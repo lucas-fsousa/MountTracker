@@ -125,7 +125,8 @@ local function refreshRow(r, item)
     local e = item.entry
     local where = ""
     if e then
-        if e.vendor then where = "Vendor: " .. e.vendor end
+        if e.vendor then where = "Vendor: " .. e.vendor
+        elseif e.source then where = "Source: " .. e.source end
         if e.zone then where = where .. (where ~= "" and "  -  " or "") .. e.zone end
     end
     r.where:SetText(where)

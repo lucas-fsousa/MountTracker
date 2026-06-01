@@ -12,6 +12,7 @@ local STATUS_WEIGHT = {
     NEED_CURRENCY    = 1,
     NEED_REQUIREMENT = 2,
     UNKNOWN          = 3,
+    FARM             = 4,
     OWNED            = 6,
     WRONG_FACTION    = 8,
     HIDDEN           = 9,

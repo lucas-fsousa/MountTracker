@@ -35,6 +35,7 @@ ns.STATUS = {
     MARKED_OBTAINED  = "MARKED_OBTAINED",  -- marcada como obtida (track indevido)
     UNKNOWN          = "UNKNOWN",          -- dado protegido pelo jogo (Secret Value)
     OWNED            = "OWNED",            -- ja coletada (so visivel com "Show owned")
+    FARM             = "FARM",             -- drop/RNG: nao e "comprar", e farmar
 }
 
 -- Cores por status (r, g, b) p/ badges na UI.
@@ -47,6 +48,7 @@ ns.STATUS_COLOR = {
     MARKED_OBTAINED  = { 0.55, 0.55, 0.55 },
     UNKNOWN          = { 0.60, 0.60, 0.75 },
     OWNED            = { 0.30, 0.85, 0.45 },
+    FARM             = { 0.45, 0.70, 0.95 },
 }
 
 ns.STATUS_LABEL = {
@@ -58,6 +60,7 @@ ns.STATUS_LABEL = {
     MARKED_OBTAINED  = "Marked obtained",
     UNKNOWN          = "Protected data",
     OWNED            = "Owned",
+    FARM             = "Farmable (RNG)",
 }
 
 -- Helper de print com prefixo.

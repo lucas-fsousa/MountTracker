@@ -121,7 +121,21 @@ function Eligibility.Evaluate(cand)
         return item
     end
 
-    -- 4) Requisito + custo.
+    -- 4) Drop / RNG: nao e "comprar", e farmar. Se houver requisito de desbloqueio
+    --    (ex.: conquista) e ele faltar, mostramos isso; senao, status FARM.
+    if entry.acquisition == "drop" or entry.acquisition == "world" or entry.acquisition == "rare" then
+        local reqOk, reqMissing = checkRequirement(entry.requirement)
+        if not reqOk then
+            item.status = S.NEED_REQUIREMENT
+            item.detail = reqMissing
+        else
+            item.status = S.FARM
+            item.detail = entry.dropNote or "Random drop - farm the source"
+        end
+        return item
+    end
+
+    -- 5) Requisito + custo (vendedor/reputacao/conquista/quest).
     local reqOk, reqMissing = checkRequirement(entry.requirement)
     local costOk, costMissing, costHave, costPct, costUnknown = checkCost(entry.cost)
     item.costPct  = costPct or 0

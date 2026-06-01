@@ -26,4 +26,26 @@ ns.Data.Register("Classic", {
         cost    = { gold = 60 },
         wowhead = "https://www.wowhead.com/spell=23509",
     },
+
+    -- Reputacao de grind (Alliance, Winterspring). Quest do Rivern ao atingir Exalted.
+    {
+        name    = "Winterspring Frostsaber",
+        spellID = 17229,
+        acquisition = "reputation",
+        vendor  = "Rivern Frostwind",
+        zone    = "Winterspring (Frostsaber Rock)",
+        requirement = { type = "reputation", factionID = 589, standing = "Exalted" }, -- Wintersaber Trainers
+        wowhead = "https://www.wowhead.com/spell=17229",
+    },
+
+    -- Drop de RNG (~1%) do Baron Rivendare em Stratholme.
+    {
+        name    = "Rivendare's Deathcharger",
+        spellID = 17481,
+        acquisition = "drop",
+        source  = "Baron Rivendare",
+        zone    = "Stratholme (Eastern Plaguelands)",
+        dropNote = "Random drop (~1%) - farm Stratholme",
+        wowhead = "https://www.wowhead.com/spell=17481",
+    },
 })
