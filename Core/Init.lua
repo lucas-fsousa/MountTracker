@@ -12,6 +12,19 @@ ns.Data = ns.Data or {}        -- tabela curada de montarias
 ns.Logic = ns.Logic or {}      -- Scanner / Eligibility / Roadmap
 ns.UI = ns.UI or {}            -- frames
 
+-- Lista mestra agregada de TODAS as entradas curadas (todas as expansoes).
+ns.Data.All = ns.Data.All or {}
+
+-- Cada arquivo Data/Mounts_<Exp>.lua chama isto para registrar suas montarias.
+-- `expansion` rotula a sprint (ex.: "Classic", "TBC"); cada entrada recebe esse campo.
+function ns.Data.Register(expansion, list)
+    if not list then return end
+    for _, entry in ipairs(list) do
+        entry.expansion = expansion
+        ns.Data.All[#ns.Data.All + 1] = entry
+    end
+end
+
 -- Enum de status (centraliza as strings p/ evitar typo).
 ns.STATUS = {
     READY            = "READY",            -- pode pegar agora

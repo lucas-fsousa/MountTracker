@@ -76,7 +76,7 @@ function Scanner.Collect()
         end
     end
 
-    addList(ns.Data.Reputation)
+    addList(ns.Data.All)
 
     -- Unresolved curated entries are not an error for the user: just note the count,
     -- and only show details when debugging. Fix by adding a verified mountID.

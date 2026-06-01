@@ -16,9 +16,10 @@ Core\Init.lua
 Core\Safe.lua
 Core\Database.lua
 
-# Dados curados
+# Dados curados (um arquivo por expansao = uma sprint)
 Data\Schema.lua
-Data\Mounts_Reputation.lua
+Data\Mounts_Classic.lua
+Data\Mounts_TBC.lua
 
 # Logica
 Logic\Scanner.lua

@@ -28,9 +28,7 @@ end
 
 -- Counts curated entries across all source lists (for diagnostics).
 local function curatedTotal()
-    local n = 0
-    for _, entry in ipairs(ns.Data.Reputation or {}) do n = n + 1 end
-    return n
+    return #(ns.Data.All or {})
 end
 
 -- Recalcula o roadmap inteiro. Retorna lista ordenada de itens (exclui coletadas).
