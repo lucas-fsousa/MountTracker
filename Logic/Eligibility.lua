@@ -86,6 +86,20 @@ local function checkCost(cost)
     return true, nil, nil, 1, false
 end
 
+-- Formata a chance de drop (fracao 0..1) como texto amigavel + tier.
+-- Ex.: 1/25 -> "Drop ~1 in 25 (4.0%)"; sem dado -> nota generica.
+local function formatOdds(chance, note)
+    if not chance or chance <= 0 then
+        return note or "Random drop - rate unknown"
+    end
+    local n = math.floor(1 / chance + 0.5)
+    local tier
+    if n <= 50 then tier = "acceptable"
+    elseif n <= 100 then tier = "rare"
+    else tier = "very rare" end
+    return ("Drop ~1 in %d (%.1f%%) - %s"):format(n, chance * 100, tier)
+end
+
 -- Avalia UM candidato. Retorna um "item de roadmap" enriquecido.
 function Eligibility.Evaluate(cand)
     local info, entry, mountID = cand.info, cand.entry, cand.mountID
@@ -122,7 +136,7 @@ function Eligibility.Evaluate(cand)
     end
 
     -- 4) Drop / RNG: nao e "comprar", e farmar. Se houver requisito de desbloqueio
-    --    (ex.: conquista) e ele faltar, mostramos isso; senao, status FARM.
+    --    (ex.: conquista) e ele faltar, mostramos isso; senao, status FARM com as odds.
     if entry.acquisition == "drop" or entry.acquisition == "world" or entry.acquisition == "rare" then
         local reqOk, reqMissing = checkRequirement(entry.requirement)
         if not reqOk then
@@ -130,7 +144,8 @@ function Eligibility.Evaluate(cand)
             item.detail = reqMissing
         else
             item.status = S.FARM
-            item.detail = entry.dropNote or "Random drop - farm the source"
+            item.dropChance = entry.dropChance     -- consumido pela ordenacao (Roadmap)
+            item.detail = formatOdds(entry.dropChance, entry.dropNote)
         end
         return item
     end

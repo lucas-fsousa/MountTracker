@@ -45,7 +45,7 @@ ns.Data.Register("Classic", {
         acquisition = "drop",
         source  = "Baron Rivendare",
         zone    = "Stratholme (Eastern Plaguelands)",
-        dropNote = "Random drop (~1%) - farm Stratholme",
+        dropChance = 0.01,   -- ~1 em 100 (very rare)
         wowhead = "https://www.wowhead.com/spell=17481",
     },
 })

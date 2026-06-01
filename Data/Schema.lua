@@ -27,6 +27,11 @@
 --         -- currencyID = 2003, amount = 500,        -- moeda especifica
 --     },
 --
+--     -- Para acquisition "drop"/"world"/"rare": chance de drop como fracao 0..1.
+--     -- Gradua a "obtenibilidade": 1/25, 1/50 = aceitavel; 1/150, 1/200 = very rare.
+--     dropChance = 0.04,                            -- ex.: 1 em 25
+--     source     = "Baron Rivendare",               -- NPC/fonte (no lugar de vendor)
+--
 --     wowhead = "https://www.wowhead.com/...",
 -- }
 --

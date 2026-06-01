@@ -23,6 +23,11 @@ local function difficulty(item)
     local base = STATUS_WEIGHT[item.status] or 5
     if item.status == ns.STATUS.NEED_CURRENCY then
         return base + (1 - (item.costPct or 0)) -- mais currency acumulada = menor score
+    elseif item.status == ns.STATUS.FARM then
+        -- Ordena drops pela raridade: odds boas (1/25) interleavam com os compraveis;
+        -- odds ruins (1/200) caem para o fundo. Sem dado -> assume ~1/150.
+        local n = item.dropChance and math.floor(1 / item.dropChance + 0.5) or 150
+        return 1.5 + math.min(n, 250) / 100   -- 1/25->1.75, 1/50->2.0, 1/100->2.5, 1/200->3.5
     end
     return base
 end
