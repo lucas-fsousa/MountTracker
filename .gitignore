@@ -1,0 +1,13 @@
+# OS / editor cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.bak
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# WoW SavedVariables (geradas pelo cliente; nao versionar dados de conta)
+*.lua.bak
+SavedVariables/

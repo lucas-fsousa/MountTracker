@@ -1,0 +1,146 @@
+-- Logic/Eligibility.lua
+-- O cerebro: decide o STATUS de cada candidato e calcula o "quanto falta".
+
+local ADDON, ns = ...
+
+local Eligibility = {}
+ns.Logic.Eligibility = Eligibility
+
+-- Faccao do jogador como 0 (Horde) / 1 (Alliance) p/ comparar com info.faction.
+local function playerFactionId()
+    local g = UnitFactionGroup("player")
+    if g == "Alliance" then return 1 elseif g == "Horde" then return 0 end
+    return nil -- Neutro (Panda nivel 1) etc.
+end
+
+-- Le a reputacao classica de uma faccao: retorna reaction (1..8).
+-- Pode devolver nil se a API falhar ou se o valor vier protegido (Secret Value).
+local function getReputation(factionID)
+    if C_Reputation and C_Reputation.GetFactionDataByID then
+        local d = C_Reputation.GetFactionDataByID(factionID)
+        if d then
+            local reaction = ns.Safe.Value(d.reaction, nil) -- nil se for secreto
+            return reaction
+        end
+    end
+    return nil
+end
+
+-- Checa requisito: retorna (ok, faltaTexto).
+local function checkRequirement(req)
+    if not req then return true, nil end
+
+    if req.type == "reputation" then
+        local needed = ns.STANDING_TO_REACTION[req.standing] or 8
+        local current = getReputation(req.factionID)
+        if not current then return false, "reputation unknown" end
+        if current >= needed then return true, nil end
+        return false, ("need %s"):format(req.standing or "?")
+
+    elseif req.type == "renown" then
+        local d = C_MajorFactions and C_MajorFactions.GetMajorFactionData(req.factionID)
+        local cur = d and d.renownLevel or 0
+        if cur >= (req.renownLevel or 0) then return true, nil end
+        return false, ("need Renown %d (have %d)"):format(req.renownLevel or 0, cur)
+
+    elseif req.type == "achievement" then
+        local _, _, _, completed = GetAchievementInfo(req.achievementID)
+        if completed then return true, nil end
+        return false, "need achievement"
+    end
+
+    return true, nil
+end
+
+-- Checa custo: retorna (ok, faltaTexto, posseTexto, pct 0..1, unknown).
+-- `unknown=true` quando o valor de posse vem protegido pelo jogo (Secret Value).
+local function checkCost(cost)
+    if not cost then return true, nil, nil, 1, false end
+
+    if cost.currencyID then
+        local info = C_CurrencyInfo.GetCurrencyInfo(cost.currencyID)
+        local rawHave = info and info.quantity
+        local have, secret = ns.Safe.Value(rawHave, nil)
+        if secret then return false, nil, nil, 0, true end
+        have = have or 0
+        local need = cost.amount or 0
+        local pct = need > 0 and math.min(have / need, 1) or 1
+        local cname = info and info.name or ("moeda " .. cost.currencyID)
+        local posse = ("%d/%d %s"):format(have, need, cname)
+        if have >= need then return true, nil, posse, 1, false end
+        return false, ("need %d more %s"):format(need - have, cname), posse, pct, false
+
+    elseif cost.gold then
+        local rawCopper = GetMoney()
+        local haveCopper, secret = ns.Safe.Value(rawCopper, nil)
+        if secret then return false, nil, nil, 0, true end
+        haveCopper = haveCopper or 0
+        local needCopper = cost.gold * 10000
+        local haveGold = math.floor(haveCopper / 10000)
+        local posse = ("%dg (have %dg)"):format(cost.gold, haveGold)
+        local pct = needCopper > 0 and math.min(haveCopper / needCopper, 1) or 1
+        if haveCopper >= needCopper then return true, nil, posse, 1, false end
+        return false, ("need %dg more"):format(cost.gold - haveGold), posse, pct, false
+    end
+
+    return true, nil, nil, 1, false
+end
+
+-- Avalia UM candidato. Retorna um "item de roadmap" enriquecido.
+function Eligibility.Evaluate(cand)
+    local info, entry, mountID = cand.info, cand.entry, cand.mountID
+    local S = ns.STATUS
+
+    local item = {
+        mountID = mountID,
+        name    = info.name or entry.name,
+        icon    = info.icon,
+        entry   = entry,
+        costPct = 0,
+    }
+
+    -- 1) Ja coletada ou marcada como obtida -> status OWNED (so aparece com "Show owned").
+    if info.isCollected or ns.DB.IsMarkedObtained(mountID) then
+        item.owned = true
+        item.status = S.OWNED
+        item.detail = info.isCollected and "Already collected" or "Marked as owned"
+        return item
+    end
+
+    -- 2) Oculta manualmente.
+    if ns.DB.IsHidden(mountID) then
+        item.status = S.HIDDEN
+        return item
+    end
+
+    -- 3) Faccao oposta (inelegivel).
+    local pf = playerFactionId()
+    if info.isFactionSpecific and info.faction ~= nil and pf ~= nil and info.faction ~= pf then
+        item.status = S.WRONG_FACTION
+        item.detail = "Opposite faction mount"
+        return item
+    end
+
+    -- 4) Requisito + custo.
+    local reqOk, reqMissing = checkRequirement(entry.requirement)
+    local costOk, costMissing, costHave, costPct, costUnknown = checkCost(entry.cost)
+    item.costPct  = costPct or 0
+    item.costHave = costHave
+
+    if costUnknown then
+        -- Value protected by the game (Secret Value): can't assert the status.
+        item.status = S.UNKNOWN
+        item.detail = "Balance protected by game - check at vendor"
+    elseif not reqOk then
+        item.status = S.NEED_REQUIREMENT
+        item.detail = reqMissing
+    elseif not costOk then
+        item.status = S.NEED_CURRENCY
+        item.detail = costMissing
+    else
+        item.status = S.READY
+        item.detail = "Can buy now"
+    end
+
+    return item
+end

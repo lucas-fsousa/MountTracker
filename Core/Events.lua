@@ -1,0 +1,100 @@
+-- Core/Events.lua
+-- Registra eventos do jogo e os slash commands. Carregado por ultimo.
+
+local ADDON, ns = ...
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("NEW_MOUNT_ADDED")
+f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+f:RegisterEvent("UPDATE_FACTION")
+
+-- Marca o roadmap como "sujo"; recalcula na proxima abertura/refresh.
+local dirty = true
+local function markDirty() dirty = true end
+
+local function rebuildIfNeeded()
+    if dirty then
+        ns.Logic.Roadmap.Build()
+        dirty = false
+    end
+    if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
+end
+
+-- Handler blindado: qualquer erro nosso vira msg no chat, nunca no meio da tela.
+local function handleEvent(_, event)
+    if event == "PLAYER_LOGIN" then
+        ns.DB.Init()
+        ns.Logic.Roadmap.Build()
+        dirty = false
+        local s = ns._stats or {}
+        ns.Print(("loaded. %d mount(s) pending (%d owned, %d unresolved). Type |cffffff00/mtrack|r to open.")
+            :format(s.pending or 0, s.owned or 0, s.unresolved or 0))
+    else
+        -- Coleta nova montaria, mudou ouro/currency ou reputacao -> recalcular.
+        markDirty()
+        -- Se a janela estiver aberta, atualiza ao vivo.
+        if MountTrackerFrame and MountTrackerFrame:IsShown() then
+            rebuildIfNeeded()
+        end
+    end
+end
+
+f:SetScript("OnEvent", function(self, event, ...)
+    ns.Safe.Call("process event " .. tostring(event), handleEvent, self, event, ...)
+end)
+
+-- ---- Slash commands ----
+SLASH_MOUNTTRACKER1 = "/mtrack"
+SLASH_MOUNTTRACKER2 = "/mounttracker"
+SLASH_MOUNTTRACKER3 = "/mtr"
+
+local function handleSlash(msg)
+    msg = (msg or ""):gsub("^%s+", ""):gsub("%s+$", "")
+    local cmd, rest = msg:match("^(%S*)%s*(.*)$")
+    cmd = (cmd or ""):lower()
+
+    if cmd == "" then
+        ns.UI.Toggle()   -- Toggle ja reconstroi o roadmap ao abrir
+
+    elseif cmd == "find" then
+        ns.Logic.Scanner.Find(rest)
+
+    elseif cmd == "scan" then
+        local items = ns.Logic.Roadmap.Build()
+        local s = ns._stats or {}
+        ns.Print(("scan: %d curated | %d resolved | %d owned | %d pending | %d unresolved")
+            :format(s.curated or 0, s.resolved or 0, s.owned or 0, s.pending or 0, s.unresolved or 0))
+        if (s.unresolved or 0) > 0 and ns._unresolved then
+            ns.Print("  unresolved: " .. table.concat(ns._unresolved, ", "))
+        end
+        for _, item in ipairs(items) do
+            ns.Print(("  [%s] %s - %s"):format(
+                ns.STATUS_LABEL[item.status] or item.status,
+                item.name or "?", item.detail or ""))
+        end
+
+    elseif cmd == "reset" then
+        wipe(MountTrackerDB.markedObtained)
+        wipe(MountTrackerDB.hidden)
+        ns.Print("overrides (obtained/hidden) cleared.")
+        ns.Logic.Roadmap.Build()
+        if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
+
+    elseif cmd == "debug" then
+        ns.DEBUG = not ns.DEBUG
+        ns.Print("debug " .. (ns.DEBUG and "on" or "off") ..
+            (ns._lastError and (" | last error: " .. ns._lastError) or ""))
+
+    elseif cmd == "help" then
+        ns.Print("commands: /mtrack (open) | find <name> | scan | reset | debug | help")
+
+    else
+        ns.Print("unknown command. /mtrack help")
+    end
+end
+
+-- Hardened slash: an error here becomes a chat message, never a mid-screen error.
+SlashCmdList["MOUNTTRACKER"] = function(msg)
+    ns.Safe.Call("run command", handleSlash, msg)
+end
