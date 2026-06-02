@@ -10,6 +10,8 @@ f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 f:RegisterEvent("UPDATE_FACTION")
 f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")   -- transicoes de dungeon/raid
+f:RegisterEvent("CHAT_MSG_ADDON")          -- checagem de versao entre pares
+f:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 -- Marca o roadmap como "sujo"; recalcula na proxima abertura/refresh.
 local dirty = true
@@ -24,15 +26,28 @@ local function rebuildIfNeeded()
 end
 
 -- Handler blindado: qualquer erro nosso vira msg no chat, nunca no meio da tela.
-local function handleEvent(_, event)
+local function handleEvent(_, event, arg1, arg2)
     if event == "PLAYER_LOGIN" then
         ns.DB.Init()
         ns.Logic.Roadmap.Build()
         if ns.UI.Minimap then ns.UI.Minimap.Init() end
+        if ns.Version then ns.Version.Init() end
         dirty = false
         local s = ns._stats or {}
-        ns.Print(("loaded. %d obtainable mounts to collect (%d owned, %d unavailable). Type |cffffff00/mtrack|r to open.")
-            :format(s.pending or 0, s.owned or 0, s.unavailable or 0))
+        ns.Print(("v%s loaded  ·  WoW %s  ·  %d obtainable mounts. Type |cffffff00/mtrack|r to open.")
+            :format((ns.Version and ns.Version.current) or ns.VERSION or "?",
+                    (ns.Version and ns.Version.GameString()) or "?", s.pending or 0))
+        -- Anuncia a versao apos o roster carregar (checagem de update entre pares).
+        if ns.Version and C_Timer then
+            C_Timer.After(5, function() ns.Safe.Call("broadcast version", ns.Version.Broadcast) end)
+        end
+
+    elseif event == "CHAT_MSG_ADDON" then
+        if ns.Version then ns.Version.OnAddonMessage(arg1, arg2) end
+
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        if ns.Version then ns.Version.Broadcast() end
+
     elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
         -- Mudou de zona/instancia: o roadmap nao muda, so o filtro "Current zone".
         if MountTrackerFrame and MountTrackerFrame:IsShown()

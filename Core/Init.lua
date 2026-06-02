@@ -5,7 +5,7 @@ local ADDON, ns = ...
 
 -- Tudo do addon vive dentro de `ns` (compartilhado entre os arquivos via `...`).
 ns.NAME = ADDON
-ns.VERSION = "0.1.0"
+ns.VERSION = "0.5.0"  -- fallback; Core/Version.lua le do .toc (fonte unica)
 
 -- Sub-tabelas que os outros arquivos vao preencher.
 ns.Data = ns.Data or {}        -- tabela curada de montarias

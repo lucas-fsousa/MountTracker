@@ -2,7 +2,7 @@
 ## Title: MountTracker
 ## Notes: Roadmap das montarias mais faceis de obter que ainda faltam na sua conta.
 ## Author: Lucas
-## Version: 0.1.0
+## Version: 0.5.0
 ## SavedVariables: MountTrackerDB, MountTrackerDump
 ## IconTexture: Interface\Icons\Ability_Mount_RidingHorse
 ## X-Category: Collections
@@ -15,6 +15,7 @@
 Core\Init.lua
 Core\Safe.lua
 Core\Database.lua
+Core\Version.lua
 
 # Dados curados (um arquivo por expansao = uma sprint)
 Data\Schema.lua
