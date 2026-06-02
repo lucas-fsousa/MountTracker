@@ -85,4 +85,23 @@ ns.Data.Register("TWW", {
         cost    = { currencyID = 2815, amount = 8125 },
         wowhead = "https://www.wowhead.com/spell=1233546",
     },
+
+    -- Manaforge Vandals (trilha de Renome do raid Manaforge Omega). Recompensas
+    -- diretas do rank -- SEM custo em moeda (so atingir o renome e resgatar).
+    {
+        name    = "Vandal's Gearglider",
+        spellID = 353265,
+        acquisition = "reputation",
+        zone    = "Shadow Point",
+        requirement = { type = "renown", factionID = 2736, renownLevel = 8 }, -- Manaforge Vandals
+        wowhead = "https://www.wowhead.com/spell=353265",
+    },
+    {
+        name    = "The Bone Freezer",
+        spellID = 1233542,
+        acquisition = "reputation",
+        zone    = "Shadow Point",
+        requirement = { type = "renown", factionID = 2736, renownLevel = 14 }, -- Manaforge Vandals
+        wowhead = "https://www.wowhead.com/spell=1233542",
+    },
 })
