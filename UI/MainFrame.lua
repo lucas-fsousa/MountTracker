@@ -59,37 +59,14 @@ local function costToText(costs)
     return table.concat(parts, ", ")
 end
 
--- Palavras-chave que indicam um requisito que NAO conseguimos verificar para
--- montarias nao-curadas (reputacao/renome/conquista). Se o texto do jogo cita
--- qualquer uma, nao acendemos o glow (evita falso "da pra pegar agora").
-local GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
-
--- A montaria pode ser obtida AGORA? (borda brilhante)
---  - curada com status READY (reputacao + custo verificados), ou
---  - nao-curada de vendedor SEM gate detectavel e com o custo todo pago.
+-- A montaria pode ser obtida AGORA? (borda brilhante).
+-- CONSERVADOR: so para montarias CURADAS com status READY, onde os requisitos
+-- (reputacao/renome) foram verificados de verdade contra o estado do personagem.
+-- Glow por "afford" de nao-curadas e inseguro: montarias de moeda podem ter gate
+-- de renome invisivel no sourceText (ex.: Amani de Zul'Aman). A afford continua
+-- visivel no "(have X)" verde do custo; o glow e o sinal de alta confianca.
 local function readyNow(item)
-    if item.owned then return false end
-    if item.status == ns.STATUS.READY then return true end
-    if item.status ~= ns.STATUS.MISSING then return false end
-
-    -- Bloqueia se o texto do jogo cita qualquer requisito de rep/renome/conquista
-    -- (independe da estrutura do parse, que e sensivel a ordem).
-    local t = (item.sourceText or ""):lower()
-    for _, w in ipairs(GATE_WORDS) do
-        if t:find(w, 1, true) then return false end
-    end
-
-    local costSource = nil
-    for _, s in ipairs(item.sources or {}) do
-        if s.renown then return false end
-        if not costSource and s.costs and #s.costs > 0 then costSource = s end
-    end
-    if not costSource then return false end
-    for _, c in ipairs(costSource.costs) do
-        local have = costHave(c)
-        if have == nil or have < (c.amount or 0) then return false end
-    end
-    return true
+    return (not item.owned) and item.status == ns.STATUS.READY
 end
 
 -- Linha 2: vendedores/origem (com tag de faccao [A]/[H] quando aplicavel).
