@@ -26,6 +26,25 @@ local function getReputation(factionID)
     return nil
 end
 
+-- Resolve uma Major Faction (renome) pelo NOME, via API do jogo. Usado quando o
+-- dado curado tem factionName mas nao o factionID (ex.: facoes que o Wowhead nao
+-- indexa). Mapa montado uma vez (lazy) e cacheado.
+local _mfByName
+local function majorFactionByName(name)
+    if not name then return nil end
+    if not _mfByName then
+        _mfByName = {}
+        if C_MajorFactions and C_MajorFactions.GetMajorFactionIDs then
+            for _, id in ipairs(C_MajorFactions.GetMajorFactionIDs() or {}) do
+                local d = C_MajorFactions.GetMajorFactionData(id)
+                if d and d.name then _mfByName[d.name:lower()] = id end
+            end
+        end
+    end
+    local key = name:lower()
+    return _mfByName[key] or _mfByName[key:gsub("^the ", "")] or _mfByName["the " .. key]
+end
+
 -- Checa requisito: retorna (ok, faltaTexto).
 local function checkRequirement(req)
     if not req then return true, nil end
@@ -38,8 +57,10 @@ local function checkRequirement(req)
         return false, ("need %s"):format(req.standing or "?")
 
     elseif req.type == "renown" then
-        local d = C_MajorFactions and C_MajorFactions.GetMajorFactionData(req.factionID)
-        local cur = d and d.renownLevel or 0
+        local fid = req.factionID or majorFactionByName(req.factionName)
+        local d = fid and C_MajorFactions and C_MajorFactions.GetMajorFactionData(fid)
+        if not d then return false, "renown faction unknown" end
+        local cur = d.renownLevel or 0
         if cur >= (req.renownLevel or 0) then return true, nil end
         return false, ("need Renown %d (have %d)"):format(req.renownLevel or 0, cur)
 

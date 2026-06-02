@@ -187,8 +187,12 @@ def emit_entry(rec, req, fid, costs):
         L.append(f"        zone    = {lua_str(zone)},")
     if req:
         if req["type"] == "renown":
-            L.append("        requirement = { type = \"renown\", factionID = %s, renownLevel = %d },"
-                     % (fid if fid else "nil --[[ VERIFICAR ]]", req["renownLevel"]))
+            if fid:
+                L.append('        requirement = { type = "renown", factionID = %d, renownLevel = %d },'
+                         % (fid, req["renownLevel"]))
+            else:  # sem ID -> factionName (resolvido em runtime via C_MajorFactions)
+                L.append('        requirement = { type = "renown", factionName = %s, renownLevel = %d },'
+                         % (lua_str(req.get("faction") or ""), req["renownLevel"]))
         else:
             L.append('        requirement = { type = "reputation", factionID = %s, standing = "%s" },'
                      % (fid if fid else "nil --[[ VERIFICAR ]]", req["standing"]))

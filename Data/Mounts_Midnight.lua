@@ -61,4 +61,27 @@ ns.Data.Register("Midnight", {
         cost    = { currencyID = 3316, amount = 8000 },
         wowhead = "https://www.wowhead.com/spell=1266702",
     },
+
+    -- Hara'ti (Harandar): o Wowhead nao expoe o factionID; resolvido em runtime
+    -- pelo nome via C_MajorFactions (factionName).
+    {
+        name    = "Fierce Grimlynx",
+        spellID = 1243593,
+        acquisition = "reputation",
+        vendor  = "Naynar",
+        zone    = "Harandar",
+        requirement = { type = "renown", factionName = "Hara'ti", renownLevel = 16 },
+        cost    = { currencyID = 3316, amount = 6000 },
+        wowhead = "https://www.wowhead.com/spell=1243593",
+    },
+    {
+        name    = "Cerulean Sporeglider",
+        spellID = 1253929,
+        acquisition = "reputation",
+        vendor  = "Naynar",
+        zone    = "Harandar",
+        requirement = { type = "renown", factionName = "Hara'ti", renownLevel = 19 },
+        cost    = { currencyID = 3316, amount = 8000 },
+        wowhead = "https://www.wowhead.com/spell=1253929",
+    },
 })
