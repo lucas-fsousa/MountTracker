@@ -60,10 +60,18 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 
 ## 📸 Capturas de tela
 
-> _Em breve._ Coloque suas imagens em `images/` e referencie aqui, por exemplo:
->
-> `![Janela do roadmap](images/roadmap.png)`
-> `![Brilho de obtenível](images/glow.png)`
+![Janela do roadmap](images/roadmap.png)
+
+*O roadmap — as montarias que faltam, da mais fácil primeiro, cada uma com vendedor, local e **custo vs. seu saldo**.*
+
+| | |
+|:---:|:---:|
+| ![Brilho de obtenível agora](images/glow.png) | ![Detalhe da montaria](images/row.png) |
+| **Brilho verde = dá pra pegar agora** | Vendedor(es), zona e `Cost: N (have X)` |
+| ![Filtro por expansão](images/expansion-filter.png) | ![Mostrar obtidas](images/owned-toggle.png) |
+| Filtrar por expansão | Obtidas (coloridas) vs. faltantes (cinza) |
+
+<p align="center"><img src="images/minimap.png" alt="Botão de minimapa"><br><em>Arraste o botão do minimapa pra qualquer lugar; clique pra abrir.</em></p>
 
 ---
 

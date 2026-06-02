@@ -60,10 +60,18 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 
 ## 📸 Screenshots
 
-> _Coming soon._ Drop your screenshots in `images/` and reference them here, e.g.:
->
-> `![Roadmap window](images/roadmap.png)`
-> `![Obtainable-now glow](images/glow.png)`
+![The roadmap window](images/roadmap.png)
+
+*The roadmap — your missing mounts, easiest first, each with vendor, location and **cost vs. your balance**.*
+
+| | |
+|:---:|:---:|
+| ![Obtainable-now glow](images/glow.png) | ![Per-mount detail](images/row.png) |
+| **Green glow = you can get it right now** | Vendor(s), zone and `Cost: N (have X)` |
+| ![Expansion filter](images/expansion-filter.png) | ![Show owned](images/owned-toggle.png) |
+| Filter by expansion | Owned (colored) vs. missing (gray) |
+
+<p align="center"><img src="images/minimap.png" alt="Minimap button"><br><em>Drag the minimap button anywhere; click to open.</em></p>
 
 ---
 
