@@ -59,14 +59,43 @@ local function costToText(costs)
     return table.concat(parts, ", ")
 end
 
--- A montaria pode ser obtida AGORA? (borda brilhante).
--- CONSERVADOR: so para montarias CURADAS com status READY, onde os requisitos
--- (reputacao/renome) foram verificados de verdade contra o estado do personagem.
--- Glow por "afford" de nao-curadas e inseguro: montarias de moeda podem ter gate
--- de renome invisivel no sourceText (ex.: Amani de Zul'Aman). A afford continua
--- visivel no "(have X)" verde do custo; o glow e o sinal de alta confianca.
+-- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
+local GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
+
+-- A montaria pode ser obtida AGORA? (borda brilhante). Double-check em camadas:
+--   1. Jogo (nativo): se o sourceText cita um requisito -> ha gate -> nao brilha.
+--   2. Wowhead (curadoria): se curada, usa a eligibilidade verificada (READY brilha).
+--   3. Fallback: nem jogo nem Wowhead informam requisito -> brilha se o custo esta pago.
 local function readyNow(item)
-    return (not item.owned) and item.status == ns.STATUS.READY
+    if item.owned then return false end
+
+    -- Camada 2 (curado/Wowhead): eligibilidade precisa ja calculada.
+    if item.status == ns.STATUS.READY then return true end   -- requisito + custo verificados
+    if item.entry then return false end                      -- curado mas ainda nao elegivel
+
+    -- Nao-curado: so a base ao vivo do jogo.
+    if item.status ~= ns.STATUS.MISSING then return false end
+
+    -- Camada 1 (jogo nativo): texto cita um requisito que nao da p/ verificar -> nao brilha.
+    local t = (item.sourceText or ""):lower()
+    for _, w in ipairs(GATE_WORDS) do
+        if t:find(w, 1, true) then return false end
+    end
+    for _, s in ipairs(item.sources or {}) do
+        if s.renown then return false end
+    end
+
+    -- Camada 3 (fallback): nenhum requisito conhecido -> brilha se houver custo e estiver pago.
+    local costSource = nil
+    for _, s in ipairs(item.sources or {}) do
+        if s.costs and #s.costs > 0 then costSource = s; break end
+    end
+    if not costSource then return false end
+    for _, c in ipairs(costSource.costs) do
+        local have = costHave(c)
+        if have == nil or have < (c.amount or 0) then return false end
+    end
+    return true
 end
 
 -- Linha 2: vendedores/origem (com tag de faccao [A]/[H] quando aplicavel).
