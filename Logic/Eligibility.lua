@@ -91,6 +91,20 @@ local function checkCost(cost)
         if have >= need then return true, nil, posse, 1, false end
         return false, ("need %d more %s"):format(need - have, cname), posse, pct, false
 
+    elseif cost.itemID then
+        local rawCount = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(cost.itemID))
+            or (GetItemCount and GetItemCount(cost.itemID))
+        local have, secret = ns.Safe.Value(rawCount, nil)
+        if secret then return false, nil, nil, 0, true end
+        have = have or 0
+        local need = cost.amount or 0
+        local pct = need > 0 and math.min(have / need, 1) or 1
+        local iname = (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(cost.itemID))
+            or (GetItemInfo and GetItemInfo(cost.itemID)) or ("item " .. cost.itemID)
+        local posse = ("%d/%d %s"):format(have, need, iname)
+        if have >= need then return true, nil, posse, 1, false end
+        return false, ("need %d more %s"):format(need - have, iname), posse, pct, false
+
     elseif cost.gold then
         local rawCopper = GetMoney()
         local haveCopper, secret = ns.Safe.Value(rawCopper, nil)

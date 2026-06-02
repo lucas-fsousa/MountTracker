@@ -24,7 +24,8 @@
 --
 --     cost = {                                      -- o que voce paga ao comprar
 --         gold       = 1600,                        -- em ouro; OU:
---         -- currencyID = 2003, amount = 500,        -- moeda especifica
+--         -- currencyID = 2003, amount = 500,        -- moeda especifica; OU:
+--         -- itemID     = 117397, amount = 100,      -- item/token
 --     },
 --
 --     -- Para acquisition "drop"/"world"/"rare": chance de drop como fracao 0..1.

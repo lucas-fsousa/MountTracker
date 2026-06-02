@@ -11,7 +11,7 @@ ns.Data.Register("Legion", {
         vendor  = "Conjurer Margoss",
         zone    = "Dalaran",
         requirement = { type = "reputation", factionID = 1975, standing = "Honored" }, -- Conjurer Margoss
-        -- custo em item (Eligibility ainda nao checa itemID): 100x item 138777
+        cost    = { itemID = 138777, amount = 100 },
         wowhead = "https://www.wowhead.com/spell=214791",
     },
 })

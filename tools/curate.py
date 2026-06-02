@@ -237,7 +237,7 @@ def emit_entry(rec, req, fid, costs, drop_chance=None):
     elif c and c["ctype"] == "gold":
         L.append("        cost    = { gold = %d }," % c["amount"])
     elif c and c["ctype"] == "item":
-        L.append("        -- cost item:%d x%d (Eligibility ainda nao checa itemID)" % (c["id"], c["amount"]))
+        L.append("        cost    = { itemID = %d, amount = %d }," % (c["id"], c["amount"]))
     L.append(f'        wowhead = "https://www.wowhead.com/spell={rec["spellID"]}",')
     L.append("    },")
     return "\n".join(L)

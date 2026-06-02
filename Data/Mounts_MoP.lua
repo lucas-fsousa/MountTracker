@@ -31,7 +31,7 @@ ns.Data.Register("MoP", {
         vendor  = "Nat Pagle",
         zone    = "Garrison: Fishing Shack",
         requirement = { type = "reputation", factionID = 1358, standing = "Honored" }, -- Nat Pagle
-        -- custo em item (Eligibility ainda nao checa itemID): 100x item 117397
+        cost    = { itemID = 117397, amount = 100 },
         wowhead = "https://www.wowhead.com/spell=127271",
     },
 })
