@@ -1,0 +1,46 @@
+"""Resolucao de IDs no Wowhead via o endpoint publico de sugestoes.
+
+Resolve nome -> itemID e nome -> factionID (JSON limpo, sem scraping de HTML).
+Tambem busca a pagina de item (para a camada `extract`).
+"""
+
+import json
+import re
+import urllib.parse
+
+BASE = "https://www.wowhead.com"
+
+
+def _suggest(http, query):
+    url = f"{BASE}/search/suggestions-template?q=" + urllib.parse.quote(query)
+    try:
+        return json.loads(http.get(url)).get("results", [])
+    except Exception:                       # noqa: BLE001
+        return []
+
+
+def item_id(http, name):
+    """itemID exato pelo nome (typeName == Item)."""
+    for r in _suggest(http, name):
+        if r.get("typeName") == "Item" and r.get("name", "").lower() == name.lower():
+            return r.get("id")
+    return None
+
+
+def _norm(s):
+    return re.sub(r"['’ʼ`]", "'", s or "").strip().lower()
+
+
+def faction_id(http, name):
+    """factionID pelo nome (tolerante a apostrofo; fallback: 1a faccao)."""
+    if not name:
+        return None
+    facs = [r for r in _suggest(http, name) if r.get("typeName") == "Faction"]
+    for r in facs:
+        if _norm(r.get("name")) == _norm(name):
+            return r.get("id")
+    return facs[0].get("id") if facs else None
+
+
+def item_html(http, iid):
+    return http.get(f"{BASE}/item={iid}")

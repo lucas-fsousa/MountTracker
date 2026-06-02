@@ -13,14 +13,26 @@ the renown/reputation requirement to buy a mount. That gap is what causes false
 ## How it works
 
 1. `dump_to_json.lua` converts your SavedVariables `MountTracker.lua` to JSONL.
-2. `curate.py` selects candidate mounts (uncollected, obtainable, matching a filter),
-   and for each:
+2. `curate.py` (CLI/orchestration) selects candidate mounts and, for each, drives the
+   specialized modules in the **`mtcurate/`** package:
    - resolves the Wowhead **item id** by name (`/search/suggestions-template`),
    - reads the item page and extracts the requirement
-     (`Requires Renown Rank N with X` / `Requires <Standing> with X`),
+     (`Requires Renown Rank N with X` / `Requires <Standing> with X`) or drop chance,
    - resolves the **faction id** by name (same suggestions endpoint),
-   - parses the **cost** (currency/gold) from the dump's `sourceText`,
+   - parses the **cost** (currency/item/gold) and the requirement from the dump's
+     `sourceText` as a fallback,
    - emits a Lua entry.
+
+### Modules (`mtcurate/`)
+
+| Module | Responsibility |
+|---|---|
+| `http.py` | Polite GET: disk cache, rate-limit, retry/backoff |
+| `dump.py` | Load the `/mtrack dump` (via `dump_to_json.lua`) |
+| `wowhead.py` | ID resolution (item/faction) via the suggestions endpoint |
+| `sourcetext.py` | Parse the game's `sourceText`: fields, cost, requirement, expansion |
+| `extract.py` | Extract from the Wowhead item page: requirement, drop chance |
+| `emit.py` | Build the curated Lua entries |
 
 It is **polite**: identifiable User-Agent, on-disk cache (only hits the network for
 pages it hasn't seen), and a configurable rate-limit (`--delay`). Run it sparingly,
