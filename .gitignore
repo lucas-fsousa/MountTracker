@@ -16,3 +16,7 @@ SavedVariables/
 tools/cache/
 tools/out.lua
 __pycache__/
+
+# Backup pessoal e config local do Claude (nao versionar)
+backup-claude.ps1
+.claude/settings.local.json
