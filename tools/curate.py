@@ -31,6 +31,32 @@ UA = ("MountTracker-curate/0.1 (community addon; "
 
 STANDINGS = ("Exalted", "Revered", "Honored", "Friendly", "Neutral")
 
+# Heuristica de expansao por zona (espelha Logic/Expansion.lua do addon).
+EXP_RULES = [
+    ("TWW", ["k'aresh", "kʼaresh", "isle of dorn", "dornogal", "ringing deeps", "azj-kahet", "hallowfall", "undermine", "city of threads", "khaz algar", "siren isle"]),
+    ("Dragonflight", ["emerald dream", "thaldraszus", "ohn'ahran", "azure span", "waking shores", "zaralek", "forbidden reach", "valdrakken", "dragon isles", "amirdrassil"]),
+    ("Shadowlands", ["oribos", "bastion", "maldraxxus", "ardenweald", "revendreth", "the maw", "korthia", "zereth mortis", "torghast"]),
+    ("BfA", ["zuldazar", "nazmir", "vol'dun", "tiragarde", "drustvar", "stormsong", "nazjatar", "mechagon", "boralus", "dazar'alor", "zandalar", "kul tiras"]),
+    ("Legion", ["suramar", "val'sharah", "highmountain", "stormheim", "azsuna", "broken shore", "argus", "mac'aree", "antoran", "krokuun", "trueshot lodge", "broken isles"]),
+    ("WoD", ["draenor", "tanaan", "frostfire", "gorgrond", "talador", "spires of arak", "warspear", "stormshield", "ashran", "shadowmoon valley", "nagrand"]),
+    ("MoP", ["pandaria", "jade forest", "valley of the four winds", "kun-lai", "townlong", "dread wastes", "vale of eternal", "timeless isle", "krasarang", "isle of thunder", "mogu"]),
+    ("Cataclysm", ["mount hyjal", "vashj'ir", "deepholm", "uldum", "twilight highlands", "tol barad", "firelands", "gilneas"]),
+    ("WotLK", ["northrend", "icecrown", "storm peaks", "sholazar", "grizzly hills", "howling fjord", "borean tundra", "dragonblight", "zul'drak", "crystalsong", "wintergrasp", "argent tournament", "argent crusade", "dalaran"]),
+    ("TBC", ["hellfire", "zangarmarsh", "terokkar", "blade's edge", "netherstorm", "shattrath", "quel'danas", "zul'aman", "netherwing", "skettis"]),
+    ("Classic", ["alterac", "winterspring", "silithus", "azshara", "felwood", "un'goro", "plaguelands", "stratholme", "scholomance", "dire maul", "blackrock", "zul'gurub", "ahn'qiraj", "tanaris", "stormwind", "orgrimmar", "ironforge", "darnassus", "thunder bluff", "undercity"]),
+]
+
+
+def classify_expansion(source_text):
+    t = re.sub(r"\|T.+?\|t", "", source_text or "").lower()
+    if "outland" in t:
+        return "TBC"
+    for exp, kws in EXP_RULES:
+        for kw in kws:
+            if kw in t:
+                return exp
+    return "Unknown"
+
 
 # ----------------------------------------------------------------------------- IO
 
@@ -41,20 +67,27 @@ def load_dump(dump_path, lua_bin):
     return [json.loads(line) for line in out.splitlines() if line.strip()]
 
 
-def http_get(url, cache_dir, delay):
-    """GET com cache em disco e rate-limit. Retorna o corpo (str)."""
+def http_get(url, cache_dir, delay, retries=3):
+    """GET com cache em disco, rate-limit e retry com backoff. Retorna o corpo (str)."""
     os.makedirs(cache_dir, exist_ok=True)
     key = re.sub(r"[^a-zA-Z0-9]+", "_", url)[:180]
     path = os.path.join(cache_dir, key)
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             return f.read()
-    time.sleep(delay)  # so dorme quando realmente bate na rede
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    body = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(body)
-    return body
+    last = None
+    for attempt in range(retries):
+        try:
+            time.sleep(delay)  # so dorme quando realmente bate na rede
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            body = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(body)
+            return body
+        except Exception as e:           # noqa: BLE001 (queremos tolerar qualquer falha de rede)
+            last = e
+            time.sleep(1.5 * (attempt + 1))
+    raise last
 
 
 # ------------------------------------------------------------------- Wowhead bits
@@ -72,19 +105,36 @@ def resolve_item_id(name, cache_dir, delay):
     return None
 
 
+def _norm(s):
+    return re.sub(r"['’ʼ`]", "'", s or "").strip().lower()
+
+
 def extract_requirement(item_html):
-    """Extrai (type, factionName, standing|renownLevel) da pagina de item."""
-    m = re.search(r"Renown Rank (\d+) with (?:the )?([^.<]+?)[.<]", item_html)
-    if m:
-        return {"type": "renown", "faction": m.group(2).strip(), "renownLevel": int(m.group(1))}
-    m = re.search(r"Requires (%s) with (?:the )?([^.<]+?)[.<]" % "|".join(STANDINGS), item_html)
-    if m:
-        return {"type": "reputation", "faction": m.group(2).strip(), "standing": m.group(1)}
+    """Extrai requisito da pagina de item. Captura o factionID direto do link
+    quando a faccao e hyperlinkada; senao guarda o nome para resolver depois."""
+    for kind, pat in (("renown", r"Renown Rank (\d+) with (?:the )?"),
+                      ("reputation", r"Requires (%s) with (?:the )?" % "|".join(STANDINGS))):
+        m = re.search(pat, item_html)
+        if not m:
+            continue
+        tail = item_html[m.end():m.end() + 160]
+        fid = None
+        fm = re.search(r"faction=(\d+)", tail)
+        if fm:
+            fid = int(fm.group(1))
+        nm = re.search(r">([^<]+)</a>", tail) or re.search(r"^\s*([^.<]+)", tail)
+        fname = nm.group(1).strip() if nm else None
+        req = {"type": kind, "factionID": fid, "faction": fname}
+        if kind == "renown":
+            req["renownLevel"] = int(m.group(1))
+        else:
+            req["standing"] = m.group(1)
+        return req
     return None
 
 
 def resolve_faction_id(name, cache_dir, delay):
-    """Resolve o factionID exato pelo nome via o endpoint de sugestoes."""
+    """Resolve o factionID pelo nome via o endpoint de sugestoes (tolerante a apostrofo)."""
     if not name:
         return None
     url = f"{WH}/search/suggestions-template?q=" + urllib.parse.quote(name)
@@ -92,10 +142,11 @@ def resolve_faction_id(name, cache_dir, delay):
         data = json.loads(http_get(url, cache_dir, delay))
     except Exception:
         return None
-    for r in data.get("results", []):
-        if r.get("typeName") == "Faction" and r.get("name", "").lower() == name.lower():
+    factions = [r for r in data.get("results", []) if r.get("typeName") == "Faction"]
+    for r in factions:
+        if _norm(r.get("name")) == _norm(name):
             return r.get("id")
-    return None
+    return factions[0].get("id") if factions else None
 
 
 # ----------------------------------------------------------------- sourceText bits
@@ -160,11 +211,13 @@ def main():
     ap.add_argument("--dump", required=True, help="caminho do SavedVariables MountTracker.lua")
     ap.add_argument("--lua", default="lua", help="binario lua para converter o dump")
     ap.add_argument("--filter", default="", help="substring (nome ou sourceText) para filtrar candidatos")
-    ap.add_argument("--expansion", default="Unknown", help="rotulo da expansao para o Register()")
+    ap.add_argument("--expansion-only", default="", help="processa so montarias dessa expansao (heuristica de zona)")
     ap.add_argument("--cache", default=os.path.join(os.path.dirname(__file__), "cache"))
     ap.add_argument("--delay", type=float, default=1.0, help="segundos entre requisicoes (rate-limit)")
     ap.add_argument("--limit", type=int, default=0, help="maximo de montarias a processar (0 = todas)")
     ap.add_argument("--include-collected", action="store_true")
+    ap.add_argument("--has-cost", action="store_true", help="so montarias com 'Cost:' no sourceText")
+    ap.add_argument("--only-with-requirement", action="store_true", help="emite so as que tem requisito")
     args = ap.parse_args()
 
     mounts = load_dump(args.dump, args.lua)
@@ -177,6 +230,11 @@ def main():
             continue
         if m.get("shouldHideOnChar"):
             continue
+        if args.has_cost and "Cost:" not in (m.get("sourceText") or ""):
+            continue
+        m["_exp"] = classify_expansion(m.get("sourceText"))
+        if args.expansion_only and m["_exp"] != args.expansion_only:
+            continue
         blob = (m.get("name", "") + " " + (m.get("sourceText") or "")).lower()
         if flt and flt not in blob:
             continue
@@ -185,28 +243,35 @@ def main():
         cands = cands[: args.limit]
 
     sys.stderr.write(f"[curate] {len(cands)} candidato(s)\n")
-    entries, no_req = [], []
+    by_exp, no_req = {}, []
     for m in cands:
         name = m["name"]
-        item_id = resolve_item_id(name, args.cache, args.delay)
-        req, fid = None, None
-        if item_id:
-            html = http_get(f"{WH}/item={item_id}", args.cache, args.delay)
-            req = extract_requirement(html)
-            if req:
-                fid = resolve_faction_id(req["faction"], args.cache, args.delay)
+        try:
+            item_id = resolve_item_id(name, args.cache, args.delay)
+            req, fid = None, None
+            if item_id:
+                html = http_get(f"{WH}/item={item_id}", args.cache, args.delay)
+                req = extract_requirement(html)
+                if req:
+                    fid = req.get("factionID") or resolve_faction_id(req["faction"], args.cache, args.delay)
+        except Exception as e:                       # noqa: BLE001
+            sys.stderr.write(f"  {name:32s} ERRO: {e} (pulando)\n")
+            continue
         costs = parse_costs(m.get("sourceText"))
-        entries.append(emit_entry(m, req, fid, costs))
         tag = (f"renown {req['renownLevel']}" if req and req["type"] == "renown"
                else (req["standing"] if req else "-"))
-        sys.stderr.write(f"  {name:32s} item={item_id} req={tag} faction={fid}\n")
+        sys.stderr.write(f"  {name:32s} [{m['_exp']}] item={item_id} req={tag} faction={fid}\n")
         if not req:
             no_req.append(name)
+        if args.only_with_requirement and not req:
+            continue
+        by_exp.setdefault(m["_exp"], []).append(emit_entry(m, req, fid, costs))
 
-    print(f'-- Gerado por tools/curate.py (revise antes de commitar)\nlocal ADDON, ns = ...\n')
-    print(f'ns.Data.Register("{args.expansion}", {{')
-    print("\n".join(entries))
-    print("})")
+    print("-- Gerado por tools/curate.py (revise antes de commitar)\nlocal ADDON, ns = ...\n")
+    for exp in sorted(by_exp):
+        print(f'ns.Data.Register("{exp}", {{')
+        print("\n".join(by_exp[exp]))
+        print("})\n")
     if no_req:
         sys.stderr.write(f"[curate] sem requisito detectado ({len(no_req)}): {', '.join(no_req)}\n")
 
