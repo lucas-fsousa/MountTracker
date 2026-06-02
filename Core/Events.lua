@@ -105,6 +105,23 @@ local function handleSlash(msg)
         ns.Print(("marked as owned (%d): %s"):format(
             #names, #names > 0 and table.concat(names, ", ") or "(none) - use /mtrack reset to clear all"))
 
+    elseif cmd == "check" then
+        -- Estado AO VIVO de uma montaria: isCollected (Blizzard) vs marked (nosso DB).
+        local q = rest:lower()
+        if q == "" then ns.Print("uso: /mtrack check <parte do nome>") return end
+        local found = 0
+        for _, mid in ipairs(C_MountJournal.GetMountIDs()) do
+            local nm = C_MountJournal.GetMountInfoByID(mid)
+            if nm and nm:lower():find(q, 1, true) then
+                local _, _, _, _, _, _, _, _, _, _, isColl = C_MountJournal.GetMountInfoByID(mid)
+                ns.Print(("%s (id %d): isCollected=%s | marked=%s")
+                    :format(nm, mid, tostring(isColl), tostring(ns.DB.IsMarkedObtained(mid))))
+                found = found + 1
+                if found >= 12 then break end
+            end
+        end
+        if found == 0 then ns.Print("no mount matching '" .. q .. "'") end
+
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -127,7 +144,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | zone | marked | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")
