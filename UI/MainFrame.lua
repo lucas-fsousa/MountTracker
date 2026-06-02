@@ -70,34 +70,44 @@ local function acquireRow(i)
     r.icon:SetPoint("LEFT", 6, 0)
     r.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
-    r.name = r:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    r.name:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 8, -2)
-
-    r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    r.badge:SetPoint("LEFT", r.name, "RIGHT", 8, 0)
-
-    r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    r.detail:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -2)
-    r.detail:SetJustifyH("LEFT")
-
-    r.where = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    r.where:SetPoint("TOPLEFT", r.detail, "BOTTOMLEFT", 0, -2)
-    r.where:SetJustifyH("LEFT")
-
-    -- Acoes (cantos a direita).
+    -- Acoes: tres botoes numa unica fileira no topo direito.
     local function smallBtn(text, w)
         local b = CreateFrame("Button", nil, r, "UIPanelButtonTemplate")
-        b:SetSize(w or 70, 18)
+        b:SetSize(w, 18)
         b:SetText(text)
+        b:GetFontString():SetWordWrap(false)
         return b
     end
-    r.btnWowhead = smallBtn("Wowhead", 70)
+    r.btnWowhead = smallBtn("Wowhead", 64)
     r.btnWowhead:SetPoint("TOPRIGHT", -6, -6)
-    r.btnHide = smallBtn("Hide", 60)
+    r.btnHide = smallBtn("Hide", 46)
     r.btnHide:SetPoint("TOPRIGHT", r.btnWowhead, "TOPLEFT", -4, 0)
-    r.btnObtained = smallBtn("Owned", 60)
-    r.btnObtained:SetPoint("TOP", r.btnWowhead, "BOTTOM", 0, -4)
-    r.btnObtained:SetPoint("RIGHT", r.btnWowhead, "RIGHT", 0, 0)
+    r.btnObtained = smallBtn("Owned", 54)
+    r.btnObtained:SetPoint("TOPRIGHT", r.btnHide, "TOPLEFT", -4, 0)
+
+    -- Texto. Linha 1: nome (truncado, sem invadir os botoes). Linha 2: badge + detalhe.
+    -- Linha 3: vendedor/origem.
+    r.name = r:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    r.name:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 8, -3)
+    r.name:SetPoint("RIGHT", r.btnObtained, "LEFT", -8, 0)
+    r.name:SetJustifyH("LEFT")
+    r.name:SetWordWrap(false)
+
+    r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    r.badge:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3)
+    r.badge:SetJustifyH("LEFT")
+
+    r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    r.detail:SetPoint("LEFT", r.badge, "RIGHT", 8, 0)
+    r.detail:SetPoint("RIGHT", r, "RIGHT", -10, 0)
+    r.detail:SetJustifyH("LEFT")
+    r.detail:SetWordWrap(false)
+
+    r.where = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    r.where:SetPoint("TOPLEFT", r.badge, "BOTTOMLEFT", 0, -3)
+    r.where:SetPoint("RIGHT", r, "RIGHT", -10, 0)
+    r.where:SetJustifyH("LEFT")
+    r.where:SetWordWrap(false)
 
     rows[i] = r
     return r
