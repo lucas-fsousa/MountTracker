@@ -14,7 +14,9 @@ jobs:
         with:
           luaVersion: "5.1"   # WoW roda Lua 5.1
       - name: Lua syntax (luac -p)
-        run: find . -name '*.lua' -print0 | xargs -0 -n1 luac -p
+        # -type f evita a pasta de instalacao do Lua (.lua) que casa *.lua no find;
+        # e excluimos as pastas do leafo/gh-actions-lua.
+        run: find . -type f -name '*.lua' -not -path './.lua/*' -not -path './.luarocks/*' -print0 | xargs -0 -r -n1 luac -p
       - name: Validar overlay curado
         run: lua tools/validate.lua .
 
