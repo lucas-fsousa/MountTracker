@@ -36,6 +36,7 @@ ns.STATUS = {
     UNKNOWN          = "UNKNOWN",          -- dado protegido pelo jogo (Secret Value)
     OWNED            = "OWNED",            -- ja coletada (so visivel com "Show owned")
     FARM             = "FARM",             -- drop/RNG: nao e "comprar", e farmar
+    MISSING          = "MISSING",          -- nao-curada: usa o texto de origem do jogo
 }
 
 -- Cores por status (r, g, b) p/ badges na UI.
@@ -49,6 +50,7 @@ ns.STATUS_COLOR = {
     UNKNOWN          = { 0.60, 0.60, 0.75 },
     OWNED            = { 0.30, 0.85, 0.45 },
     FARM             = { 0.45, 0.70, 0.95 },
+    MISSING          = { 0.80, 0.80, 0.85 },
 }
 
 ns.STATUS_LABEL = {
@@ -61,6 +63,7 @@ ns.STATUS_LABEL = {
     UNKNOWN          = "Protected data",
     OWNED            = "Owned",
     FARM             = "Farmable (RNG)",
+    MISSING          = "Missing",
 }
 
 -- Helper de print com prefixo.

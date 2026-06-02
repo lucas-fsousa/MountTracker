@@ -28,6 +28,9 @@ local function difficulty(item)
         -- odds ruins (1/200) caem para o fundo. Sem dado -> assume ~1/150.
         local n = item.dropChance and math.floor(1 / item.dropChance + 0.5) or 150
         return 1.5 + math.min(n, 250) / 100   -- 1/25->1.75, 1/50->2.0, 1/100->2.5, 1/200->3.5
+    elseif item.status == ns.STATUS.MISSING then
+        -- Nao-curada: dificuldade pela categoria derivada do texto de origem.
+        return item._catDiff or 4.0
     end
     return base
 end
@@ -43,11 +46,13 @@ function Roadmap.Build()
     local items = {}
     local owned = 0
 
+    local curatedApplied = 0
     for _, cand in ipairs(candidates) do
         local item = ns.Logic.Eligibility.Evaluate(cand)
         item._diff = difficulty(item)
         items[#items + 1] = item       -- inclui owned tambem; o filtro decide o que exibir
         if item.owned then owned = owned + 1 end
+        if cand.entry then curatedApplied = curatedApplied + 1 end
     end
 
     table.sort(items, function(a, b)
@@ -57,8 +62,9 @@ function Roadmap.Build()
 
     -- Estatisticas de diagnostico (consumidas por /mtrack scan e pela janela).
     ns._stats = {
-        curated    = curatedTotal(),
-        resolved   = #candidates,
+        total      = #candidates,          -- todas as montarias do journal (com nome)
+        curated    = curatedTotal(),       -- entradas no overlay curado
+        applied    = curatedApplied,       -- overlays que casaram com o journal
         unresolved = ns._unresolved and #ns._unresolved or 0,
         owned      = owned,
         pending    = #items - owned,

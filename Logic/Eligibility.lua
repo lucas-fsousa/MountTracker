@@ -100,6 +100,44 @@ local function formatOdds(chance, note)
     return ("Drop ~1 in %d (%.1f%%) - %s"):format(n, chance * 100, tier)
 end
 
+-- Limpa o sourceText do jogo: remove texturas, desembrulha hyperlinks (mantendo o
+-- texto visivel), tira codigos de cor e converte quebras (|n) em espaco.
+local function cleanSource(s)
+    if not s or s == "" then return "" end
+    s = s:gsub("|T.-|t", "")             -- texturas (icones de currency/item)
+    s = s:gsub("|H.-|h(.-)|h", "%1")     -- hyperlinks -> mantem so o texto visivel
+    s = s:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")  -- codigos de cor
+    s = s:gsub("|n", " ")                -- quebras de linha
+    s = s:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+    return s
+end
+ns.CleanSource = cleanSource
+
+-- Categoriza uma montaria nao-curada pelo texto de origem do jogo.
+-- Retorna (category, baseDifficulty). Palavras-chave em en-US (cliente do usuario).
+local function categorize(sourceText)
+    local s = (sourceText or ""):lower()
+    local function has(p) return s:find(p, 1, true) ~= nil end
+
+    if has("legacy")          then return "Legacy",       9.5 end
+    -- Trading Post: so obtenivel quando rotaciona na loja do mes -> baixa prioridade.
+    if has("trading post")    then return "Trading Post", 4.5 end
+    if has("black market")    then return "Black Market", 4.0 end
+    if has("promotion") or has("recruit") or has("collector's edition")
+                              then return "Promotion",    9.0 end
+    if has("vendor:")         then return "Vendor",       2.2 end
+    if has("renown:") or has("faction:")
+                              then return "Reputation",   2.3 end
+    if has("achievement")     then return "Achievement",  2.4 end
+    if has("world quest")     then return "World Quest",  3.2 end
+    if has("quest")           then return "Quest",        2.6 end
+    if has("profession")      then return "Profession",   4.5 end
+    if has("pvp") or has("arena") or has("rated") or has("conquest")
+                              then return "PvP",          4.8 end
+    if has("drop")            then return "Drop",         5.0 end
+    return "Other", 4.0
+end
+
 -- Avalia UM candidato. Retorna um "item de roadmap" enriquecido.
 function Eligibility.Evaluate(cand)
     local info, entry, mountID = cand.info, cand.entry, cand.mountID
@@ -132,6 +170,17 @@ function Eligibility.Evaluate(cand)
     if info.isFactionSpecific and info.faction ~= nil and pf ~= nil and info.faction ~= pf then
         item.status = S.WRONG_FACTION
         item.detail = "Opposite faction mount"
+        return item
+    end
+
+    -- 3.5) Nao-curada: usa o texto de origem do proprio jogo (base ao vivo).
+    --      Cobertura total imediata; a curadoria (overlay) refina depois.
+    if not entry then
+        local cat, baseDiff = categorize(cand.sourceText)
+        item.status   = S.MISSING
+        item.category = cat
+        item._catDiff = baseDiff
+        item.detail   = cleanSource(cand.sourceText)
         return item
     end
 

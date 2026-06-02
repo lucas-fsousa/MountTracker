@@ -28,8 +28,8 @@ local function handleEvent(_, event)
         ns.Logic.Roadmap.Build()
         dirty = false
         local s = ns._stats or {}
-        ns.Print(("loaded. %d mount(s) pending (%d owned, %d unresolved). Type |cffffff00/mtrack|r to open.")
-            :format(s.pending or 0, s.owned or 0, s.unresolved or 0))
+        ns.Print(("loaded. %d missing of %d mounts. Type |cffffff00/mtrack|r to open.")
+            :format(s.pending or 0, s.total or 0))
     else
         -- Coleta nova montaria, mudou ouro/currency ou reputacao -> recalcular.
         markDirty()
@@ -64,17 +64,12 @@ local function handleSlash(msg)
         ns.Logic.Scanner.Dump()
 
     elseif cmd == "scan" then
-        local items = ns.Logic.Roadmap.Build()
+        ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
-        ns.Print(("scan: %d curated | %d resolved | %d owned | %d pending | %d unresolved")
-            :format(s.curated or 0, s.resolved or 0, s.owned or 0, s.pending or 0, s.unresolved or 0))
+        ns.Print(("scan: %d mounts | %d owned | %d pending | curated overlay %d/%d applied")
+            :format(s.total or 0, s.owned or 0, s.pending or 0, s.applied or 0, s.curated or 0))
         if (s.unresolved or 0) > 0 and ns._unresolved then
-            ns.Print("  unresolved: " .. table.concat(ns._unresolved, ", "))
-        end
-        for _, item in ipairs(items) do
-            ns.Print(("  [%s] %s - %s"):format(
-                ns.STATUS_LABEL[item.status] or item.status,
-                item.name or "?", item.detail or ""))
+            ns.Print("  curated not in journal: " .. table.concat(ns._unresolved, ", "))
         end
 
     elseif cmd == "reset" then

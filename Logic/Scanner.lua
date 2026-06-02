@@ -44,45 +44,55 @@ local function resolveMountID(entry, nameIndex)
     return nil
 end
 
--- Returns a list of "candidates": curated entries resolved with their API info.
--- Each item: { entry, mountID, info = {name, icon, isUsable, isFactionSpecific, faction, isCollected} }
+-- Returns candidates for EVERY mount in the journal (live base). Curated entries
+-- (ns.Data.All), indexed by spellID, are attached as `entry` overrides when present.
+-- Each candidate: { entry?, mountID, spellID, sourceType, sourceText, info = {...} }
 function Scanner.Collect()
-    local nameIndex = buildNameIndex()
-    local out = {}
-    local unresolved = {}
+    -- Indexa o overlay curado por spellID.
+    local curated = {}
+    for _, e in ipairs(ns.Data.All or {}) do
+        if e.spellID then curated[e.spellID] = e end
+    end
 
-    local function addList(list)
-        if not list then return end
-        for _, entry in ipairs(list) do
-            local mountID = resolveMountID(entry, nameIndex)
-            if mountID then
-                local name, _, icon, _, isUsable, _, _, isFactionSpecific, faction, _, isCollected =
-                    C_MountJournal.GetMountInfoByID(mountID)
-                out[#out + 1] = {
-                    entry   = entry,
-                    mountID = mountID,
-                    info = {
-                        name              = name,
-                        icon              = icon,
-                        isUsable          = isUsable,
-                        isFactionSpecific = isFactionSpecific,
-                        faction           = faction,       -- 0 Horde, 1 Alliance (or nil)
-                        isCollected       = isCollected,
-                    },
-                }
-            else
-                unresolved[#unresolved + 1] = entry.name or "?"
-            end
+    local out = {}
+    local seen = {}   -- spellIDs curados que existem no journal deste cliente
+
+    local ids = C_MountJournal.GetMountIDs()
+    for _, mountID in ipairs(ids) do
+        local name, spellID, icon, _, isUsable, sourceType, _, isFactionSpecific, faction, _, isCollected =
+            C_MountJournal.GetMountInfoByID(mountID)
+        if name and name ~= "" then
+            local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
+            local entry = spellID and curated[spellID] or nil
+            if entry then seen[spellID] = true end
+            out[#out + 1] = {
+                entry      = entry,
+                mountID    = mountID,
+                spellID    = spellID,
+                sourceType = sourceType,
+                sourceText = sourceText,
+                info = {
+                    name              = name,
+                    icon              = icon,
+                    isUsable          = isUsable,
+                    isFactionSpecific = isFactionSpecific,
+                    faction           = faction,       -- 0 Horde, 1 Alliance (or nil)
+                    isCollected       = isCollected,
+                },
+            }
         end
     end
 
-    addList(ns.Data.All)
-
-    -- Unresolved curated entries are not an error for the user: just note the count,
-    -- and only show details when debugging. Fix by adding a verified mountID.
+    -- Curated com spellID que nao existe neste cliente (provavel typo no dado).
+    local unresolved = {}
+    for _, e in ipairs(ns.Data.All or {}) do
+        if e.spellID and not seen[e.spellID] then
+            unresolved[#unresolved + 1] = e.name or ("spell " .. e.spellID)
+        end
+    end
     ns._unresolved = unresolved
     if #unresolved > 0 and ns.DEBUG then
-        ns.Print(("debug: %d curated entr(ies) not resolved: %s")
+        ns.Print(("debug: %d curated entr(ies) not in journal: %s")
             :format(#unresolved, table.concat(unresolved, ", ")))
     end
 

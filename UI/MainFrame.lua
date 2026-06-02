@@ -116,7 +116,10 @@ local function refreshRow(r, item)
     end
 
     local c = ns.STATUS_COLOR[item.status] or { 1, 1, 1 }
-    r.badge:SetText(ns.STATUS_LABEL[item.status] or item.status)
+    -- Nao-curadas mostram a categoria derivada do jogo; curadas mostram o status.
+    local badgeText = (item.status == ns.STATUS.MISSING and item.category)
+        or ns.STATUS_LABEL[item.status] or item.status
+    r.badge:SetText(badgeText)
     r.badge:SetTextColor(c[1], c[2], c[3])
 
     r.detail:SetText(item.detail or "")
@@ -209,6 +212,8 @@ local function buildFrame()
     frame:Hide()
 end
 
+local MAX_ROWS = 200   -- limite de render (832 frames travariam); top-N ja e o que importa
+
 function UI.Refresh()
     if not frame then return end
     local items = ns.Logic.Roadmap.Filtered()
@@ -217,15 +222,21 @@ function UI.Refresh()
 
     for _, r in ipairs(rows) do r:Hide() end
 
-    for i, item in ipairs(items) do
+    local shown = math.min(#items, MAX_ROWS)
+    for i = 1, shown do
         local r = acquireRow(i)
         r:SetWidth(width)
         r:SetPoint("TOPLEFT", 0, -(i - 1) * (ROW_HEIGHT + 2))
         r:SetPoint("TOPRIGHT", 0, -(i - 1) * (ROW_HEIGHT + 2))
-        refreshRow(r, item)
+        refreshRow(r, items[i])
     end
 
-    content:SetHeight(math.max(1, #items * (ROW_HEIGHT + 2)))
+    local extra = #items - shown
+    frame.title:SetText(extra > 0
+        and ("MountTracker  -  mount roadmap  (top %d of %d)"):format(shown, #items)
+        or  "MountTracker  -  mount roadmap")
+
+    content:SetHeight(math.max(1, shown * (ROW_HEIGHT + 2)))
     if #items == 0 then
         local s = ns._stats or {}
         frame.empty:SetText(("Nothing to show.\n\n%d curated  |  %d owned  |  %d pending  |  %d unresolved\n\nIf everything is owned, that's expected.\nType /mtrack scan for details, or expand the curated list.")
