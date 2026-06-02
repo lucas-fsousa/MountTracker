@@ -20,6 +20,12 @@ Core\Database.lua
 Data\Schema.lua
 Data\Mounts_Classic.lua
 Data\Mounts_TBC.lua
+Data\Mounts_Cataclysm.lua
+Data\Mounts_MoP.lua
+Data\Mounts_WoD.lua
+Data\Mounts_Legion.lua
+Data\Mounts_BfA.lua
+Data\Mounts_Shadowlands.lua
 Data\Mounts_TWW.lua
 Data\Mounts_Midnight.lua
 

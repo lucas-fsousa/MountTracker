@@ -156,6 +156,21 @@ def st_field(src, label):
     return m.group(1).strip() if m else None
 
 
+def requirement_from_sourcetext(src):
+    """Extrai requisito do proprio sourceText do jogo (confiavel): garrison WoD/BfA
+    e afins trazem 'Faction: X - Exalted' ou 'Faction: X ... Renown: N'."""
+    fac = st_field(src, "Faction")
+    if not fac:
+        return None
+    ren = st_field(src, "Renown")
+    if ren and ren.strip().isdigit():
+        return {"type": "renown", "factionID": None, "faction": fac.strip(), "renownLevel": int(ren.strip())}
+    m = re.match(r"(.+?)\s*-\s*(%s)\s*$" % "|".join(STANDINGS), fac.strip())
+    if m:
+        return {"type": "reputation", "factionID": None, "faction": m.group(1).strip(), "standing": m.group(2)}
+    return None
+
+
 def parse_costs(src):
     s = (src or "").replace(",", "")
     costs = []
@@ -253,11 +268,13 @@ def main():
         try:
             item_id = resolve_item_id(name, args.cache, args.delay)
             req, fid = None, None
-            if item_id:
+            if item_id:                                         # 1) tooltip do item (renome moderno)
                 html = http_get(f"{WH}/item={item_id}", args.cache, args.delay)
                 req = extract_requirement(html)
-                if req:
-                    fid = req.get("factionID") or resolve_faction_id(req["faction"], args.cache, args.delay)
+            if not req:                                         # 2) sourceText do jogo (rep/garrison)
+                req = requirement_from_sourcetext(m.get("sourceText"))
+            if req:
+                fid = req.get("factionID") or resolve_faction_id(req["faction"], args.cache, args.delay)
         except Exception as e:                       # noqa: BLE001
             sys.stderr.write(f"  {name:32s} ERRO: {e} (pulando)\n")
             continue

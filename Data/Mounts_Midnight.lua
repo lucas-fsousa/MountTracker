@@ -84,4 +84,26 @@ ns.Data.Register("Midnight", {
         cost    = { currencyID = 3316, amount = 8000 },
         wowhead = "https://www.wowhead.com/spell=1253929",
     },
+
+    -- Slayer's Duellum (Masters' Perch).
+    {
+        name    = "Prowling Shredclaw",
+        spellID = 1261584,
+        acquisition = "reputation",
+        vendor  = "Thraxadar",
+        zone    = "Masters' Perch",
+        requirement = { type = "reputation", factionID = 2770, standing = "Exalted" }, -- Slayer's Duellum
+        cost    = { currencyID = 3316, amount = 6000 },
+        wowhead = "https://www.wowhead.com/spell=1261584",
+    },
+    {
+        name    = "Frenzied Shredclaw",
+        spellID = 1261585,
+        acquisition = "reputation",
+        vendor  = "Thraxadar",
+        zone    = "Masters' Perch",
+        requirement = { type = "reputation", factionID = 2770, standing = "Exalted" }, -- Slayer's Duellum
+        cost    = { currencyID = 3316, amount = 6000 },
+        wowhead = "https://www.wowhead.com/spell=1261585",
+    },
 })
