@@ -1,0 +1,50 @@
+# Changelog
+
+All notable changes to **MountTracker** are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and the project adheres to [Semantic Versioning](https://semver.org/).
+
+<!--
+HOW TO RELEASE (see RELEASING.md):
+  1. Move the items below from [Unreleased] into a new "## [X.Y.Z] - YYYY-MM-DD" section.
+  2. Bump "## Version:" in MountTracker.toc to X.Y.Z.
+  3. Commit, then: git tag vX.Y.Z && git push --tags
+     -> the Release workflow builds the .zip and publishes a GitHub Release.
+-->
+
+## [Unreleased]
+
+## [0.5.0] - 2026-06-02
+
+First public release.
+
+### Added
+- **Full-collection roadmap.** Lists every mount your account is missing, sorted
+  easiest-first, using the game's own data (live base) + a curated overlay.
+- **Hidden-eligibility detection.** A pulsing green border on mounts whose
+  requirements you already meet (reputation/renown OK + affordable now).
+- **Rich per-mount detail.** Vendor(s) (with Alliance/Horde tags), zone, and cost
+  with the currency icon, name, **and how much you currently own**.
+- **Drop-rate grading.** RNG drops ranked by odds; guaranteed rare-elite drops sit
+  mid-priority; very rare ones sink to the bottom.
+- **Smart faction filter** via the game's own visibility signal (hides opposite
+  faction / class-locked / legacy mounts; one click to reveal).
+- **Filters:** by expansion and by **current zone** (works in dungeons/raids and
+  resolves sub-zones, e.g. Tazavesh → K'aresh).
+- **Curated eligibility overlay** (122 mounts): renown, reputation and notable
+  drops across Classic → Midnight, with precise requirement + currency checks.
+- **Minimap button**, slash commands (`/mtrack`, `/mtr`, `/mounttracker`),
+  one-click Wowhead links, manual "mark owned" / "hide".
+- **Login banner** with addon version + game version, and a peer-to-peer
+  **update check** (announces version over guild/party/raid).
+- **Curation tool** (`tools/`) that extracts data from Wowhead + the game dump,
+  plus a data-integrity validator and CI.
+
+### Notes
+- Targets **Midnight 12.0.5** (`## Interface: 120005`).
+- Zero dependencies (pure Blizzard API). Handles Midnight "Secret Values" safely.
+- Errors are sandboxed — no mid-screen Lua error popups.
+
+[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/lucas-fsousa/MountTracker/releases/tag/v0.5.0

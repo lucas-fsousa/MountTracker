@@ -77,14 +77,12 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 
 ## 📥 Installation
 
-**Manual (for now):**
-
-1. Download this repository (green **Code → Download ZIP**), or clone it.
-2. Extract the `MountTracker` folder into:
+1. Download the latest **[`MountTracker-x.y.z.zip`](../../releases/latest)** from the **Releases** page.
+2. Extract it into:
    ```
    World of Warcraft\_retail_\Interface\AddOns\
    ```
-   (The folder must be named `MountTracker` and contain `MountTracker.toc`.)
+   (You'll get a `MountTracker` folder containing `MountTracker.toc`.)
 3. Restart the game, or `/reload` if it was already running.
 4. Make sure **MountTracker** is enabled in the AddOns list on the character screen.
 
