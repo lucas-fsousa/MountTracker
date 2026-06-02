@@ -90,6 +90,12 @@ local function handleSlash(msg)
     elseif cmd == "minimap" then
         if ns.UI.Minimap then ns.UI.Minimap.Toggle() end
 
+    elseif cmd == "zone" then
+        local cands, matched, examples = ns.Logic.Roadmap.ZoneDebug()
+        ns.Print("current zone -> [" .. table.concat(cands, "] [") .. "]")
+        ns.Print(("matches %d missing mount(s)%s"):format(
+            matched, #examples > 0 and (": " .. table.concat(examples, ", ")) or ""))
+
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -112,7 +118,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | zone | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

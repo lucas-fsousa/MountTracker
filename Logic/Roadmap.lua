@@ -159,3 +159,18 @@ function Roadmap.Filtered()
     end
     return out
 end
+
+-- Diagnostico do filtro de zona (/mtrack zone): nomes de localizacao detectados +
+-- montarias (nao-obtidas) que casam, com exemplos.
+function Roadmap.ZoneDebug()
+    local cands = playerZoneCandidates()
+    local items = ns._roadmap or Roadmap.Build()
+    local matched, examples = 0, {}
+    for _, item in ipairs(items) do
+        if not item.owned and zoneMatches(item, cands) then
+            matched = matched + 1
+            if #examples < 5 then examples[#examples + 1] = item.name end
+        end
+    end
+    return cands, matched, examples
+end

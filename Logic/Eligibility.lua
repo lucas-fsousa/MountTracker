@@ -233,7 +233,7 @@ function Eligibility.Evaluate(cand)
         entry   = entry,
         sourceText = cand.sourceText,
         sources = ns.SourceParse and ns.SourceParse(cand.sourceText) or {},
-        expansion = ns.ExpansionFor and ns.ExpansionFor(cand.sourceText, entry and entry.expansion) or "Unknown",
+        expansion = ns.ExpansionFor and ns.ExpansionFor(cand.sourceText, entry and entry.expansion, cand.spellID) or "Unknown",
         costPct = 0,
     }
 

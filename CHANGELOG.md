@@ -15,6 +15,15 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- `/mtrack zone` — prints the current-zone names the addon detects and how many
+  missing mounts match (diagnostics for the **Current zone** filter).
+
+### Fixed
+- Mounts from **revamped zones** (e.g. Isle of Quel'Danas) are no longer filed
+  under the old expansion's filter — a recent spell ID now overrides the zone
+  heuristic (so Midnight content in old zones shows as Midnight).
+
 ## [0.5.0] - 2026-06-02
 
 First public release.
