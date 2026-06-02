@@ -24,6 +24,7 @@ Data\Mounts_TBC.lua
 # Logica
 Logic\Scanner.lua
 Logic\SourceParse.lua
+Logic\Expansion.lua
 Logic\Eligibility.lua
 Logic\Roadmap.lua
 

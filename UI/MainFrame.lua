@@ -311,9 +311,34 @@ local function buildFrame()
     frame.title:SetPoint("TOP", 0, -5)
     frame.title:SetText("MountTracker  -  mount roadmap")
 
-    -- Checkbox: mostrar faccao errada.
+    -- Dropdown: filtro por expansao.
+    local ddLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    ddLabel:SetPoint("TOPLEFT", 14, -28)
+    ddLabel:SetText("Expansion:")
+
+    local dd = CreateFrame("Frame", "MountTrackerExpDropdown", frame, "UIDropDownMenuTemplate")
+    dd:SetPoint("LEFT", ddLabel, "RIGHT", -6, -2)
+    UIDropDownMenu_SetWidth(dd, 110)
+    UIDropDownMenu_Initialize(dd, function(_, level)
+        local function add(label, value)
+            local info = UIDropDownMenu_CreateInfo()
+            info.text, info.value = label, value
+            info.checked = (ns.DB.Settings().expansionFilter or "All") == value
+            info.func = ns.Safe.Wrap("apply expansion filter", function()
+                ns.DB.Settings().expansionFilter = value
+                UIDropDownMenu_SetText(dd, label)
+                UI.Refresh()
+            end)
+            UIDropDownMenu_AddButton(info)
+        end
+        add("All expansions", "All")
+        for _, e in ipairs(ns.EXPANSIONS) do add(e, e) end
+    end)
+    frame.ddExp = dd
+
+    -- Checkbox: mostrar indisponiveis / ocultas.
     local cb = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb:SetPoint("TOPLEFT", 12, -28)
+    cb:SetPoint("TOPLEFT", 16, -56)
     local cbLabel = cb:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cbLabel:SetPoint("LEFT", cb, "RIGHT", 2, 0)
     cbLabel:SetText("Show unavailable / hidden")
@@ -327,7 +352,7 @@ local function buildFrame()
 
     -- Checkbox: mostrar montarias ja obtidas (aparecem coloridas; as faltantes, cinza).
     local cb2 = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb2:SetPoint("TOPLEFT", 320, -28)
+    cb2:SetPoint("TOPLEFT", 320, -56)
     local cb2Label = cb2:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cb2Label:SetPoint("LEFT", cb2, "RIGHT", 2, 0)
     cb2Label:SetText("Show owned")
@@ -338,7 +363,7 @@ local function buildFrame()
     frame.cbOwned = cb2
 
     scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
-    scroll:SetPoint("TOPLEFT", 10, -56)
+    scroll:SetPoint("TOPLEFT", 10, -84)
     scroll:SetPoint("BOTTOMRIGHT", -30, 10)
 
     content = CreateFrame("Frame", nil, scroll)
@@ -388,6 +413,8 @@ function UI.Refresh()
     end
     frame.cbWrong:SetChecked(ns.DB.Settings().showWrongFaction)
     frame.cbOwned:SetChecked(ns.DB.Settings().showOwned)
+    local ef = ns.DB.Settings().expansionFilter or "All"
+    UIDropDownMenu_SetText(frame.ddExp, ef == "All" and "All expansions" or ef)
 end
 
 function UI.Toggle()

@@ -82,8 +82,10 @@ function Roadmap.Filtered()
     local items = ns._roadmap or Roadmap.Build()
     local s = ns.DB.Settings()
     local out = {}
+    local expFilter = s.expansionFilter
     for _, item in ipairs(items) do
         local show = true
+        if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end
         if item.status == ns.STATUS.UNAVAILABLE and not s.showWrongFaction then show = false end

@@ -150,6 +150,7 @@ function Eligibility.Evaluate(cand)
         icon    = info.icon,
         entry   = entry,
         sources = ns.SourceParse and ns.SourceParse(cand.sourceText) or {},
+        expansion = ns.ExpansionFor and ns.ExpansionFor(cand.sourceText, entry and entry.expansion) or "Unknown",
         costPct = 0,
     }
 

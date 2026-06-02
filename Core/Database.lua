@@ -12,6 +12,7 @@ local DEFAULTS = {
         showOwned        = false,
         minimapAngle     = 205,    -- posicao do botao na borda (graus)
         minimapHide      = false,  -- esconder o botao do minimapa
+        expansionFilter  = "All",  -- filtro por expansao ("All" ou nome da expansao)
     },
 }
 
