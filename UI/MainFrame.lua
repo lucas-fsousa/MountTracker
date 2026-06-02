@@ -338,7 +338,7 @@ local function buildFrame()
             info.func = ns.Safe.Wrap("apply expansion filter", function()
                 ns.DB.Settings().expansionFilter = value
                 UIDropDownMenu_SetText(dd, label)
-                UI.Refresh()
+                UI.RefreshTop()
             end)
             UIDropDownMenu_AddButton(info)
         end
@@ -362,7 +362,7 @@ local function buildFrame()
             info.checked = (ns.DB.Settings().zoneFilter or "All") == value
             info.func = ns.Safe.Wrap("apply zone filter", function()
                 ns.DB.Settings().zoneFilter = value
-                UI.Refresh()
+                UI.RefreshTop()
             end)
             UIDropDownMenu_AddButton(info)
         end
@@ -381,7 +381,7 @@ local function buildFrame()
         local s = ns.DB.Settings()
         s.showWrongFaction = self:GetChecked()
         s.showHidden = self:GetChecked()
-        UI.Refresh()
+        UI.RefreshTop()
     end))
     frame.cbWrong = cb
 
@@ -393,7 +393,7 @@ local function buildFrame()
     cb2Label:SetText("Show owned")
     cb2:SetScript("OnClick", ns.Safe.Wrap("apply filter", function(self)
         ns.DB.Settings().showOwned = self:GetChecked()
-        UI.Refresh()
+        UI.RefreshTop()
     end))
     frame.cbOwned = cb2
 
@@ -427,7 +427,10 @@ function UI.Refresh()
     local numVisible = math.max(1, math.floor(scroll:GetHeight() / ROW_STEP))
 
     FauxScrollFrame_Update(scroll, #items, numVisible, ROW_STEP)
-    local offset = FauxScrollFrame_GetOffset(scroll)
+    -- Clampa o offset: ao encolher a lista (ex.: aplicar filtro de zona), a barra
+    -- pode ter ficado "rolada" alem do fim -> renderizaria itens nil (tela em branco).
+    local maxOffset = math.max(0, #items - numVisible)
+    local offset = math.min(FauxScrollFrame_GetOffset(scroll), maxOffset)
 
     for i = 1, numVisible do
         local item = items[offset + i]
@@ -461,6 +464,15 @@ function UI.Refresh()
     else
         UIDropDownMenu_SetText(frame.ddZone, "All zones")
     end
+end
+
+-- Volta a lista ao topo e re-renderiza (usado quando um filtro muda).
+function UI.RefreshTop()
+    if scroll then
+        local bar = _G[scroll:GetName() .. "ScrollBar"]
+        if bar then bar:SetValue(0) end
+    end
+    UI.Refresh()
 end
 
 function UI.Toggle()
