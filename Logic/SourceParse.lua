@@ -32,9 +32,16 @@ local function parseCosts(value)
         return ""
     end)
 
-    -- 2) ouro: NUM|Ticon|t  (no que sobrou; ex.: icone do MoneyFrame)
+    -- 2) NUM|Ticon|t (sem |H). Ouro SO se o icone for de dinheiro; senao e um
+    --    "token" opaco (ex.: Vicious Saddle de PvP, sem link p/ o ID) -> nao e ouro.
     for amount, icon in rest:gmatch("(%d+)|T(.-):%d+|t") do
-        costs[#costs + 1] = { amount = tonumber(amount), ctype = "gold", icon = icon }
+        local low = icon:lower()
+        local isGold = low:find("moneyframe", 1, true) or low:find("goldicon", 1, true)
+        costs[#costs + 1] = {
+            amount = tonumber(amount),
+            ctype  = isGold and "gold" or "token",
+            icon   = icon,
+        }
     end
 
     -- 3) fallback: numero solto sem icone

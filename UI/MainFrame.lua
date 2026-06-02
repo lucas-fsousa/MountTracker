@@ -28,11 +28,12 @@ local function costName(c)
     if c.ctype == "currency" then
         local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
         return ci and ci.name or "currency", ci and ci.iconFileID
-    elseif c.ctype == "item" then
+    elseif c.ctype == "item" and c.id then
         return (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id)) or "tokens"
-    else
+    elseif c.ctype == "gold" then
         return "gold"
     end
+    return ""  -- token opaco: so o icone (sem nome nem "gold")
 end
 
 -- Monta a string de um custo: valor + icone + nome da moeda + quanto o char possui.

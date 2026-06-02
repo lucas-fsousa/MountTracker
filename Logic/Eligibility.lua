@@ -181,12 +181,13 @@ function ns.CostHave(c)
     if c.ctype == "currency" then
         local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
         return ci and ns.Safe.Value(ci.quantity, nil) or nil
-    elseif c.ctype == "item" then
+    elseif c.ctype == "item" and c.id then
         local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
         return ns.Safe.Value(cnt, nil)
-    else -- gold
+    elseif c.ctype == "gold" then
         return ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
     end
+    return nil  -- token opaco (sem ID) ou desconhecido -> posse indeterminada
 end
 
 -- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
