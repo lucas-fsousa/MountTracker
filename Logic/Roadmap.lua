@@ -94,22 +94,47 @@ local function itemZones(item)
     return z
 end
 
--- Casa a zona da montaria com a do personagem (vale p/ zona aberta E dungeon/raid).
-local function zoneMatches(item, playerZone)
-    if not playerZone or playerZone == "" then return false end
-    -- 1) Zonas parseadas (curada + Zone/Location do sourceText). Contains nos dois
-    --    sentidos p/ tolerar "Nagrand, Outland" vs "Nagrand".
-    for _, z in ipairs(itemZones(item)) do
-        local lz = z:lower()
-        if lz:find(playerZone, 1, true) or playerZone:find(lz, 1, true) then
-            return true
+-- Nomes da localizacao do personagem (lowercase): subzona, zona, e toda a
+-- hierarquia de mapas (sub-area -> zona -> ...) parando antes do continente/mundo.
+-- Resolve o caso "estou em Tazavesh (subzona) mas a montaria e de K'aresh (mapa)".
+local function playerZoneCandidates()
+    local names, seen = {}, {}
+    local function add(t)
+        if t and t ~= "" then
+            local l = t:lower()
+            if not seen[l] then seen[l] = true; names[#names + 1] = l end
         end
     end
-    -- 2) Nome da zona em qualquer parte do texto de origem -- cobre dungeons/raids
-    --    cujo nome aparece no "Drop:"/fonte sem um campo Zone proprio.
-    local st = item.sourceText
-    if st and st:gsub("|T.-|t", ""):lower():find(playerZone, 1, true) then
-        return true
+    add(GetSubZoneText and GetSubZoneText())
+    add(GetZoneText and GetZoneText())
+    add(GetRealZoneText and GetRealZoneText())
+    if C_Map and C_Map.GetBestMapForUnit then
+        local mid = C_Map.GetBestMapForUnit("player")
+        local guard = 0
+        while mid and guard < 12 do
+            guard = guard + 1
+            local info = C_Map.GetMapInfo(mid)
+            if not info then break end
+            if info.mapType and info.mapType <= 2 then break end  -- 2 = Continent (para)
+            add(info.name)
+            mid = info.parentMapID
+        end
+    end
+    return names
+end
+
+-- Casa a montaria com qualquer um dos nomes de localizacao do personagem
+-- (zona aberta, dungeon/raid e subzona via hierarquia de mapas).
+local function zoneMatches(item, playerZones)
+    if not playerZones or #playerZones == 0 then return false end
+    local zones = itemZones(item)
+    local st = item.sourceText and item.sourceText:gsub("|T.-|t", ""):lower()
+    for _, pz in ipairs(playerZones) do
+        for _, z in ipairs(zones) do
+            local lz = z:lower()
+            if lz:find(pz, 1, true) or pz:find(lz, 1, true) then return true end
+        end
+        if st and st:find(pz, 1, true) then return true end
     end
     return false
 end
@@ -121,11 +146,11 @@ function Roadmap.Filtered()
     local out = {}
     local expFilter = s.expansionFilter
     local zoneCurrent = (s.zoneFilter == "Current")
-    local playerZone = zoneCurrent and ((GetRealZoneText() or GetZoneText() or ""):lower()) or nil
+    local playerZones = zoneCurrent and playerZoneCandidates() or nil
     for _, item in ipairs(items) do
         local show = true
         if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
-        if zoneCurrent and not zoneMatches(item, playerZone) then show = false end
+        if zoneCurrent and not zoneMatches(item, playerZones) then show = false end
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end
         if item.status == ns.STATUS.UNAVAILABLE and not s.showWrongFaction then show = false end
