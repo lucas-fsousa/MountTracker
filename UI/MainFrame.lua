@@ -59,20 +59,32 @@ local function costToText(costs)
     return table.concat(parts, ", ")
 end
 
+-- Palavras-chave que indicam um requisito que NAO conseguimos verificar para
+-- montarias nao-curadas (reputacao/renome/conquista). Se o texto do jogo cita
+-- qualquer uma, nao acendemos o glow (evita falso "da pra pegar agora").
+local GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
+
 -- A montaria pode ser obtida AGORA? (borda brilhante)
 --  - curada com status READY (reputacao + custo verificados), ou
---  - nao-curada de vendedor SEM gate de reputacao e com o custo todo pago.
+--  - nao-curada de vendedor SEM gate detectavel e com o custo todo pago.
 local function readyNow(item)
     if item.owned then return false end
     if item.status == ns.STATUS.READY then return true end
     if item.status ~= ns.STATUS.MISSING then return false end
 
-    local costSource, hasRepGate = nil, false
+    -- Bloqueia se o texto do jogo cita qualquer requisito de rep/renome/conquista
+    -- (independe da estrutura do parse, que e sensivel a ordem).
+    local t = (item.sourceText or ""):lower()
+    for _, w in ipairs(GATE_WORDS) do
+        if t:find(w, 1, true) then return false end
+    end
+
+    local costSource = nil
     for _, s in ipairs(item.sources or {}) do
-        if s.kind == "Faction" or s.renown then hasRepGate = true end
+        if s.renown then return false end
         if not costSource and s.costs and #s.costs > 0 then costSource = s end
     end
-    if hasRepGate or not costSource then return false end
+    if not costSource then return false end
     for _, c in ipairs(costSource.costs) do
         local have = costHave(c)
         if have == nil or have < (c.amount or 0) then return false end
