@@ -96,6 +96,15 @@ local function handleSlash(msg)
         ns.Print(("matches %d missing mount(s)%s"):format(
             matched, #examples > 0 and (": " .. table.concat(examples, ", ")) or ""))
 
+    elseif cmd == "marked" then
+        local names = {}
+        for mid in pairs(ns.DB.data.markedObtained or {}) do
+            local nm = C_MountJournal and C_MountJournal.GetMountInfoByID(mid)
+            names[#names + 1] = (nm or "?") .. " (" .. tostring(mid) .. ")"
+        end
+        ns.Print(("marked as owned (%d): %s"):format(
+            #names, #names > 0 and table.concat(names, ", ") or "(none) - use /mtrack reset to clear all"))
+
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -118,7 +127,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | zone | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | zone | marked | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

@@ -240,8 +240,10 @@ function Eligibility.Evaluate(cand)
     -- 1) Ja coletada ou marcada como obtida -> status OWNED (so aparece com "Show owned").
     if info.isCollected or ns.DB.IsMarkedObtained(mountID) then
         item.owned = true
+        -- markedOnly = marcada a mao mas NAO realmente coletada -> reversivel ("Unmark").
+        item.markedOnly = (not info.isCollected) and ns.DB.IsMarkedObtained(mountID) or nil
         item.status = S.OWNED
-        item.detail = info.isCollected and "Already collected" or "Marked as owned"
+        item.detail = info.isCollected and "Already collected" or "Marked as owned (click Unmark to undo)"
         return item
     end
 

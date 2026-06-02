@@ -283,12 +283,24 @@ local function refreshRow(r, item)
         ns.DB.SetHidden(item.mountID, not ns.DB.IsHidden(item.mountID))
         UI.Refresh()
     end))
-    r.btnObtained:SetScript("OnClick", ns.Safe.Wrap("mark as owned", function()
-        ns.DB.SetMarkedObtained(item.mountID, true)
-        ns.Logic.Roadmap.Build()
-        UI.Refresh()
-    end))
-    r.btnObtained:SetShown(not item.owned)
+    if item.markedOnly then
+        -- Marcada a mao (nao coletada de fato) -> permite desfazer.
+        r.btnObtained:SetText("Unmark")
+        r.btnObtained:SetScript("OnClick", ns.Safe.Wrap("unmark", function()
+            ns.DB.SetMarkedObtained(item.mountID, false)
+            ns.Logic.Roadmap.Build()
+            UI.Refresh()
+        end))
+        r.btnObtained:Show()
+    else
+        r.btnObtained:SetText("Owned")
+        r.btnObtained:SetScript("OnClick", ns.Safe.Wrap("mark as owned", function()
+            ns.DB.SetMarkedObtained(item.mountID, true)
+            ns.Logic.Roadmap.Build()
+            UI.Refresh()
+        end))
+        r.btnObtained:SetShown(not item.owned)  -- esconde nas realmente coletadas
+    end
 
     r:Show()
 end
