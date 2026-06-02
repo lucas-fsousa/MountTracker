@@ -10,6 +10,8 @@ local DEFAULTS = {
         showWrongFaction = false,
         showHidden       = false,
         showOwned        = false,
+        minimapAngle     = 205,    -- posicao do botao na borda (graus)
+        minimapHide      = false,  -- esconder o botao do minimapa
     },
 }
 

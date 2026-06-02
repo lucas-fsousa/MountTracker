@@ -26,6 +26,7 @@ local function handleEvent(_, event)
     if event == "PLAYER_LOGIN" then
         ns.DB.Init()
         ns.Logic.Roadmap.Build()
+        if ns.UI.Minimap then ns.UI.Minimap.Init() end
         dirty = false
         local s = ns._stats or {}
         ns.Print(("loaded. %d obtainable mounts to collect (%d owned, %d unavailable). Type |cffffff00/mtrack|r to open.")
@@ -63,6 +64,9 @@ local function handleSlash(msg)
     elseif cmd == "dump" then
         ns.Logic.Scanner.Dump()
 
+    elseif cmd == "minimap" then
+        if ns.UI.Minimap then ns.UI.Minimap.Toggle() end
+
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -85,7 +89,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | minimap | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

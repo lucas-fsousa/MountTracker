@@ -29,6 +29,7 @@ Logic\Roadmap.lua
 
 # Interface
 UI\MainFrame.lua
+UI\Minimap.lua
 
 # Eventos e slash commands (por ultimo, depende de tudo acima)
 Core\Events.lua
