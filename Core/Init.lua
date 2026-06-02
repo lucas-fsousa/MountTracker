@@ -17,10 +17,13 @@ ns.Data.All = ns.Data.All or {}
 
 -- Cada arquivo Data/Mounts_<Exp>.lua chama isto para registrar suas montarias.
 -- `expansion` rotula a sprint (ex.: "Classic", "TBC"); cada entrada recebe esse campo.
+-- `expansion` pode ser nil: nesse caso a expansao e derivada do sourceText pelo
+-- heuristico (Logic/Expansion.lua), igual a base ao vivo. Uma `entry.expansion`
+-- ja definida tem prioridade.
 function ns.Data.Register(expansion, list)
     if not list then return end
     for _, entry in ipairs(list) do
-        entry.expansion = expansion
+        if expansion then entry.expansion = entry.expansion or expansion end
         ns.Data.All[#ns.Data.All + 1] = entry
     end
 end

@@ -28,6 +28,7 @@ Data\Mounts_BfA.lua
 Data\Mounts_Shadowlands.lua
 Data\Mounts_TWW.lua
 Data\Mounts_Midnight.lua
+Data\Mounts_Drops.lua
 
 # Logica
 Logic\Scanner.lua

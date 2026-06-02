@@ -133,6 +133,19 @@ def extract_requirement(item_html):
     return None
 
 
+def extract_drop_chance(item_html):
+    """Estima a chance de drop pela maior amostra (count/outof) da pagina de item.
+    ~1.0 = drop garantido (raro elite); valores baixos = RNG."""
+    best = None
+    for c, o in re.findall(r'"count":(\d+)[^{}]{0,40}?"outof":(\d+)', item_html):
+        c, o = int(c), int(o)
+        if o > 0 and (best is None or o > best[1]):
+            best = (c, o)
+    if best:
+        return min(best[0] / best[1], 1.0)
+    return None
+
+
 def resolve_faction_id(name, cache_dir, delay):
     """Resolve o factionID pelo nome via o endpoint de sugestoes (tolerante a apostrofo)."""
     if not name:
@@ -188,18 +201,25 @@ def lua_str(s):
     return '"' + (s or "").replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def emit_entry(rec, req, fid, costs):
+def emit_entry(rec, req, fid, costs, drop_chance=None):
+    src = rec.get("sourceText") or ""
     L = ["    {"]
     L.append(f"        name    = {lua_str(rec['name'])},")
     L.append(f"        spellID = {rec['spellID']},")
-    acq = "reputation" if req else ("drop" if (rec.get("sourceText") or "").find("Drop:") >= 0 else "vendor")
+    is_drop = (drop_chance is not None) or (not req and "Drop:" in src)
+    acq = "reputation" if req else ("drop" if is_drop else "vendor")
     L.append(f'        acquisition = "{acq}",')
-    vendor = st_field(rec.get("sourceText"), "Vendor")
-    zone = st_field(rec.get("sourceText"), "Zone") or st_field(rec.get("sourceText"), "Location")
+    vendor = st_field(src, "Vendor")
+    zone = st_field(src, "Zone") or st_field(src, "Location")
+    drop_src = st_field(src, "Drop")
     if vendor:
         L.append(f"        vendor  = {lua_str(vendor)},")
+    elif drop_src:
+        L.append(f"        source  = {lua_str(drop_src)},")
     if zone:
         L.append(f"        zone    = {lua_str(zone)},")
+    if drop_chance is not None:
+        L.append("        dropChance = %.4f," % drop_chance)
     if req:
         if req["type"] == "renown":
             if fid:
@@ -236,7 +256,8 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="maximo de montarias a processar (0 = todas)")
     ap.add_argument("--include-collected", action="store_true")
     ap.add_argument("--has-cost", action="store_true", help="so montarias com 'Cost:' no sourceText")
-    ap.add_argument("--only-with-requirement", action="store_true", help="emite so as que tem requisito")
+    ap.add_argument("--include-drops", action="store_true", help="inclui drops (extrai dropChance)")
+    ap.add_argument("--only-with-requirement", action="store_true", help="emite so as que tem requisito ou dropChance")
     args = ap.parse_args()
 
     mounts = load_dump(args.dump, args.lua)
@@ -249,7 +270,8 @@ def main():
             continue
         if m.get("shouldHideOnChar"):
             continue
-        if args.has_cost and "Cost:" not in (m.get("sourceText") or ""):
+        src = m.get("sourceText") or ""
+        if args.has_cost and "Cost:" not in src and not (args.include_drops and "Drop:" in src):
             continue
         m["_exp"] = classify_expansion(m.get("sourceText"))
         if args.expansion_only and m["_exp"] != args.expansion_only:
@@ -267,7 +289,8 @@ def main():
         name = m["name"]
         try:
             item_id = resolve_item_id(name, args.cache, args.delay)
-            req, fid = None, None
+            req, fid, drop_chance = None, None, None
+            html = None
             if item_id:                                         # 1) tooltip do item (renome moderno)
                 html = http_get(f"{WH}/item={item_id}", args.cache, args.delay)
                 req = extract_requirement(html)
@@ -275,18 +298,20 @@ def main():
                 req = requirement_from_sourcetext(m.get("sourceText"))
             if req:
                 fid = req.get("factionID") or resolve_faction_id(req["faction"], args.cache, args.delay)
+            elif html and "Drop:" in (m.get("sourceText") or ""):  # 3) drop chance
+                drop_chance = extract_drop_chance(html)
         except Exception as e:                       # noqa: BLE001
             sys.stderr.write(f"  {name:32s} ERRO: {e} (pulando)\n")
             continue
         costs = parse_costs(m.get("sourceText"))
         tag = (f"renown {req['renownLevel']}" if req and req["type"] == "renown"
-               else (req["standing"] if req else "-"))
+               else (req["standing"] if req else ("drop %.1f%%" % (100 * drop_chance) if drop_chance else "-")))
         sys.stderr.write(f"  {name:32s} [{m['_exp']}] item={item_id} req={tag} faction={fid}\n")
-        if not req:
+        if not req and drop_chance is None:
             no_req.append(name)
-        if args.only_with_requirement and not req:
+        if args.only_with_requirement and not req and drop_chance is None:
             continue
-        by_exp.setdefault(m["_exp"], []).append(emit_entry(m, req, fid, costs))
+        by_exp.setdefault(m["_exp"], []).append(emit_entry(m, req, fid, costs, drop_chance))
 
     print("-- Gerado por tools/curate.py (revise antes de commitar)\nlocal ADDON, ns = ...\n")
     for exp in sorted(by_exp):
