@@ -179,7 +179,7 @@ Lançado sob a **Licença MIT** — livre para usar, estudar e melhorar. Veja `L
 
 <div align="center">
 
-Feito com ❤️ para a comunidade colecionadora de montarias de WoW.
-**Boa caçada — que seus brilhos verdes sejam muitos. 🐎✨**
+Feito para a comunidade colecionadora de montarias de WoW.
+**Boa caçada**
 
 </div>

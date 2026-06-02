@@ -179,7 +179,7 @@ Released under the **MIT License** — free to use, study and improve. See `LICE
 
 <div align="center">
 
-Made with ❤️ for the WoW mount-collecting community.
-**Happy hunting — may your green glows be many. 🐎✨**
+Made for the WoW mount-collecting community.
+**Happy hunting**
 
 </div>
