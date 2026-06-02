@@ -160,6 +160,9 @@ local function categorize(sourceText)
     if has("black market")    then return "Black Market", 4.0 end
     if has("promotion") or has("recruit") or has("collector's edition")
                               then return "Promotion",    9.0 end
+    -- Evento/feriado: obtenivel so durante o evento -> prioridade media.
+    if has("holiday:") or has("darkmoon") or has("event:")
+                              then return "Holiday",       3.5 end
     if has("vendor:")         then return "Vendor",       2.2 end
     if has("renown:") or has("faction:")
                               then return "Reputation",   2.3 end
@@ -187,7 +190,7 @@ function ns.CostHave(c)
 end
 
 -- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
-local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
+local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires", "holiday:", "event:" }
 
 -- "Da pra pegar AGORA?" -> glow + topo da lista. Double-check em camadas:
 --   1. Curado (Wowhead): READY = elegibilidade verificada.
