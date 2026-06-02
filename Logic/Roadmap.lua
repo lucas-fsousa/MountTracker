@@ -94,15 +94,22 @@ local function itemZones(item)
     return z
 end
 
--- Casa a zona da montaria com a do personagem (contains nos dois sentidos,
--- p/ tolerar "Nagrand, Outland" vs "Nagrand").
+-- Casa a zona da montaria com a do personagem (vale p/ zona aberta E dungeon/raid).
 local function zoneMatches(item, playerZone)
     if not playerZone or playerZone == "" then return false end
+    -- 1) Zonas parseadas (curada + Zone/Location do sourceText). Contains nos dois
+    --    sentidos p/ tolerar "Nagrand, Outland" vs "Nagrand".
     for _, z in ipairs(itemZones(item)) do
         local lz = z:lower()
         if lz:find(playerZone, 1, true) or playerZone:find(lz, 1, true) then
             return true
         end
+    end
+    -- 2) Nome da zona em qualquer parte do texto de origem -- cobre dungeons/raids
+    --    cujo nome aparece no "Drop:"/fonte sem um campo Zone proprio.
+    local st = item.sourceText
+    if st and st:gsub("|T.-|t", ""):lower():find(playerZone, 1, true) then
+        return true
     end
     return false
 end

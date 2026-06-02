@@ -9,6 +9,7 @@ f:RegisterEvent("NEW_MOUNT_ADDED")
 f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 f:RegisterEvent("UPDATE_FACTION")
 f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")   -- transicoes de dungeon/raid
 
 -- Marca o roadmap como "sujo"; recalcula na proxima abertura/refresh.
 local dirty = true
@@ -32,8 +33,8 @@ local function handleEvent(_, event)
         local s = ns._stats or {}
         ns.Print(("loaded. %d obtainable mounts to collect (%d owned, %d unavailable). Type |cffffff00/mtrack|r to open.")
             :format(s.pending or 0, s.owned or 0, s.unavailable or 0))
-    elseif event == "ZONE_CHANGED_NEW_AREA" then
-        -- Mudou de zona: o roadmap nao muda, so o filtro "Current zone". Re-renderiza.
+    elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
+        -- Mudou de zona/instancia: o roadmap nao muda, so o filtro "Current zone".
         if MountTrackerFrame and MountTrackerFrame:IsShown()
             and (ns.DB.Settings().zoneFilter or "All") == "Current" then
             ns.UI.Refresh()
