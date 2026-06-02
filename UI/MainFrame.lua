@@ -4,9 +4,70 @@
 local ADDON, ns = ...
 
 local UI = ns.UI
-local ROW_HEIGHT = 56
+local ROW_HEIGHT = 64
 local frame, scroll, content
 local rows = {}
+
+-- ---- Helpers de render do custo/vendedores (linha 2 e 3) ----
+
+-- Monta a string de um custo com icone inline + valor + nome da moeda/item.
+local function costToText(costs)
+    local parts = {}
+    for _, c in ipairs(costs or {}) do
+        local icon, name = "", ""
+        if c.ctype == "currency" then
+            local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
+            name = ci and ci.name or ""
+            local fid = ci and ci.iconFileID
+            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or (fid and ("|T" .. fid .. ":13:13|t ") or "")
+        elseif c.ctype == "item" then
+            local n = (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id))
+            name = n or "tokens"
+            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or ""
+        else -- gold
+            icon = "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t "
+            name = "gold"
+        end
+        parts[#parts + 1] = string.format("%d %s%s", c.amount or 0, icon, name)
+    end
+    return table.concat(parts, ", ")
+end
+
+-- Linha 2: vendedores/origem (com tag de faccao [A]/[H] quando aplicavel).
+local function vendorsText(item)
+    local sources = item.sources or {}
+    if #sources == 0 then return item.detail or "" end
+    local parts = {}
+    for _, s in ipairs(sources) do
+        local tag = ""
+        if s.faction == "Alliance" then tag = "|cff4a78ff[A]|r "
+        elseif s.faction == "Horde" then tag = "|cffe5304a[H]|r " end
+        if s.kind == "Vendor" then
+            parts[#parts + 1] = tag .. (s.who or "?")
+        else
+            parts[#parts + 1] = (s.kind or "?") .. ": " .. (s.who or "?")
+        end
+    end
+    return table.concat(parts, "    ")
+end
+
+-- Linha 3: zona (+ renome) + custo.
+local function zoneCostText(item)
+    local sources = item.sources or {}
+    local zone, cost, renown
+    for _, s in ipairs(sources) do
+        if not zone and s.zone then zone = s.zone end
+        if not renown and s.renown then renown = s.renown end
+        if not cost and s.costs and #s.costs > 0 then cost = costToText(s.costs) end
+    end
+    local parts = {}
+    if zone then parts[#parts + 1] = zone end
+    if renown then parts[#parts + 1] = "Renown " .. renown end
+    if cost then parts[#parts + 1] = "Cost: " .. cost end
+    -- Drops curados: anexa as odds.
+    if item.status == ns.STATUS.FARM and item.detail then parts[#parts + 1] = item.detail end
+    return table.concat(parts, "    ·    ")
+end
 
 -- Janela propria para copiar o link do Wowhead (addons nao abrem navegador).
 -- Evitamos StaticPopupDialogs porque seus internos (editBox) sao fonte comum de
@@ -66,48 +127,60 @@ local function acquireRow(i)
     r:SetBackdropColor(1, 1, 1, (i % 2 == 0) and 0.04 or 0.07)
 
     r.icon = r:CreateTexture(nil, "ARTWORK")
-    r.icon:SetSize(40, 40)
+    r.icon:SetSize(46, 46)
     r.icon:SetPoint("LEFT", 6, 0)
     r.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
-    -- Acoes: tres botoes numa unica fileira no topo direito.
-    local function smallBtn(text, w)
-        local b = CreateFrame("Button", nil, r, "UIPanelButtonTemplate")
-        b:SetSize(w, 18)
+    -- Box de acoes a direita: tres botoes empilhados (grid vertical).
+    local BOX_W = 78
+    r.btnBox = CreateFrame("Frame", nil, r, "BackdropTemplate")
+    r.btnBox:SetWidth(BOX_W)
+    r.btnBox:SetPoint("TOPRIGHT", -4, -4)
+    r.btnBox:SetPoint("BOTTOMRIGHT", -4, 4)
+    r.btnBox:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1,
+    })
+    r.btnBox:SetBackdropColor(1, 1, 1, 0.05)
+    r.btnBox:SetBackdropBorderColor(1, 1, 1, 0.10)
+
+    local function boxBtn(text)
+        local b = CreateFrame("Button", nil, r.btnBox, "UIPanelButtonTemplate")
+        b:SetSize(BOX_W - 8, 17)
         b:SetText(text)
         b:GetFontString():SetWordWrap(false)
         return b
     end
-    r.btnWowhead = smallBtn("Wowhead", 64)
-    r.btnWowhead:SetPoint("TOPRIGHT", -6, -6)
-    r.btnHide = smallBtn("Hide", 46)
-    r.btnHide:SetPoint("TOPRIGHT", r.btnWowhead, "TOPLEFT", -4, 0)
-    r.btnObtained = smallBtn("Owned", 54)
-    r.btnObtained:SetPoint("TOPRIGHT", r.btnHide, "TOPLEFT", -4, 0)
+    r.btnWowhead = boxBtn("Wowhead")
+    r.btnWowhead:SetPoint("TOP", 0, -4)
+    r.btnHide = boxBtn("Hide")
+    r.btnHide:SetPoint("TOP", r.btnWowhead, "BOTTOM", 0, -2)
+    r.btnObtained = boxBtn("Owned")
+    r.btnObtained:SetPoint("TOP", r.btnHide, "BOTTOM", 0, -2)
 
-    -- Texto. Linha 1: nome (truncado, sem invadir os botoes). Linha 2: badge + detalhe.
-    -- Linha 3: vendedor/origem.
+    -- Texto: 3 linhas, limitadas a esquerda do box (sem transbordar).
+    -- Linha 1: nome + badge.  Linha 2: vendedores.  Linha 3: zona/xpac + custo.
     r.name = r:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    r.name:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 8, -3)
-    r.name:SetPoint("RIGHT", r.btnObtained, "LEFT", -8, 0)
+    r.name:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 8, -4)
     r.name:SetJustifyH("LEFT")
     r.name:SetWordWrap(false)
 
     r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    r.badge:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3)
-    r.badge:SetJustifyH("LEFT")
+    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -5)
+    r.badge:SetJustifyH("RIGHT")
+    r.name:SetPoint("RIGHT", r.badge, "LEFT", -6, 0)
 
-    r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    r.detail:SetPoint("LEFT", r.badge, "RIGHT", 8, 0)
-    r.detail:SetPoint("RIGHT", r, "RIGHT", -10, 0)
-    r.detail:SetJustifyH("LEFT")
-    r.detail:SetWordWrap(false)
+    r.vendors = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    r.vendors:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -4)
+    r.vendors:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.vendors:SetJustifyH("LEFT")
+    r.vendors:SetWordWrap(false)
 
-    r.where = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    r.where:SetPoint("TOPLEFT", r.badge, "BOTTOMLEFT", 0, -3)
-    r.where:SetPoint("RIGHT", r, "RIGHT", -10, 0)
-    r.where:SetJustifyH("LEFT")
-    r.where:SetWordWrap(false)
+    r.zonecost = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    r.zonecost:SetPoint("TOPLEFT", r.vendors, "BOTTOMLEFT", 0, -4)
+    r.zonecost:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.zonecost:SetJustifyH("LEFT")
+    r.zonecost:SetWordWrap(false)
 
     rows[i] = r
     return r
@@ -115,39 +188,27 @@ end
 
 local function refreshRow(r, item)
     r.icon:SetTexture(item.icon or 134400)
-    r.name:SetText(item.name or "?")
+    r.icon:SetDesaturated(not item.owned)  -- obtida = colorido; faltante = cinza
 
-    -- Convencao Blizzard: obtida = icone colorido; nao obtida = icone cinza.
-    r.icon:SetDesaturated(not item.owned)
-    if item.owned then
-        r.name:SetTextColor(1, 1, 1)          -- branco
-    else
-        r.name:SetTextColor(0.6, 0.6, 0.6)    -- cinza
-    end
+    r.name:SetText(item.name or "?")
+    r.name:SetTextColor(item.owned and 1 or 0.95, item.owned and 1 or 0.95, item.owned and 1 or 0.95)
 
     local c = ns.STATUS_COLOR[item.status] or { 1, 1, 1 }
-    -- Nao-curadas mostram a categoria derivada do jogo; curadas mostram o status.
     local badgeText = (item.status == ns.STATUS.MISSING and item.category)
         or ns.STATUS_LABEL[item.status] or item.status
     r.badge:SetText(badgeText)
     r.badge:SetTextColor(c[1], c[2], c[3])
 
-    r.detail:SetText(item.detail or "")
-    if item.costHave then r.detail:SetText((item.detail or "") .. "  |cffaaaaaa(" .. item.costHave .. ")|r") end
+    r.vendors:SetText(vendorsText(item))
+    r.zonecost:SetText(zoneCostText(item))
 
+    -- Link do Wowhead: usa o curado, senao gera a partir do spellID (todas tem).
     local e = item.entry
-    local where = ""
-    if e then
-        if e.vendor then where = "Vendor: " .. e.vendor
-        elseif e.source then where = "Source: " .. e.source end
-        if e.zone then where = where .. (where ~= "" and "  -  " or "") .. e.zone end
-    end
-    r.where:SetText(where)
-
+    local url = (e and e.wowhead) or (item.spellID and ("https://www.wowhead.com/spell=" .. item.spellID))
     r.btnWowhead:SetScript("OnClick", ns.Safe.Wrap("open Wowhead link", function()
-        ShowWowhead(e and e.wowhead)
+        ShowWowhead(url)
     end))
-    r.btnWowhead:SetShown(e and e.wowhead ~= nil)
+    r.btnWowhead:SetShown(url ~= nil)
 
     r.btnHide:SetScript("OnClick", ns.Safe.Wrap("hide mount", function()
         ns.DB.SetHidden(item.mountID, not ns.DB.IsHidden(item.mountID))
@@ -158,7 +219,7 @@ local function refreshRow(r, item)
         ns.Logic.Roadmap.Build()
         UI.Refresh()
     end))
-    r.btnObtained:SetShown(not item.owned)  -- nao faz sentido "marcar obtida" o que ja e owned
+    r.btnObtained:SetShown(not item.owned)
 
     r:Show()
 end

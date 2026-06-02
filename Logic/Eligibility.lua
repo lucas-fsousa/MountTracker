@@ -145,9 +145,11 @@ function Eligibility.Evaluate(cand)
 
     local item = {
         mountID = mountID,
-        name    = info.name or entry.name,
+        spellID = cand.spellID,
+        name    = info.name or (entry and entry.name),
         icon    = info.icon,
         entry   = entry,
+        sources = ns.SourceParse and ns.SourceParse(cand.sourceText) or {},
         costPct = 0,
     }
 
