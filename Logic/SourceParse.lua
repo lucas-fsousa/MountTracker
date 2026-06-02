@@ -19,18 +19,27 @@ end
 
 -- Extrai os custos de um valor "Cost:". Retorna lista de { amount, ctype, id, icon }.
 -- ctype = "currency" | "item" | "gold".
+-- Trata: separador de milhar (5,000), moeda/item (|Hcurrency/item:ID|h|Ticon|t|h),
+-- e ouro combinado (ex.: "5,000<gold> + 5,000 Apexis").
 local function parseCosts(value)
+    if not value then return {} end
+    value = value:gsub(",", "")        -- remove separador de milhar antes de parsear
     local costs = {}
-    for amount, ctype, id, icon in value:gmatch("(%d+)|H(%a+):(%d+)|h|T(.-):%d+|t|h") do
-        costs[#costs + 1] = {
-            amount = tonumber(amount),
-            ctype  = ctype,            -- "currency" ou "item"
-            id     = tonumber(id),
-            icon   = icon,             -- caminho da textura (renderizado via |T no UI)
-        }
+
+    -- 1) moeda/item: NUM|Htype:ID|h|Ticon|t|h  (consome do texto)
+    local rest = value:gsub("(%d+)|H(%a+):(%d+)|h|T(.-):%d+|t|h", function(amount, ctype, id, icon)
+        costs[#costs + 1] = { amount = tonumber(amount), ctype = ctype, id = tonumber(id), icon = icon }
+        return ""
+    end)
+
+    -- 2) ouro: NUM|Ticon|t  (no que sobrou; ex.: icone do MoneyFrame)
+    for amount, icon in rest:gmatch("(%d+)|T(.-):%d+|t") do
+        costs[#costs + 1] = { amount = tonumber(amount), ctype = "gold", icon = icon }
     end
+
+    -- 3) fallback: numero solto sem icone
     if #costs == 0 then
-        local g = value:match("(%d+)")
+        local g = value:match("%d+")
         if g then costs[#costs + 1] = { amount = tonumber(g), ctype = "gold" } end
     end
     return costs

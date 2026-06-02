@@ -10,25 +10,38 @@ local rows = {}
 
 -- ---- Helpers de render do custo/vendedores (linha 2 e 3) ----
 
--- Monta a string de um custo com icone inline + valor + nome da moeda/item.
+local function num(n)
+    return (BreakUpLargeNumbers and BreakUpLargeNumbers(n)) or tostring(n)
+end
+
+-- Monta a string de um custo: valor + icone + nome da moeda + quanto o char possui.
 local function costToText(costs)
     local parts = {}
     for _, c in ipairs(costs or {}) do
-        local icon, name = "", ""
+        local icon, name, have = "", "", nil
         if c.ctype == "currency" then
             local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
-            name = ci and ci.name or ""
+            name = ci and ci.name or "currency"
             local fid = ci and ci.iconFileID
             icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or (fid and ("|T" .. fid .. ":13:13|t ") or "")
+            if ci then have = ns.Safe.Value(ci.quantity, nil) end          -- nil se Secret Value
         elseif c.ctype == "item" then
-            local n = (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id))
-            name = n or "tokens"
+            name = (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id)) or "tokens"
             icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or ""
+            local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
+            have = ns.Safe.Value(cnt, nil)
         else -- gold
-            icon = "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t "
+            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t "
             name = "gold"
+            have = ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
         end
-        parts[#parts + 1] = string.format("%d %s%s", c.amount or 0, icon, name)
+
+        local haveStr = ""
+        if have ~= nil then
+            local color = (have >= (c.amount or 0)) and "ff44dd44" or "ffdd8844"
+            haveStr = (" |c%s(have %s)|r"):format(color, num(have))
+        end
+        parts[#parts + 1] = string.format("%s %s%s%s", num(c.amount or 0), icon, name, haveStr)
     end
     return table.concat(parts, ", ")
 end
