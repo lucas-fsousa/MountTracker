@@ -60,6 +60,9 @@ local function handleSlash(msg)
     elseif cmd == "find" then
         ns.Logic.Scanner.Find(rest)
 
+    elseif cmd == "dump" then
+        ns.Logic.Scanner.Dump()
+
     elseif cmd == "scan" then
         local items = ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -87,7 +90,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | scan | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | scan | dump | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

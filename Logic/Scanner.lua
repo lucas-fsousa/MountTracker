@@ -89,6 +89,35 @@ function Scanner.Collect()
     return out
 end
 
+-- Exporta TODAS as montarias do jogo (fonte da verdade) para o SavedVariables
+-- MountTrackerDump. Usado para gerar dados curados em massa, com spellIDs corretos
+-- e o texto de origem do proprio jogo. Rode /mtrack dump, depois /reload.
+function Scanner.Dump()
+    local out = {}
+    local ids = C_MountJournal.GetMountIDs()
+    for _, mountID in ipairs(ids) do
+        local name, spellID, _, _, _, sourceType, _, isFactionSpecific, faction, _, isCollected =
+            C_MountJournal.GetMountInfoByID(mountID)
+        local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
+        out[#out + 1] = {
+            mountID    = mountID,
+            spellID    = spellID,
+            name       = name,
+            sourceType = sourceType,                              -- 0 Drop,1 Quest,2 Vendor,...
+            faction    = isFactionSpecific and faction or nil,    -- 0 Horde,1 Alliance
+            collected  = isCollected,
+            sourceText = sourceText,                              -- texto cru do jogo
+        }
+    end
+    MountTrackerDump = {
+        built = (date and date("%Y-%m-%d %H:%M")) or "",
+        count = #out,
+        mounts = out,
+    }
+    ns.Print(("dumped %d mounts to SavedVariables. Now type |cffffff00/reload|r, then share the file.")
+        :format(#out))
+end
+
 -- Debug helper: prints the mountID of mounts whose name contains `query`.
 function Scanner.Find(query)
     query = (query or ""):lower()
