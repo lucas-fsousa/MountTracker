@@ -5,7 +5,9 @@ local ADDON, ns = ...
 
 local UI = ns.UI
 local ROW_HEIGHT = 64
-local frame, scroll, content
+local ROW_SPACING = 2
+local ROW_STEP = ROW_HEIGHT + ROW_SPACING
+local frame, scroll
 local rows = {}
 
 -- ---- Helpers de render do custo/vendedores (linha 2 e 3) ----
@@ -145,8 +147,12 @@ end
 local function acquireRow(i)
     if rows[i] then return rows[i] end
 
-    local r = CreateFrame("Button", nil, content, "BackdropTemplate")
-    r:SetSize(1, ROW_HEIGHT)
+    -- Linhas sao "slots" fixos sobre o scroll (virtualizacao): o slot i fica sempre
+    -- na mesma posicao; o conteudo (a montaria) muda conforme a rolagem.
+    local r = CreateFrame("Button", nil, scroll, "BackdropTemplate")
+    r:SetHeight(ROW_HEIGHT)
+    r:SetPoint("TOPLEFT", scroll, "TOPLEFT", 0, -(i - 1) * ROW_STEP)
+    r:SetPoint("TOPRIGHT", scroll, "TOPRIGHT", 0, -(i - 1) * ROW_STEP)
     r:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8" })
     r:SetBackdropColor(1, 1, 1, (i % 2 == 0) and 0.04 or 0.07)
 
@@ -339,47 +345,47 @@ local function buildFrame()
     end))
     frame.cbOwned = cb2
 
-    scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+    -- Scroll virtualizado (FauxScrollFrame): renderiza so as linhas visiveis e
+    -- recicla ao rolar -> aguenta milhares de itens (inclui as owned) sem travar.
+    scroll = CreateFrame("ScrollFrame", "MountTrackerScrollFrame", frame, "FauxScrollFrameTemplate")
     scroll:SetPoint("TOPLEFT", 10, -84)
     scroll:SetPoint("BOTTOMRIGHT", -30, 10)
+    scroll:SetScript("OnVerticalScroll", function(self, offset)
+        FauxScrollFrame_OnVerticalScroll(self, offset, ROW_STEP, UI.Refresh)
+    end)
+    scroll:EnableMouseWheel(true)
+    scroll:SetScript("OnMouseWheel", function(self, delta)
+        local bar = _G[self:GetName() .. "ScrollBar"]
+        if bar then bar:SetValue(bar:GetValue() - delta * 3 * ROW_STEP) end
+    end)
 
-    content = CreateFrame("Frame", nil, scroll)
-    content:SetSize(1, 1)
-    scroll:SetScrollChild(content)
-
-    frame.empty = content:CreateFontString(nil, "OVERLAY", "GameFontDisable")
-    frame.empty:SetPoint("TOP", 0, -20)
+    frame.empty = scroll:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    frame.empty:SetPoint("TOPLEFT", 6, -16)
+    frame.empty:SetWidth(480)
+    frame.empty:SetJustifyH("LEFT")
     frame.empty:SetText("Nothing in roadmap. Type /mtrack scan or adjust filters.")
 
     -- CreateFrame devolve o frame ja visivel; escondemos para o primeiro Toggle abrir.
     frame:Hide()
 end
 
-local MAX_ROWS = 200   -- limite de render (832 frames travariam); top-N ja e o que importa
-
 function UI.Refresh()
     if not frame then return end
     local items = ns.Logic.Roadmap.Filtered()
-    local width = scroll:GetWidth()
-    content:SetWidth(width)
+    local numVisible = math.max(1, math.floor(scroll:GetHeight() / ROW_STEP))
 
-    for _, r in ipairs(rows) do r:Hide() end
+    FauxScrollFrame_Update(scroll, #items, numVisible, ROW_STEP)
+    local offset = FauxScrollFrame_GetOffset(scroll)
 
-    local shown = math.min(#items, MAX_ROWS)
-    for i = 1, shown do
+    for i = 1, numVisible do
+        local item = items[offset + i]
         local r = acquireRow(i)
-        r:SetWidth(width)
-        r:SetPoint("TOPLEFT", 0, -(i - 1) * (ROW_HEIGHT + 2))
-        r:SetPoint("TOPRIGHT", 0, -(i - 1) * (ROW_HEIGHT + 2))
-        refreshRow(r, items[i])
+        if item then refreshRow(r, item) else r:Hide() end
     end
+    for i = numVisible + 1, #rows do rows[i]:Hide() end  -- janela encolheu
 
-    local extra = #items - shown
-    frame.title:SetText(extra > 0
-        and ("MountTracker  -  mount roadmap  (top %d of %d)"):format(shown, #items)
-        or  "MountTracker  -  mount roadmap")
+    frame.title:SetText(("MountTracker  -  mount roadmap  (%d)"):format(#items))
 
-    content:SetHeight(math.max(1, shown * (ROW_HEIGHT + 2)))
     if #items == 0 then
         local s = ns._stats or {}
         frame.empty:SetText(("Nothing to show with current filters.\n\n%d owned  |  %d obtainable  |  %d unavailable\n\nThe %d unavailable are hidden by the game for this\ncharacter (other faction / class / legacy).\nTick \"Show unavailable / hidden\" to reveal them.")
