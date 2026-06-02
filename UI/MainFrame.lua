@@ -14,27 +14,40 @@ local function num(n)
     return (BreakUpLargeNumbers and BreakUpLargeNumbers(n)) or tostring(n)
 end
 
+-- Quanto o personagem possui de um custo (nil = desconhecido/Secret Value).
+local function costHave(c)
+    if c.ctype == "currency" then
+        local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
+        return ci and ns.Safe.Value(ci.quantity, nil) or nil
+    elseif c.ctype == "item" then
+        local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
+        return ns.Safe.Value(cnt, nil)
+    else -- gold
+        return ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
+    end
+end
+
+local function costName(c)
+    if c.ctype == "currency" then
+        local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
+        return ci and ci.name or "currency", ci and ci.iconFileID
+    elseif c.ctype == "item" then
+        return (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id)) or "tokens"
+    else
+        return "gold"
+    end
+end
+
 -- Monta a string de um custo: valor + icone + nome da moeda + quanto o char possui.
 local function costToText(costs)
     local parts = {}
     for _, c in ipairs(costs or {}) do
-        local icon, name, have = "", "", nil
-        if c.ctype == "currency" then
-            local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
-            name = ci and ci.name or "currency"
-            local fid = ci and ci.iconFileID
-            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or (fid and ("|T" .. fid .. ":13:13|t ") or "")
-            if ci then have = ns.Safe.Value(ci.quantity, nil) end          -- nil se Secret Value
-        elseif c.ctype == "item" then
-            name = (C_Item and C_Item.GetItemInfo and C_Item.GetItemInfo(c.id)) or (GetItemInfo and GetItemInfo(c.id)) or "tokens"
-            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or ""
-            local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
-            have = ns.Safe.Value(cnt, nil)
-        else -- gold
-            icon = c.icon and ("|T" .. c.icon .. ":13:13|t ") or "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t "
-            name = "gold"
-            have = ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
-        end
+        local name, fid = costName(c)
+        local icon = c.icon and ("|T" .. c.icon .. ":13:13|t ")
+            or (fid and ("|T" .. fid .. ":13:13|t "))
+            or (c.ctype == "gold" and "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t ")
+            or ""
+        local have = costHave(c)
 
         local haveStr = ""
         if have ~= nil then
@@ -44,6 +57,27 @@ local function costToText(costs)
         parts[#parts + 1] = string.format("%s %s%s%s", num(c.amount or 0), icon, name, haveStr)
     end
     return table.concat(parts, ", ")
+end
+
+-- A montaria pode ser obtida AGORA? (borda brilhante)
+--  - curada com status READY (reputacao + custo verificados), ou
+--  - nao-curada de vendedor SEM gate de reputacao e com o custo todo pago.
+local function readyNow(item)
+    if item.owned then return false end
+    if item.status == ns.STATUS.READY then return true end
+    if item.status ~= ns.STATUS.MISSING then return false end
+
+    local costSource, hasRepGate = nil, false
+    for _, s in ipairs(item.sources or {}) do
+        if s.kind == "Faction" or s.renown then hasRepGate = true end
+        if not costSource and s.costs and #s.costs > 0 then costSource = s end
+    end
+    if hasRepGate or not costSource then return false end
+    for _, c in ipairs(costSource.costs) do
+        local have = costHave(c)
+        if have == nil or have < (c.amount or 0) then return false end
+    end
+    return true
 end
 
 -- Linha 2: vendedores/origem (com tag de faccao [A]/[H] quando aplicavel).
@@ -144,6 +178,20 @@ local function acquireRow(i)
     r.icon:SetPoint("LEFT", 6, 0)
     r.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
+    -- Borda brilhante pulsante: sinaliza montaria obtenivel AGORA.
+    r.glow = CreateFrame("Frame", nil, r, "BackdropTemplate")
+    r.glow:SetPoint("TOPLEFT", 1, -1)
+    r.glow:SetPoint("BOTTOMRIGHT", -1, 1)
+    r.glow:SetBackdrop({ edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 2 })
+    r.glow:SetBackdropBorderColor(0.30, 1.0, 0.45, 1)
+    r.glow:SetFrameLevel(r:GetFrameLevel() + 6)
+    local ag = r.glow:CreateAnimationGroup()
+    ag:SetLooping("BOUNCE")
+    local a = ag:CreateAnimation("Alpha")
+    a:SetFromAlpha(1.0); a:SetToAlpha(0.15); a:SetDuration(0.9); a:SetSmoothing("IN_OUT")
+    r.glow.ag = ag
+    r.glow:Hide()
+
     -- Box de acoes a direita: tres botoes empilhados (grid vertical).
     local BOX_W = 78
     r.btnBox = CreateFrame("Frame", nil, r, "BackdropTemplate")
@@ -214,6 +262,15 @@ local function refreshRow(r, item)
 
     r.vendors:SetText(vendorsText(item))
     r.zonecost:SetText(zoneCostText(item))
+
+    -- Glow de "obtenivel agora".
+    if readyNow(item) then
+        r.glow:Show()
+        if not r.glow.ag:IsPlaying() then r.glow.ag:Play() end
+    else
+        r.glow.ag:Stop()
+        r.glow:Hide()
+    end
 
     -- Link do Wowhead: usa o curado, senao gera a partir do spellID (todas tem).
     local e = item.entry
