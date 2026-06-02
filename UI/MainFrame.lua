@@ -78,6 +78,15 @@ local function vendorsText(item)
     return table.concat(parts, "    ")
 end
 
+-- Converte um cost curado ({currencyID/itemID/gold, amount}) para o formato de lista.
+local function curatedCostList(cost)
+    if not cost then return nil end
+    if cost.currencyID then return { { amount = cost.amount, ctype = "currency", id = cost.currencyID } } end
+    if cost.itemID then return { { amount = cost.amount, ctype = "item", id = cost.itemID } } end
+    if cost.gold then return { { amount = cost.gold, ctype = "gold" } } end
+    return nil
+end
+
 -- Linha 3: zona (+ renome) + custo.
 local function zoneCostText(item)
     local sources = item.sources or {}
@@ -86,6 +95,12 @@ local function zoneCostText(item)
         if not zone and s.zone then zone = s.zone end
         if not renown and s.renown then renown = s.renown end
         if not cost and s.costs and #s.costs > 0 then cost = costToText(s.costs) end
+    end
+    -- Fallback: muitas montarias de renome nao trazem o custo no sourceText, mas o
+    -- dado curado tem -> mostra o custo curado (moeda de troca no NPC).
+    if not cost and item.entry and item.entry.cost then
+        local list = curatedCostList(item.entry.cost)
+        if list then cost = costToText(list) end
     end
     local parts = {}
     if zone then parts[#parts + 1] = zone end
