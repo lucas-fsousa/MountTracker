@@ -11,3 +11,8 @@ Desktop.ini
 # WoW SavedVariables (geradas pelo cliente; nao versionar dados de conta)
 *.lua.bak
 SavedVariables/
+
+# Cache da tool de curadoria (paginas do Wowhead)
+tools/cache/
+tools/out.lua
+__pycache__/
