@@ -27,7 +27,7 @@ def entry(rec, req, fid, costs, drop_chance=None):
     if zone:
         L.append(f"        zone    = {lua_str(zone)},")
     if drop_chance is not None:
-        L.append("        dropChance = %.4f," % drop_chance)
+        L.append("        dropChance = %.6f," % drop_chance)
 
     if req:
         if req["type"] == "renown":

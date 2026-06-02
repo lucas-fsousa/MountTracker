@@ -71,6 +71,19 @@ Options:
 | `--include-collected` | Also process mounts you already own |
 | `--cache` | Cache directory (default `tools/cache`) |
 
+## Validating the curated data
+
+`validate.lua` loads the whole curated overlay outside the game and checks integrity
+(unique spell IDs; renown entries have a faction id/name; reputation entries have a
+faction id + valid standing; costs are well-formed; drop chances in range):
+
+```bash
+lua tools/validate.lua .
+```
+
+It runs in CI (`.github/workflows/ci.yml`) on every push/PR, alongside Lua syntax
+(`luac -p`) and Python syntax checks.
+
 ## Status / limitations
 
 - ✅ **Modern renown mounts** (requirement encoded on the item tooltip): fully

@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lua:
+    name: Lua syntax + data integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"   # WoW roda Lua 5.1
+      - name: Lua syntax (luac -p)
+        run: find . -name '*.lua' -print0 | xargs -0 -n1 luac -p
+      - name: Validar overlay curado
+        run: lua tools/validate.lua .
+
+  python:
+    name: Python (tool de curadoria)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Sintaxe Python
+        run: python -m compileall -q tools

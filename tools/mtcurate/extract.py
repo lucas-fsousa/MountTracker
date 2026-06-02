@@ -36,7 +36,7 @@ def drop_chance(html):
     best = None
     for c, o in re.findall(r'"count":(\d+)[^{}]{0,40}?"outof":(\d+)', html):
         c, o = int(c), int(o)
-        if o > 0 and (best is None or o > best[1]):
+        if o > 0 and c > 0 and (best is None or o > best[1]):  # ignora amostras com 0 drops
             best = (c, o)
     if best:
         return min(best[0] / best[1], 1.0)

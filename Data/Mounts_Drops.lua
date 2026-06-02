@@ -11,7 +11,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "High Tinker Mekkatorque",
         zone    = "Battle of Dazar'alor",
-        dropChance = 0.0025,
+        dropChance = 0.002494,
         wowhead = "https://www.wowhead.com/spell=289083",
     },
     {
@@ -20,7 +20,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Jaina Proudmoore (Mythic)",
         zone    = "Battle of Dazar'alor",
-        dropChance = 0.0066,
+        dropChance = 0.006598,
         wowhead = "https://www.wowhead.com/spell=289555",
     },
     {
@@ -29,7 +29,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "HK-8 Aerial Oppression Unit",
         zone    = "Operation: Mechagon (Mythic)",
-        dropChance = 0.0025,
+        dropChance = 0.002461,
         wowhead = "https://www.wowhead.com/spell=299158",
     },
     {
@@ -38,7 +38,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Soundless",
         zone    = "Nazjatar",
-        dropChance = 0.0144,
+        dropChance = 0.014444,
         wowhead = "https://www.wowhead.com/spell=300149",
     },
     {
@@ -47,7 +47,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Rotfeaster",
         zone    = "Uldum",
-        dropChance = 0.0336,
+        dropChance = 0.033604,
         wowhead = "https://www.wowhead.com/spell=316275",
     },
     {
@@ -56,7 +56,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Corpse Eater",
         zone    = "Uldum",
-        dropChance = 0.0122,
+        dropChance = 0.012211,
         wowhead = "https://www.wowhead.com/spell=316337",
     },
     {
@@ -65,7 +65,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Blackhand",
         zone    = "Blackrock Foundry (Mythic)",
-        dropChance = 0.0223,
+        dropChance = 0.022332,
         wowhead = "https://www.wowhead.com/spell=171621",
     },
     {
@@ -74,7 +74,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Karokta",
         zone    = "Zaralek Cavern",
-        dropChance = 0.0082,
+        dropChance = 0.008212,
         wowhead = "https://www.wowhead.com/spell=408647",
     },
     {
@@ -82,7 +82,7 @@ ns.Data.Register(nil, {
         spellID = 242874,
         acquisition = "drop",
         source  = "Highmountain Supplies",
-        dropChance = 0.0729,
+        dropChance = 0.072948,
         wowhead = "https://www.wowhead.com/spell=242874",
     },
     {
@@ -90,7 +90,7 @@ ns.Data.Register(nil, {
         spellID = 243651,
         acquisition = "drop",
         source  = "Argus the Unmaker (Mythic)",
-        dropChance = 0.0079,
+        dropChance = 0.007879,
         wowhead = "https://www.wowhead.com/spell=243651",
     },
     {
@@ -99,7 +99,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Ha-Li",
         zone    = "Vale of Eternal Blossoms",
-        dropChance = 0.0289,
+        dropChance = 0.028912,
         wowhead = "https://www.wowhead.com/spell=312751",
     },
     {
@@ -108,7 +108,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Houndlord Ren",
         zone    = "Vale of Eternal Blossoms",
-        dropChance = 0.0296,
+        dropChance = 0.029619,
         wowhead = "https://www.wowhead.com/spell=316722",
     },
     {
@@ -117,7 +117,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Anh-De the Loyal",
         zone    = "Vale of Eternal Blossoms",
-        dropChance = 0.0275,
+        dropChance = 0.027491,
         wowhead = "https://www.wowhead.com/spell=316723",
     },
     {
@@ -126,7 +126,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Gorged Shadehound",
         zone    = "The Maw",
-        dropChance = 0.0184,
+        dropChance = 0.018352,
         wowhead = "https://www.wowhead.com/spell=312762",
     },
     {
@@ -135,7 +135,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Tahonta",
         zone    = "Maldraxxus",
-        dropChance = 0.0062,
+        dropChance = 0.006212,
         wowhead = "https://www.wowhead.com/spell=332457",
     },
     {
@@ -144,7 +144,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Warbringer Mal'korak",
         zone    = "Maldraxxus",
-        dropChance = 0.0245,
+        dropChance = 0.024484,
         wowhead = "https://www.wowhead.com/spell=332478",
     },
     {
@@ -153,7 +153,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Nerissa Heartless",
         zone    = "Maldraxxus",
-        dropChance = 0.0218,
+        dropChance = 0.021837,
         wowhead = "https://www.wowhead.com/spell=332480",
     },
     {
@@ -162,7 +162,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Gieger",
         zone    = "Maldraxxus",
-        dropChance = 0.0232,
+        dropChance = 0.023208,
         wowhead = "https://www.wowhead.com/spell=336045",
     },
     {
@@ -171,7 +171,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Fleshwing",
         zone    = "Korthia",
-        dropChance = 1.0000,
+        dropChance = 1.000000,
         wowhead = "https://www.wowhead.com/spell=347250",
     },
     {
@@ -180,7 +180,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Malbog",
         zone    = "Korthia",
-        dropChance = 0.0200,
+        dropChance = 0.020007,
         wowhead = "https://www.wowhead.com/spell=354357",
     },
     {
@@ -189,7 +189,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Death's Advance Supplies",
         zone    = "Korthia",
-        dropChance = 0.0911,
+        dropChance = 0.091052,
         wowhead = "https://www.wowhead.com/spell=354359",
     },
     {
@@ -198,7 +198,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Reliwik the Defiant",
         zone    = "Korthia",
-        dropChance = 0.0262,
+        dropChance = 0.026161,
         wowhead = "https://www.wowhead.com/spell=354360",
     },
     {
@@ -206,7 +206,7 @@ ns.Data.Register(nil, {
         spellID = 1261316,
         acquisition = "drop",
         source  = "Zul'Aman Rare Creatures",
-        dropChance = 0.0010,
+        dropChance = 0.001047,
         wowhead = "https://www.wowhead.com/spell=1261316",
     },
     {
@@ -215,7 +215,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Alunira",
         zone    = "Isle of Dorn",
-        dropChance = 0.6424,
+        dropChance = 0.642405,
         wowhead = "https://www.wowhead.com/spell=447213",
     },
     {
@@ -224,7 +224,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Beledar's Spawn",
         zone    = "Hallowfall",
-        dropChance = 0.0552,
+        dropChance = 0.055202,
         wowhead = "https://www.wowhead.com/spell=448941",
     },
     {
@@ -233,7 +233,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Blackwater Trove",
         zone    = "Undermine",
-        dropChance = 0.2836,
+        dropChance = 0.283611,
         wowhead = "https://www.wowhead.com/spell=466001",
     },
     {
@@ -242,7 +242,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Steamwheedle Trove",
         zone    = "Undermine",
-        dropChance = 0.2520,
+        dropChance = 0.251992,
         wowhead = "https://www.wowhead.com/spell=466014",
     },
     {
@@ -251,7 +251,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Sifted Pile of Scrap",
         zone    = "Undermine",
-        dropChance = 0.0198,
+        dropChance = 0.019802,
         wowhead = "https://www.wowhead.com/spell=466020",
     },
     {
@@ -260,7 +260,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Venture Co. Trove",
         zone    = "Undermine",
-        dropChance = 0.2876,
+        dropChance = 0.287643,
         wowhead = "https://www.wowhead.com/spell=466022",
     },
     {
@@ -269,7 +269,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Gallagio Garbage",
         zone    = "Undermine",
-        dropChance = 0.0000,
+        dropChance = 0.000011,
         wowhead = "https://www.wowhead.com/spell=466026",
     },
     {
@@ -278,7 +278,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Bilgewater Trove",
         zone    = "Undermine",
-        dropChance = 0.2486,
+        dropChance = 0.248597,
         wowhead = "https://www.wowhead.com/spell=466024",
     },
     {
@@ -287,7 +287,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Darkfuse Trove",
         zone    = "Undermine",
-        dropChance = 0.1926,
+        dropChance = 0.192641,
         wowhead = "https://www.wowhead.com/spell=473188",
     },
     {
@@ -296,7 +296,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Chrome King Gallywix",
         zone    = "Liberation of Undermine",
-        dropChance = 0.0057,
+        dropChance = 0.005704,
         wowhead = "https://www.wowhead.com/spell=1221155",
     },
     {
@@ -305,7 +305,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Wriggling Pinnacle Cache",
         zone    = "K'aresh",
-        dropChance = 0.0314,
+        dropChance = 0.031432,
         wowhead = "https://www.wowhead.com/spell=1233561",
     },
     {
@@ -314,7 +314,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Urmag",
         zone    = "K'aresh",
-        dropChance = 0.0803,
+        dropChance = 0.080275,
         wowhead = "https://www.wowhead.com/spell=1240632",
     },
     {
@@ -323,7 +323,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Sthaarbs",
         zone    = "K'aresh",
-        dropChance = 0.0684,
+        dropChance = 0.068420,
         wowhead = "https://www.wowhead.com/spell=1241076",
     },
     {
@@ -331,7 +331,7 @@ ns.Data.Register(nil, {
         spellID = 43900,
         acquisition = "drop",
         source  = "Keg-Shaped Treasure Chest",
-        dropChance = 0.0109,
+        dropChance = 0.010902,
         wowhead = "https://www.wowhead.com/spell=43900",
     },
     {
@@ -339,7 +339,7 @@ ns.Data.Register(nil, {
         spellID = 49379,
         acquisition = "drop",
         source  = "Keg-Shaped Treasure Chest",
-        dropChance = 0.0124,
+        dropChance = 0.012374,
         wowhead = "https://www.wowhead.com/spell=49379",
     },
     {
@@ -347,7 +347,7 @@ ns.Data.Register(nil, {
         spellID = 71342,
         acquisition = "drop",
         source  = "Heart-Shaped Box",
-        dropChance = 0.0009,
+        dropChance = 0.000854,
         wowhead = "https://www.wowhead.com/spell=71342",
     },
     {
@@ -356,7 +356,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Lesser Cache of the Aspects",
         zone    = "Dragon Soul",
-        dropChance = 0.0115,
+        dropChance = 0.011517,
         wowhead = "https://www.wowhead.com/spell=110039",
     },
     {
@@ -364,7 +364,7 @@ ns.Data.Register(nil, {
         spellID = 171624,
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
-        dropChance = 0.0134,
+        dropChance = 0.013423,
         wowhead = "https://www.wowhead.com/spell=171624",
     },
     {
@@ -372,7 +372,7 @@ ns.Data.Register(nil, {
         spellID = 171635,
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
-        dropChance = 0.0075,
+        dropChance = 0.007452,
         wowhead = "https://www.wowhead.com/spell=171635",
     },
     {
@@ -380,7 +380,7 @@ ns.Data.Register(nil, {
         spellID = 171836,
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
-        dropChance = 0.0081,
+        dropChance = 0.008111,
         wowhead = "https://www.wowhead.com/spell=171836",
     },
     {
@@ -388,7 +388,7 @@ ns.Data.Register(nil, {
         spellID = 171843,
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
-        dropChance = 0.0100,
+        dropChance = 0.010027,
         wowhead = "https://www.wowhead.com/spell=171843",
     },
     {
@@ -396,7 +396,7 @@ ns.Data.Register(nil, {
         spellID = 242875,
         acquisition = "drop",
         source  = "Dreamweaver Cache",
-        dropChance = 0.1159,
+        dropChance = 0.115866,
         wowhead = "https://www.wowhead.com/spell=242875",
     },
     {
@@ -404,7 +404,7 @@ ns.Data.Register(nil, {
         spellID = 242881,
         acquisition = "drop",
         source  = "Farondis Chest",
-        dropChance = 0.0298,
+        dropChance = 0.029811,
         wowhead = "https://www.wowhead.com/spell=242881",
     },
     {
@@ -412,7 +412,7 @@ ns.Data.Register(nil, {
         spellID = 242882,
         acquisition = "drop",
         source  = "Valarjar Strongbox",
-        dropChance = 0.0468,
+        dropChance = 0.046751,
         wowhead = "https://www.wowhead.com/spell=242882",
     },
     {
@@ -420,7 +420,7 @@ ns.Data.Register(nil, {
         spellID = 254069,
         acquisition = "drop",
         source  = "Gleaming Footlocker",
-        dropChance = 0.0472,
+        dropChance = 0.047189,
         wowhead = "https://www.wowhead.com/spell=254069",
     },
     {
@@ -428,7 +428,7 @@ ns.Data.Register(nil, {
         spellID = 254258,
         acquisition = "drop",
         source  = "Gleaming Footlocker",
-        dropChance = 0.0426,
+        dropChance = 0.042572,
         wowhead = "https://www.wowhead.com/spell=254258",
     },
     {
@@ -436,7 +436,7 @@ ns.Data.Register(nil, {
         spellID = 254811,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0454,
+        dropChance = 0.045381,
         wowhead = "https://www.wowhead.com/spell=254811",
     },
     {
@@ -444,7 +444,7 @@ ns.Data.Register(nil, {
         spellID = 278979,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0017,
+        dropChance = 0.001660,
         wowhead = "https://www.wowhead.com/spell=278979",
     },
     {
@@ -453,7 +453,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Knight-Captain Aldrin",
         zone    = "Arathi Highlands",
-        dropChance = 0.0666,
+        dropChance = 0.066631,
         wowhead = "https://www.wowhead.com/spell=279457",
     },
     {
@@ -461,7 +461,7 @@ ns.Data.Register(nil, {
         spellID = 279466,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0624,
+        dropChance = 0.062399,
         wowhead = "https://www.wowhead.com/spell=279466",
     },
     {
@@ -469,7 +469,7 @@ ns.Data.Register(nil, {
         spellID = 279467,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0344,
+        dropChance = 0.034441,
         wowhead = "https://www.wowhead.com/spell=279467",
     },
     {
@@ -478,7 +478,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Beastrider Kama",
         zone    = "Arathi Highlands",
-        dropChance = 0.0567,
+        dropChance = 0.056745,
         wowhead = "https://www.wowhead.com/spell=279569",
     },
     {
@@ -487,7 +487,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Overseer Krix",
         zone    = "Arathi Highlands",
-        dropChance = 0.0664,
+        dropChance = 0.066442,
         wowhead = "https://www.wowhead.com/spell=279608",
     },
     {
@@ -496,7 +496,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Skullripper",
         zone    = "Arathi Highlands",
-        dropChance = 0.0622,
+        dropChance = 0.062194,
         wowhead = "https://www.wowhead.com/spell=279611",
     },
     {
@@ -505,7 +505,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Nimar the Slayer",
         zone    = "Arathi Highlands",
-        dropChance = 0.0556,
+        dropChance = 0.055555,
         wowhead = "https://www.wowhead.com/spell=279868",
     },
     {
@@ -514,7 +514,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Agathe Wyrmwood",
         zone    = "Darkshore",
-        dropChance = 0.0594,
+        dropChance = 0.059423,
         wowhead = "https://www.wowhead.com/spell=288438",
     },
     {
@@ -523,7 +523,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Alash'anir",
         zone    = "Darkshore",
-        dropChance = 0.0557,
+        dropChance = 0.055693,
         wowhead = "https://www.wowhead.com/spell=288495",
     },
     {
@@ -532,7 +532,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Moxo the Beheader",
         zone    = "Darkshore",
-        dropChance = 0.0498,
+        dropChance = 0.049768,
         wowhead = "https://www.wowhead.com/spell=288503",
     },
     {
@@ -541,7 +541,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Croz Bloodrage",
         zone    = "Darkshore",
-        dropChance = 0.0511,
+        dropChance = 0.051106,
         wowhead = "https://www.wowhead.com/spell=288505",
     },
     {
@@ -549,7 +549,7 @@ ns.Data.Register(nil, {
         spellID = 288712,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0146,
+        dropChance = 0.014587,
         wowhead = "https://www.wowhead.com/spell=288712",
     },
     {
@@ -557,7 +557,7 @@ ns.Data.Register(nil, {
         spellID = 288720,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0134,
+        dropChance = 0.013371,
         wowhead = "https://www.wowhead.com/spell=288720",
     },
     {
@@ -565,7 +565,7 @@ ns.Data.Register(nil, {
         spellID = 288721,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.0920,
+        dropChance = 0.092010,
         wowhead = "https://www.wowhead.com/spell=288721",
     },
     {
@@ -573,7 +573,7 @@ ns.Data.Register(nil, {
         spellID = 288722,
         acquisition = "drop",
         source  = "Island Expeditions",
-        dropChance = 0.1207,
+        dropChance = 0.120702,
         wowhead = "https://www.wowhead.com/spell=288722",
     },
     {
@@ -581,7 +581,7 @@ ns.Data.Register(nil, {
         spellID = 294038,
         acquisition = "drop",
         source  = "Ankoan Supplies",
-        dropChance = 0.0626,
+        dropChance = 0.062586,
         wowhead = "https://www.wowhead.com/spell=294038",
     },
     {
@@ -590,7 +590,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "N'Zoth the Corruptor",
         zone    = "Ny'alotha, the Waking City",
-        dropChance = 0.0068,
+        dropChance = 0.006783,
         wowhead = "https://www.wowhead.com/spell=308814",
     },
     {
@@ -599,7 +599,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Mail Muncher",
         zone    = "Horrific Visions",
-        dropChance = 1.0000,
+        dropChance = 1.000000,
         wowhead = "https://www.wowhead.com/spell=315987",
     },
     {
@@ -607,7 +607,7 @@ ns.Data.Register(nil, {
         spellID = 344574,
         acquisition = "drop",
         source  = "Oozing Necroray Egg",
-        dropChance = 0.3394,
+        dropChance = 0.339419,
         wowhead = "https://www.wowhead.com/spell=344574",
     },
     {
@@ -615,7 +615,7 @@ ns.Data.Register(nil, {
         spellID = 344576,
         acquisition = "drop",
         source  = "Oozing Necroray Egg",
-        dropChance = 0.3286,
+        dropChance = 0.328614,
         wowhead = "https://www.wowhead.com/spell=344576",
     },
     {
@@ -624,7 +624,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "So'leah",
         zone    = "Tazavesh, the Veiled Market",
-        dropChance = 0.0097,
+        dropChance = 0.009679,
         wowhead = "https://www.wowhead.com/spell=353263",
     },
     {
@@ -632,7 +632,7 @@ ns.Data.Register(nil, {
         spellID = 432455,
         acquisition = "drop",
         source  = "Daetan Swiftplume",
-        dropChance = 0.0398,
+        dropChance = 0.039810,
         wowhead = "https://www.wowhead.com/spell=432455",
     },
     {
@@ -640,7 +640,7 @@ ns.Data.Register(nil, {
         spellID = 1218013,
         acquisition = "drop",
         source  = "Apothecary Hummel",
-        dropChance = 0.0000,
+        dropChance = 0.000032,
         wowhead = "https://www.wowhead.com/spell=1218013",
     },
     {
@@ -649,7 +649,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Dimensius, the All-Devouring",
         zone    = "Manaforge Omega (Mythic)",
-        dropChance = 0.1724,
+        dropChance = 0.172414,
         wowhead = "https://www.wowhead.com/spell=1234573",
     },
     {
@@ -657,7 +657,7 @@ ns.Data.Register(nil, {
         spellID = 1247662,
         acquisition = "drop",
         source  = "Coren Direbrew",
-        dropChance = 0.0045,
+        dropChance = 0.004465,
         wowhead = "https://www.wowhead.com/spell=1247662",
     },
     {
@@ -665,7 +665,7 @@ ns.Data.Register(nil, {
         spellID = 1261155,
         acquisition = "drop",
         source  = "Voidstorm Rare Creatures",
-        dropChance = 0.0015,
+        dropChance = 0.001521,
         wowhead = "https://www.wowhead.com/spell=1261155",
     },
     {
@@ -673,7 +673,7 @@ ns.Data.Register(nil, {
         spellID = 1261323,
         acquisition = "drop",
         source  = "Eversong Woods Rare Creatures",
-        dropChance = 0.0016,
+        dropChance = 0.001600,
         wowhead = "https://www.wowhead.com/spell=1261323",
     },
     {
@@ -682,7 +682,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Slayer's Duellum Trove",
         zone    = "Masters' Perch",
-        dropChance = 0.3210,
+        dropChance = 0.320988,
         wowhead = "https://www.wowhead.com/spell=1261332",
     },
     {
@@ -691,7 +691,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "The Restless Heart",
         zone    = "Windrunner Spire (Mythic)",
-        dropChance = 0.0202,
+        dropChance = 0.020212,
         wowhead = "https://www.wowhead.com/spell=1263635",
     },
     {
@@ -700,7 +700,7 @@ ns.Data.Register(nil, {
         acquisition = "drop",
         source  = "Degentrius",
         zone    = "Magister's Terrace (Mythic)",
-        dropChance = 0.0205,
+        dropChance = 0.020478,
         wowhead = "https://www.wowhead.com/spell=1265784",
     },
     {
@@ -708,7 +708,7 @@ ns.Data.Register(nil, {
         spellID = 1266700,
         acquisition = "drop",
         source  = "Voidstorm Rare Creatures",
-        dropChance = 0.0012,
+        dropChance = 0.001217,
         wowhead = "https://www.wowhead.com/spell=1266700",
     },
 })
