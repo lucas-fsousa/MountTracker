@@ -19,16 +19,22 @@ local STATUS_WEIGHT = {
     HIDDEN           = 9,
 }
 
--- Score de dificuldade: READY no topo; depois quem esta mais perto do custo.
+-- Score de dificuldade (menor = mais facil = topo).
 local function difficulty(item)
+    -- Obtenivel AGORA (glow) -> topo absoluto: e so ir buscar.
+    if item.readyNow then return -1 end
+
     local base = STATUS_WEIGHT[item.status] or 5
     if item.status == ns.STATUS.NEED_CURRENCY then
         return base + (1 - (item.costPct or 0)) -- mais currency acumulada = menor score
     elseif item.status == ns.STATUS.FARM then
-        -- Ordena drops pela raridade: odds boas (1/25) interleavam com os compraveis;
-        -- odds ruins (1/200) caem para o fundo. Sem dado -> assume ~1/150.
-        local n = item.dropChance and math.floor(1 / item.dropChance + 0.5) or 150
-        return 1.5 + math.min(n, 250) / 100   -- 1/25->1.75, 1/50->2.0, 1/100->2.5, 1/200->3.5
+        local chance = item.dropChance
+        -- Drop ~100% (raro elite): o gargalo e o raro estar UP, nao a sorte do drop.
+        -- Relevancia MEDIA (nem topo, nem fundo).
+        if chance and chance >= 0.9 then return 3.5 end
+        -- Demais drops: pela raridade. Bons (1/25) altos; ruins (1/200) ao fundo.
+        local n = chance and math.floor(1 / chance + 0.5) or 150
+        return 2.0 + math.min(n, 250) / 80   -- 1/25->2.31, 1/100->3.25, 1/200->4.5
     elseif item.status == ns.STATUS.MISSING then
         -- Nao-curada: dificuldade pela categoria derivada do texto de origem.
         return item._catDiff or 4.0
@@ -50,6 +56,7 @@ function Roadmap.Build()
     local curatedApplied, unavailable = 0, 0
     for _, cand in ipairs(candidates) do
         local item = ns.Logic.Eligibility.Evaluate(cand)
+        item.readyNow = ns.Logic.Eligibility.IsReadyNow(item)
         item._diff = difficulty(item)
         items[#items + 1] = item       -- inclui owned tambem; o filtro decide o que exibir
         if item.owned then owned = owned + 1 end

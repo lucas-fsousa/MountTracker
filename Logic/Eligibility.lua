@@ -138,6 +138,49 @@ local function categorize(sourceText)
     return "Other", 4.0
 end
 
+-- Quanto o personagem possui de um custo parseado (nil = desconhecido/Secret Value).
+function ns.CostHave(c)
+    if c.ctype == "currency" then
+        local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
+        return ci and ns.Safe.Value(ci.quantity, nil) or nil
+    elseif c.ctype == "item" then
+        local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
+        return ns.Safe.Value(cnt, nil)
+    else -- gold
+        return ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
+    end
+end
+
+-- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
+local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
+
+-- "Da pra pegar AGORA?" -> glow + topo da lista. Double-check em camadas:
+--   1. Curado (Wowhead): READY = elegibilidade verificada.
+--   2. Jogo nativo: se o sourceText cita requisito -> ha gate -> nao.
+--   3. Fallback: nenhum requisito conhecido -> sim, se o custo esta pago.
+function Eligibility.IsReadyNow(item)
+    if item.owned then return false end
+    if item.status == ns.STATUS.READY then return true end   -- curado verificado
+    if item.entry then return false end                      -- curado, ainda nao elegivel
+    if item.status ~= ns.STATUS.MISSING then return false end
+
+    local t = (item.sourceText or ""):lower()
+    for _, w in ipairs(READY_GATE_WORDS) do
+        if t:find(w, 1, true) then return false end
+    end
+    local costSource = nil
+    for _, s in ipairs(item.sources or {}) do
+        if s.renown then return false end
+        if not costSource and s.costs and #s.costs > 0 then costSource = s end
+    end
+    if not costSource then return false end
+    for _, c in ipairs(costSource.costs) do
+        local have = ns.CostHave(c)
+        if have == nil or have < (c.amount or 0) then return false end
+    end
+    return true
+end
+
 -- Avalia UM candidato. Retorna um "item de roadmap" enriquecido.
 function Eligibility.Evaluate(cand)
     local info, entry, mountID = cand.info, cand.entry, cand.mountID

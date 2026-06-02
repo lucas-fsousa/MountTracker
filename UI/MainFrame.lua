@@ -14,19 +14,6 @@ local function num(n)
     return (BreakUpLargeNumbers and BreakUpLargeNumbers(n)) or tostring(n)
 end
 
--- Quanto o personagem possui de um custo (nil = desconhecido/Secret Value).
-local function costHave(c)
-    if c.ctype == "currency" then
-        local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
-        return ci and ns.Safe.Value(ci.quantity, nil) or nil
-    elseif c.ctype == "item" then
-        local cnt = (C_Item and C_Item.GetItemCount and C_Item.GetItemCount(c.id)) or (GetItemCount and GetItemCount(c.id))
-        return ns.Safe.Value(cnt, nil)
-    else -- gold
-        return ns.Safe.Value(math.floor((GetMoney() or 0) / 10000), nil)
-    end
-end
-
 local function costName(c)
     if c.ctype == "currency" then
         local ci = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(c.id)
@@ -47,7 +34,7 @@ local function costToText(costs)
             or (fid and ("|T" .. fid .. ":13:13|t "))
             or (c.ctype == "gold" and "|TInterface\\MoneyFrame\\UI-GoldIcon:13:13|t ")
             or ""
-        local have = costHave(c)
+        local have = ns.CostHave(c)
 
         local haveStr = ""
         if have ~= nil then
@@ -59,44 +46,8 @@ local function costToText(costs)
     return table.concat(parts, ", ")
 end
 
--- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
-local GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires" }
-
--- A montaria pode ser obtida AGORA? (borda brilhante). Double-check em camadas:
---   1. Jogo (nativo): se o sourceText cita um requisito -> ha gate -> nao brilha.
---   2. Wowhead (curadoria): se curada, usa a eligibilidade verificada (READY brilha).
---   3. Fallback: nem jogo nem Wowhead informam requisito -> brilha se o custo esta pago.
-local function readyNow(item)
-    if item.owned then return false end
-
-    -- Camada 2 (curado/Wowhead): eligibilidade precisa ja calculada.
-    if item.status == ns.STATUS.READY then return true end   -- requisito + custo verificados
-    if item.entry then return false end                      -- curado mas ainda nao elegivel
-
-    -- Nao-curado: so a base ao vivo do jogo.
-    if item.status ~= ns.STATUS.MISSING then return false end
-
-    -- Camada 1 (jogo nativo): texto cita um requisito que nao da p/ verificar -> nao brilha.
-    local t = (item.sourceText or ""):lower()
-    for _, w in ipairs(GATE_WORDS) do
-        if t:find(w, 1, true) then return false end
-    end
-    for _, s in ipairs(item.sources or {}) do
-        if s.renown then return false end
-    end
-
-    -- Camada 3 (fallback): nenhum requisito conhecido -> brilha se houver custo e estiver pago.
-    local costSource = nil
-    for _, s in ipairs(item.sources or {}) do
-        if s.costs and #s.costs > 0 then costSource = s; break end
-    end
-    if not costSource then return false end
-    for _, c in ipairs(costSource.costs) do
-        local have = costHave(c)
-        if have == nil or have < (c.amount or 0) then return false end
-    end
-    return true
-end
+-- readyNow e calculado na camada logica (Eligibility.IsReadyNow) e guardado em
+-- item.readyNow, para que o glow (aqui) e a ordenacao (Roadmap) usem o mesmo sinal.
 
 -- Linha 2: vendedores/origem (com tag de faccao [A]/[H] quando aplicavel).
 local function vendorsText(item)
@@ -282,7 +233,7 @@ local function refreshRow(r, item)
     r.zonecost:SetText(zoneCostText(item))
 
     -- Glow de "obtenivel agora".
-    if readyNow(item) then
+    if item.readyNow then
         r.glow:Show()
         if not r.glow.ag:IsPlaying() then r.glow.ag:Play() end
     else
