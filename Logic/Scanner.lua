@@ -59,7 +59,7 @@ function Scanner.Collect()
 
     local ids = C_MountJournal.GetMountIDs()
     for _, mountID in ipairs(ids) do
-        local name, spellID, icon, _, isUsable, sourceType, _, isFactionSpecific, faction, _, isCollected =
+        local name, spellID, icon, _, isUsable, sourceType, _, isFactionSpecific, faction, shouldHideOnChar, isCollected =
             C_MountJournal.GetMountInfoByID(mountID)
         if name and name ~= "" then
             local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
@@ -71,6 +71,7 @@ function Scanner.Collect()
                 spellID    = spellID,
                 sourceType = sourceType,
                 sourceText = sourceText,
+                shouldHideOnChar = shouldHideOnChar,   -- jogo esconde p/ este char (inelegivel)
                 info = {
                     name              = name,
                     icon              = icon,

@@ -37,6 +37,7 @@ ns.STATUS = {
     OWNED            = "OWNED",            -- ja coletada (so visivel com "Show owned")
     FARM             = "FARM",             -- drop/RNG: nao e "comprar", e farmar
     MISSING          = "MISSING",          -- nao-curada: usa o texto de origem do jogo
+    UNAVAILABLE      = "UNAVAILABLE",      -- o jogo esconde p/ este char (faccao/legacy/locked)
 }
 
 -- Cores por status (r, g, b) p/ badges na UI.
@@ -51,6 +52,7 @@ ns.STATUS_COLOR = {
     OWNED            = { 0.30, 0.85, 0.45 },
     FARM             = { 0.45, 0.70, 0.95 },
     MISSING          = { 0.80, 0.80, 0.85 },
+    UNAVAILABLE      = { 0.70, 0.35, 0.35 },
 }
 
 ns.STATUS_LABEL = {
@@ -64,6 +66,7 @@ ns.STATUS_LABEL = {
     OWNED            = "Owned",
     FARM             = "Farmable (RNG)",
     MISSING          = "Missing",
+    UNAVAILABLE      = "Unavailable",
 }
 
 -- Helper de print com prefixo.

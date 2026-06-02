@@ -15,6 +15,7 @@ local STATUS_WEIGHT = {
     FARM             = 4,
     OWNED            = 6,
     WRONG_FACTION    = 8,
+    UNAVAILABLE      = 8.5,
     HIDDEN           = 9,
 }
 
@@ -46,12 +47,13 @@ function Roadmap.Build()
     local items = {}
     local owned = 0
 
-    local curatedApplied = 0
+    local curatedApplied, unavailable = 0, 0
     for _, cand in ipairs(candidates) do
         local item = ns.Logic.Eligibility.Evaluate(cand)
         item._diff = difficulty(item)
         items[#items + 1] = item       -- inclui owned tambem; o filtro decide o que exibir
         if item.owned then owned = owned + 1 end
+        if item.status == ns.STATUS.UNAVAILABLE then unavailable = unavailable + 1 end
         if cand.entry then curatedApplied = curatedApplied + 1 end
     end
 
@@ -62,12 +64,13 @@ function Roadmap.Build()
 
     -- Estatisticas de diagnostico (consumidas por /mtrack scan e pela janela).
     ns._stats = {
-        total      = #candidates,          -- todas as montarias do journal (com nome)
-        curated    = curatedTotal(),       -- entradas no overlay curado
-        applied    = curatedApplied,       -- overlays que casaram com o journal
-        unresolved = ns._unresolved and #ns._unresolved or 0,
-        owned      = owned,
-        pending    = #items - owned,
+        total       = #candidates,          -- todas as montarias do journal (com nome)
+        curated     = curatedTotal(),       -- entradas no overlay curado
+        applied     = curatedApplied,       -- overlays que casaram com o journal
+        unresolved  = ns._unresolved and #ns._unresolved or 0,
+        owned       = owned,
+        unavailable = unavailable,          -- escondidas pelo jogo (faccao/legacy/locked)
+        pending     = #items - owned - unavailable,  -- obteniveis por este personagem
     }
 
     ns._roadmap = items
@@ -83,6 +86,7 @@ function Roadmap.Filtered()
         local show = true
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end
+        if item.status == ns.STATUS.UNAVAILABLE and not s.showWrongFaction then show = false end
         if item.status == ns.STATUS.HIDDEN and not s.showHidden then show = false end
         if show then out[#out + 1] = item end
     end

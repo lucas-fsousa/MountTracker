@@ -165,6 +165,14 @@ function Eligibility.Evaluate(cand)
         return item
     end
 
+    -- 2.5) O jogo esconde esta montaria para este personagem (faccao oposta, classe,
+    --      legacy/inobtenivel). Sinal autoritativo do proprio Mount Journal.
+    if cand.shouldHideOnChar then
+        item.status = S.UNAVAILABLE
+        item.detail = ns.CleanSource and ns.CleanSource(cand.sourceText) or ""
+        return item
+    end
+
     -- 3) Faccao oposta (inelegivel).
     local pf = playerFactionId()
     if info.isFactionSpecific and info.faction ~= nil and pf ~= nil and info.faction ~= pf then

@@ -28,8 +28,8 @@ local function handleEvent(_, event)
         ns.Logic.Roadmap.Build()
         dirty = false
         local s = ns._stats or {}
-        ns.Print(("loaded. %d missing of %d mounts. Type |cffffff00/mtrack|r to open.")
-            :format(s.pending or 0, s.total or 0))
+        ns.Print(("loaded. %d obtainable mounts to collect (%d owned, %d unavailable). Type |cffffff00/mtrack|r to open.")
+            :format(s.pending or 0, s.owned or 0, s.unavailable or 0))
     else
         -- Coleta nova montaria, mudou ouro/currency ou reputacao -> recalcular.
         markDirty()
@@ -66,8 +66,8 @@ local function handleSlash(msg)
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
-        ns.Print(("scan: %d mounts | %d owned | %d pending | curated overlay %d/%d applied")
-            :format(s.total or 0, s.owned or 0, s.pending or 0, s.applied or 0, s.curated or 0))
+        ns.Print(("scan: %d mounts | %d owned | %d obtainable | %d unavailable | overlay %d/%d")
+            :format(s.total or 0, s.owned or 0, s.pending or 0, s.unavailable or 0, s.applied or 0, s.curated or 0))
         if (s.unresolved or 0) > 0 and ns._unresolved then
             ns.Print("  curated not in journal: " .. table.concat(ns._unresolved, ", "))
         end
