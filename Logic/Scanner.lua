@@ -106,17 +106,20 @@ function Scanner.Dump()
     local out = {}
     local ids = C_MountJournal.GetMountIDs()
     for _, mountID in ipairs(ids) do
-        local name, spellID, _, _, _, sourceType, _, isFactionSpecific, faction, _, isCollected =
+        local name, spellID, _, _, isUsable, sourceType, _, isFactionSpecific, faction, shouldHideOnChar, isCollected =
             C_MountJournal.GetMountInfoByID(mountID)
         local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
         out[#out + 1] = {
-            mountID    = mountID,
-            spellID    = spellID,
-            name       = name,
-            sourceType = sourceType,                              -- 0 Drop,1 Quest,2 Vendor,...
-            faction    = isFactionSpecific and faction or nil,    -- 0 Horde,1 Alliance
-            collected  = isCollected,
-            sourceText = sourceText,                              -- texto cru do jogo
+            mountID          = mountID,
+            spellID          = spellID,
+            name             = name,
+            sourceType       = sourceType,             -- 0 Drop,1 Quest,2 Vendor,...
+            isFactionSpecific = isFactionSpecific,
+            faction          = faction,                -- 0 Horde,1 Alliance (cru)
+            shouldHideOnChar = shouldHideOnChar,       -- jogo esconderia p/ este char
+            isUsable         = isUsable,
+            collected        = isCollected,
+            sourceText       = sourceText,             -- texto cru do jogo
         }
     end
     MountTrackerDump = {
