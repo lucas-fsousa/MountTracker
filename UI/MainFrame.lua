@@ -335,6 +335,30 @@ local function buildFrame()
     end)
     frame.ddExp = dd
 
+    -- Dropdown: filtro por zona (All / zona atual do personagem).
+    local zdLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    zdLabel:SetPoint("TOPLEFT", 250, -28)
+    zdLabel:SetText("Zone:")
+
+    local zd = CreateFrame("Frame", "MountTrackerZoneDropdown", frame, "UIDropDownMenuTemplate")
+    zd:SetPoint("LEFT", zdLabel, "RIGHT", -6, -2)
+    UIDropDownMenu_SetWidth(zd, 110)
+    UIDropDownMenu_Initialize(zd, function(_, level)
+        local function add(label, value)
+            local info = UIDropDownMenu_CreateInfo()
+            info.text, info.value = label, value
+            info.checked = (ns.DB.Settings().zoneFilter or "All") == value
+            info.func = ns.Safe.Wrap("apply zone filter", function()
+                ns.DB.Settings().zoneFilter = value
+                UI.Refresh()
+            end)
+            UIDropDownMenu_AddButton(info)
+        end
+        add("All zones", "All")
+        add("Current zone", "Current")
+    end)
+    frame.ddZone = zd
+
     -- Checkbox: mostrar indisponiveis / ocultas.
     local cb = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
     cb:SetPoint("TOPLEFT", 16, -56)
@@ -403,9 +427,14 @@ function UI.Refresh()
     frame.title:SetText(("MountTracker  -  mount roadmap  (%d)"):format(#items))
 
     if #items == 0 then
-        local s = ns._stats or {}
-        frame.empty:SetText(("Nothing to show with current filters.\n\n%d owned  |  %d obtainable  |  %d unavailable\n\nThe %d unavailable are hidden by the game for this\ncharacter (other faction / class / legacy).\nTick \"Show unavailable / hidden\" to reveal them.")
-            :format(s.owned or 0, s.pending or 0, s.unavailable or 0, s.unavailable or 0))
+        if (ns.DB.Settings().zoneFilter or "All") == "Current" then
+            frame.empty:SetText(("No missing mounts from your current zone\n(%s).\n\nMove to a zone with mounts, or set Zone to \"All zones\".")
+                :format(GetRealZoneText() or GetZoneText() or "?"))
+        else
+            local s = ns._stats or {}
+            frame.empty:SetText(("Nothing to show with current filters.\n\n%d owned  |  %d obtainable  |  %d unavailable\n\nThe %d unavailable are hidden by the game for this\ncharacter (other faction / class / legacy).\nTick \"Show unavailable / hidden\" to reveal them.")
+                :format(s.owned or 0, s.pending or 0, s.unavailable or 0, s.unavailable or 0))
+        end
         frame.empty:Show()
     else
         frame.empty:Hide()
@@ -414,6 +443,12 @@ function UI.Refresh()
     frame.cbOwned:SetChecked(ns.DB.Settings().showOwned)
     local ef = ns.DB.Settings().expansionFilter or "All"
     UIDropDownMenu_SetText(frame.ddExp, ef == "All" and "All expansions" or ef)
+    if (ns.DB.Settings().zoneFilter or "All") == "Current" then
+        local z = GetRealZoneText() or GetZoneText() or "?"
+        UIDropDownMenu_SetText(frame.ddZone, "Current: " .. z)
+    else
+        UIDropDownMenu_SetText(frame.ddZone, "All zones")
+    end
 end
 
 function UI.Toggle()

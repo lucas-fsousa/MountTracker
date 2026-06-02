@@ -84,15 +84,41 @@ function Roadmap.Build()
     return items
 end
 
--- Aplica os filtros de settings (faccao errada / ocultas) sobre o roadmap.
+-- Zonas associadas a uma montaria (curada + parseadas do sourceText).
+local function itemZones(item)
+    local z = {}
+    if item.entry and item.entry.zone then z[#z + 1] = item.entry.zone end
+    for _, src in ipairs(item.sources or {}) do
+        if src.zone then z[#z + 1] = src.zone end
+    end
+    return z
+end
+
+-- Casa a zona da montaria com a do personagem (contains nos dois sentidos,
+-- p/ tolerar "Nagrand, Outland" vs "Nagrand").
+local function zoneMatches(item, playerZone)
+    if not playerZone or playerZone == "" then return false end
+    for _, z in ipairs(itemZones(item)) do
+        local lz = z:lower()
+        if lz:find(playerZone, 1, true) or playerZone:find(lz, 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+-- Aplica os filtros de settings (expansao / zona / faccao errada / ocultas).
 function Roadmap.Filtered()
     local items = ns._roadmap or Roadmap.Build()
     local s = ns.DB.Settings()
     local out = {}
     local expFilter = s.expansionFilter
+    local zoneCurrent = (s.zoneFilter == "Current")
+    local playerZone = zoneCurrent and ((GetRealZoneText() or GetZoneText() or ""):lower()) or nil
     for _, item in ipairs(items) do
         local show = true
         if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
+        if zoneCurrent and not zoneMatches(item, playerZone) then show = false end
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end
         if item.status == ns.STATUS.UNAVAILABLE and not s.showWrongFaction then show = false end
