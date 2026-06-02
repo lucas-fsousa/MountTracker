@@ -10,8 +10,16 @@ local rows = {}
 
 -- ---- Helpers de render do custo/vendedores (linha 2 e 3) ----
 
+-- Abrevia numeros grandes: 42506 -> "42.5k", 1500000 -> "1.5M", 500 -> "500".
 local function num(n)
-    return (BreakUpLargeNumbers and BreakUpLargeNumbers(n)) or tostring(n)
+    n = tonumber(n) or 0
+    local function trim(x) return (("%.1f"):format(x):gsub("%.0$", "")) end
+    if n >= 1e6 then
+        return trim(n / 1e6) .. "M"
+    elseif n >= 1e3 then
+        return trim(n / 1e3) .. "k"
+    end
+    return tostring(math.floor(n))
 end
 
 local function costName(c)
