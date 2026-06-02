@@ -6,6 +6,12 @@
 
 local ADDON, ns = ...
 
+-- Tokens que o jogo as vezes mostra sem link |H (so numero + icone). Mapeamos pelo
+-- caminho do icone (substring, lowercase) -> itemID, para resolver nome + posse.
+ns.KNOWN_TOKEN_ICONS = ns.KNOWN_TOKEN_ICONS or {
+    ["achievement_bg_kill_on_mount"] = 103533,  -- Vicious Saddle (mounts Vicious de PvP)
+}
+
 -- Remove markup inline (hyperlinks, texturas, cor, quebras) mantendo so o texto.
 local function inline(v)
     if not v then return "" end
@@ -32,16 +38,25 @@ local function parseCosts(value)
         return ""
     end)
 
-    -- 2) NUM|Ticon|t (sem |H). Ouro SO se o icone for de dinheiro; senao e um
-    --    "token" opaco (ex.: Vicious Saddle de PvP, sem link p/ o ID) -> nao e ouro.
+    -- 2) NUM|Ticon|t (sem |H). Ouro SO se o icone for de dinheiro; alguns tokens
+    --    conhecidos (sem link p/ o ID) sao mapeados pelo icone -> item (nome + have);
+    --    o resto vira "token" opaco (so o icone).
     for amount, icon in rest:gmatch("(%d+)|T(.-):%d+|t") do
         local low = icon:lower()
-        local isGold = low:find("moneyframe", 1, true) or low:find("goldicon", 1, true)
-        costs[#costs + 1] = {
-            amount = tonumber(amount),
-            ctype  = isGold and "gold" or "token",
-            icon   = icon,
-        }
+        if low:find("moneyframe", 1, true) or low:find("goldicon", 1, true) then
+            costs[#costs + 1] = { amount = tonumber(amount), ctype = "gold", icon = icon }
+        else
+            local known
+            for pat, id in pairs(ns.KNOWN_TOKEN_ICONS) do
+                if low:find(pat, 1, true) then known = id break end
+            end
+            costs[#costs + 1] = {
+                amount = tonumber(amount),
+                ctype  = known and "item" or "token",
+                id     = known,
+                icon   = icon,
+            }
+        end
     end
 
     -- 3) fallback: numero solto sem icone
