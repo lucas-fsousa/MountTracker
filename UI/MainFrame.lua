@@ -69,11 +69,10 @@ local function vendorsText(item)
         local tag = ""
         if s.faction == "Alliance" then tag = "|cff4a78ff[A]|r "
         elseif s.faction == "Horde" then tag = "|cffe5304a[H]|r " end
-        if s.kind == "Vendor" then
-            parts[#parts + 1] = tag .. (s.who or "?")
-        else
-            parts[#parts + 1] = (s.kind or "?") .. ": " .. (s.who or "?")
-        end
+        -- Sempre prefixa com o tipo da fonte ("Vendor:", "Drop:", "Quest:", ...).
+        -- O rotulo fica destacado em dourado, igual ao estilo do jogo.
+        local label = "|cffffd200" .. (s.kind or "Source") .. ":|r "
+        parts[#parts + 1] = tag .. label .. (s.who or "?")
     end
     return table.concat(parts, "    ")
 end

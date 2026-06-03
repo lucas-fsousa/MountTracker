@@ -16,6 +16,9 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Changed
+- **The source line now always shows the source type.** The second row line is
+  labelled with the source kind — `Vendor:`, `Drop:`, `Quest:`, `Faction:`, etc. —
+  so a vendor mount reads `Vendor: <name>` instead of just the bare NPC name.
 - **Release packaging.** The Release asset is now a version-less `MountTracker.zip`
   (stable URL: `.../releases/latest/download/MountTracker.zip`); the folder inside is
   always `MountTracker`, so manual installs load correctly. Tagging a version can also
