@@ -332,7 +332,7 @@ end
 -- Constroi a janela (lazy, na primeira abertura).
 local function buildFrame()
     frame = CreateFrame("Frame", "MountTrackerFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(560, 600)   -- altura +30% p/ mostrar mais linhas (rows ficaram mais altas)
+    frame:SetSize(560, 570)   -- altura aumentada p/ mostrar mais linhas (rows ficaram mais altas)
     frame:SetPoint("CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
