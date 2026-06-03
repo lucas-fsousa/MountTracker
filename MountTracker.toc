@@ -31,6 +31,7 @@ Data\Mounts_TWW.lua
 Data\Mounts_Midnight.lua
 Data\Mounts_Drops.lua
 Data\Mounts_Achievements.lua
+Data\Mounts_Vendors.lua
 
 # Logica
 Logic\Scanner.lua

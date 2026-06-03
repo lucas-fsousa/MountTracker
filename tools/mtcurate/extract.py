@@ -4,9 +4,51 @@
   drop_chance(html)  -> chance de drop pela maior amostra count/outof
 """
 
+import json
 import re
 
 from .sourcetext import STANDINGS
+
+
+def _balanced(s, start):
+    """Retorna a substring '[...]' balanceada que comeca em `start` (que aponta p/ '[')."""
+    depth = 0
+    for i in range(start, len(s)):
+        if s[i] == "[":
+            depth += 1
+        elif s[i] == "]":
+            depth -= 1
+            if depth == 0:
+                return s[start:i + 1]
+    return None
+
+
+def sold_cost(html):
+    """Primeiro custo nao-vazio de uma listview 'sold-by' do Wowhead.
+    Formato: "cost":[[ moneyCopper, [[id,count]...], [[id,count]...] ]].
+    Retorna (money_copper, [(id, count), ...]) -- os ids podem ser moeda ou item,
+    a resolucao do tipo fica a cargo de quem chama. Retorna None se nao houver."""
+    for m in re.finditer(r'"cost":', html or ""):
+        seg = _balanced(html, m.end())
+        if not seg:
+            continue
+        try:
+            arr = json.loads(seg)
+        except Exception:                       # noqa: BLE001
+            continue
+        if not arr or not isinstance(arr[0], list) or not arr[0]:
+            continue
+        grp = arr[0]
+        money = grp[0] if isinstance(grp[0], int) else 0
+        ids = []
+        for sub in grp[1:]:
+            if isinstance(sub, list):
+                for pair in sub:
+                    if isinstance(pair, list) and len(pair) >= 2:
+                        ids.append((pair[0], pair[1]))
+        if money or ids:
+            return money, ids
+    return None
 
 
 def requirement(html):

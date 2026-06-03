@@ -18,8 +18,7 @@ tools/out.lua
 __pycache__/
 
 # Artefatos gerados pela auditoria (derivados do dump; dados de conta)
-tools/_dump.jsonl
-tools/_audit.jsonl
+tools/_*
 tools/AUDIT.md
 
 # Backup pessoal e config local do Claude (nao versionar)

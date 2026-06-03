@@ -89,7 +89,8 @@ def main():
     print("-- Montarias liberadas por conquista (recompensa automatica; sem custo).")
     print("local ADDON, ns = ...\n")
     for exp in sorted(by_exp):
-        print(f'ns.Data.Register("{exp}", {{')
+        reg = "nil" if exp == "Unknown" else f'"{exp}"'
+        print(f"ns.Data.Register({reg}, {{")
         print("\n".join(by_exp[exp]))
         print("})\n")
 

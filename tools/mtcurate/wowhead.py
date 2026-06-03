@@ -50,6 +50,21 @@ def spell_html(http, sid):
     return http.get(f"{BASE}/spell={sid}")
 
 
+def _title(http, url):
+    m = re.search(r"<title>([^<|]+)", http.get(url))
+    return m.group(1).strip() if m else ""
+
+
+def cost_kind(http, cid):
+    """Classifica um id de custo do Wowhead: ('currency', nome) ou ('item', nome).
+    Tenta a pagina de moeda (titulo '<Nome> - Currency'); senao trata como item."""
+    t = _title(http, f"{BASE}/currency={cid}")
+    if " - Currency" in t and not t.lower().startswith("currencies"):
+        return "currency", t.split(" - ")[0].strip()
+    t = _title(http, f"{BASE}/item={cid}")
+    return "item", (t.split(" - ")[0].strip() if t else "item")
+
+
 def npc_id(http, name):
     """npcID pelo nome (typeName == NPC; tolerante a apostrofo; fallback: 1o NPC)."""
     if not name:
