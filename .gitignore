@@ -24,3 +24,6 @@ tools/AUDIT.md
 # Backup pessoal e config local do Claude (nao versionar)
 backup-claude.ps1
 .claude/settings.local.json
+
+# Rascunho da descricao do CurseForge (nao versionar)
+curseforge/
