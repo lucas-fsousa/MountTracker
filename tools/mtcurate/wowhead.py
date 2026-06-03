@@ -46,6 +46,10 @@ def item_html(http, iid):
     return http.get(f"{BASE}/item={iid}")
 
 
+def spell_html(http, sid):
+    return http.get(f"{BASE}/spell={sid}")
+
+
 def npc_id(http, name):
     """npcID pelo nome (typeName == NPC; tolerante a apostrofo; fallback: 1o NPC)."""
     if not name:
@@ -59,3 +63,14 @@ def npc_id(http, name):
 
 def npc_html(http, nid):
     return http.get(f"{BASE}/npc={nid}")
+
+
+def achievement_id(http, name):
+    """achievementID exato pelo nome (typeName == Achievement; tolerante a apostrofo)."""
+    if not name:
+        return None
+    achs = [r for r in _suggest(http, name) if r.get("typeName") == "Achievement"]
+    for r in achs:
+        if _norm(r.get("name")) == _norm(name):
+            return r.get("id")
+    return achs[0].get("id") if achs else None

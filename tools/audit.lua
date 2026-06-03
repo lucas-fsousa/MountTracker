@@ -82,9 +82,13 @@ for _, m in ipairs(MountTrackerDump.mounts) do
             gateCovered = req and req.type == "reputation" and req.factionID ~= nil
         end
 
+        -- Recompensa automatica de conquista: criterio e a conquista, zona/custo N/A.
+        local achReward = (gate == "achievement") and not isVendor
+        local acqAch = entry and entry.acquisition == "achievement"
+
         local miss = {}
         if expansion == "Unknown" then miss[#miss + 1] = "expansion" end
-        if not hasZone then miss[#miss + 1] = "zone" end
+        if not hasZone and not achReward and not acqAch then miss[#miss + 1] = "zone" end
         if isVendor and not hasCost then miss[#miss + 1] = "cost" end
         if gate and not gateCovered then miss[#miss + 1] = "gate:" .. gate end
 

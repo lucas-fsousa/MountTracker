@@ -30,6 +30,34 @@ def requirement(html):
     return None
 
 
+# Nome da expansao no Wowhead -> codigo interno do addon.
+_WH_EXP = {
+    "Classic": "Classic",
+    "The Burning Crusade": "TBC",
+    "Wrath of the Lich King": "WotLK",
+    "Cataclysm": "Cataclysm",
+    "Mists of Pandaria": "MoP",
+    "Warlords of Draenor": "WoD",
+    "Legion": "Legion",
+    "Battle for Azeroth": "BfA",
+    "Shadowlands": "Shadowlands",
+    "Dragonflight": "Dragonflight",
+    "The War Within": "TWW",
+    "Midnight": "Midnight",
+}
+
+
+def expansion(html):
+    """Expansao a partir do meta description do Wowhead. Cobre os dois formatos:
+       item  -> 'Added in World of Warcraft: <Exp>.'
+       spell -> 'A spell from World of Warcraft: <Exp>.'
+    Retorna o codigo interno do addon ou None."""
+    m = re.search(r"World of Warcraft: ([^.<\"]+)", html or "")
+    if not m:
+        return None
+    return _WH_EXP.get(m.group(1).strip())
+
+
 def drop_zone(html):
     """Zona onde um NPC e encontrado, a partir da pagina de NPC do Wowhead:
        'This NPC can be found in <span id="locations"> ... <a ...>ZONE</a>'.
