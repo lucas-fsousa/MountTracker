@@ -21,10 +21,11 @@ HOW TO RELEASE (see RELEASING.md):
 - `/mtrack marked` — lists the mounts you manually marked as owned.
 
 ### Fixed
-- **Filters no longer leave the window blank.** When a filter (e.g. *Current zone*)
-  shrank the list, the virtualized scroll could stay scrolled past the end and
-  render nothing; the scroll offset is now clamped and the list returns to the top
-  when a filter changes. (This was the real cause behind "Current zone shows
+- **Filters no longer leave the window blank.** The virtualized list rows were
+  children of the scroll frame, so its internal scroll offset pushed them out of
+  view (rows were "shown" but invisible). Rows are now children of the main frame,
+  anchored over the scroll area, with the data offset clamped to the list size and
+  a return-to-top on filter changes. (This was the cause behind "Current zone shows
   nothing" / "only appears with Show owned".)
 - Mounts from **revamped zones** (e.g. Isle of Quel'Danas) are no longer filed
   under the old expansion's filter — a recent spell ID now overrides the zone

@@ -163,9 +163,11 @@ end
 local function acquireRow(i)
     if rows[i] then return rows[i] end
 
-    -- Linhas sao "slots" fixos sobre o scroll (virtualizacao): o slot i fica sempre
-    -- na mesma posicao; o conteudo (a montaria) muda conforme a rolagem.
-    local r = CreateFrame("Button", nil, scroll, "BackdropTemplate")
+    -- Linhas sao "slots" fixos SOBRE a area do scroll, mas filhas do FRAME principal
+    -- (nao do FauxScrollFrame) -- senao o scroll interno do ScrollFrame as desloca
+    -- para fora da vista (linha "shown" mas invisivel). Ancoradas ao scroll.
+    local r = CreateFrame("Button", nil, frame, "BackdropTemplate")
+    r:SetFrameLevel(scroll:GetFrameLevel() + 2)
     r:SetHeight(ROW_HEIGHT)
     r:SetPoint("TOPLEFT", scroll, "TOPLEFT", 0, -(i - 1) * ROW_STEP)
     r:SetPoint("TOPRIGHT", scroll, "TOPRIGHT", 0, -(i - 1) * ROW_STEP)
@@ -411,8 +413,8 @@ local function buildFrame()
         if bar then bar:SetValue(bar:GetValue() - delta * 3 * ROW_STEP) end
     end)
 
-    frame.empty = scroll:CreateFontString(nil, "OVERLAY", "GameFontDisable")
-    frame.empty:SetPoint("TOPLEFT", 6, -16)
+    frame.empty = frame:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    frame.empty:SetPoint("TOPLEFT", scroll, "TOPLEFT", 6, -16)
     frame.empty:SetWidth(480)
     frame.empty:SetJustifyH("LEFT")
     frame.empty:SetText("Nothing in roadmap. Type /mtrack scan or adjust filters.")
