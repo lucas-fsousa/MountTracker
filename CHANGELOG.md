@@ -15,6 +15,13 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **Each row now shows your current standing toward the mount.** A fourth, colour-coded
+  line spells out exactly what's missing and where you are — e.g. a renown mount reads
+  `Hara'ti: Renown 8 / 14` (faction name + current/required) instead of a bare
+  *"Need Requirement"* badge. Works for reputation (current vs required standing),
+  renown, achievements, and currency costs. Rows are a bit taller to fit it.
+
 ### Fixed
 - **World drops in revamped zones no longer vanish under the Midnight filter.** A
   curated drop whose origin lived only in its `source`/`zone` field (e.g. a mount

@@ -45,29 +45,54 @@ local function majorFactionByName(name)
     return _mfByName[key] or _mfByName[key:gsub("^the ", "")] or _mfByName["the " .. key]
 end
 
--- Checa requisito: retorna (ok, faltaTexto).
+-- Standing (reaction 1..8) -> nome, p/ mostrar o nivel atual de reputacao classica.
+local REACTION_TO_STANDING = {
+    "Hated", "Hostile", "Unfriendly", "Neutral",
+    "Friendly", "Honored", "Revered", "Exalted",
+}
+
+-- Nome de uma faccao de reputacao classica (pode ser nil se a API nao resolver).
+local function reputationName(factionID)
+    if factionID and C_Reputation and C_Reputation.GetFactionDataByID then
+        local d = C_Reputation.GetFactionDataByID(factionID)
+        if d and d.name and d.name ~= "" then return d.name end
+    end
+    return nil
+end
+
+-- Checa requisito: retorna (ok, faltaTexto). O faltaTexto e informativo: diz QUAL e
+-- a faccao/conquista e o progresso ATUAL do personagem vs o necessario.
 local function checkRequirement(req)
     if not req then return true, nil end
 
     if req.type == "reputation" then
         local needed = ns.STANDING_TO_REACTION[req.standing] or 8
         local current = getReputation(req.factionID)
-        if not current then return false, "reputation unknown" end
+        local fname = reputationName(req.factionID) or req.factionName or "Reputation"
+        if not current then
+            return false, ("%s: need %s (current hidden)"):format(fname, req.standing or "?")
+        end
         if current >= needed then return true, nil end
-        return false, ("need %s"):format(req.standing or "?")
+        return false, ("%s: %s / need %s"):format(
+            fname, REACTION_TO_STANDING[current] or "?", req.standing or "?")
 
     elseif req.type == "renown" then
         local fid = req.factionID or majorFactionByName(req.factionName)
         local d = fid and C_MajorFactions and C_MajorFactions.GetMajorFactionData(fid)
-        if not d then return false, "renown faction unknown" end
+        local fname = (d and d.name) or req.factionName or "Renown faction"
+        local need = req.renownLevel or 0
+        if not d then
+            -- Faccao nao resolvida no cliente: ainda informamos qual e quanto e preciso.
+            return false, ("%s: need Renown %d"):format(fname, need)
+        end
         local cur = d.renownLevel or 0
-        if cur >= (req.renownLevel or 0) then return true, nil end
-        return false, ("need Renown %d (have %d)"):format(req.renownLevel or 0, cur)
+        if cur >= need then return true, nil end
+        return false, ("%s: Renown %d / %d"):format(fname, cur, need)
 
     elseif req.type == "achievement" then
-        local _, _, _, completed = GetAchievementInfo(req.achievementID)
+        local name, _, _, completed = GetAchievementInfo(req.achievementID)
         if completed then return true, nil end
-        return false, "need achievement"
+        return false, ("Achievement: %s"):format(name or ("#" .. tostring(req.achievementID)))
     end
 
     return true, nil

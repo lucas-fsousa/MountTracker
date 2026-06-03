@@ -4,7 +4,7 @@
 local ADDON, ns = ...
 
 local UI = ns.UI
-local ROW_HEIGHT = 64
+local ROW_HEIGHT = 84
 local ROW_SPACING = 2
 local ROW_STEP = ROW_HEIGHT + ROW_SPACING
 local frame, scroll
@@ -110,6 +110,21 @@ local function zoneCostText(item)
     return table.concat(parts, "    ·    ")
 end
 
+-- Linha 4: situacao atual do personagem para esta montaria (o que falta e onde esta).
+-- Mostra o `detail` enriquecido (ex.: "Hara'ti: Renown 8 / 14") colorido pelo status.
+local function statusDetailText(item)
+    local S = ns.STATUS
+    local d = item.detail
+    if not d or d == "" then return "" end
+    local color
+    if item.status == S.NEED_REQUIREMENT then color = "ffff5555"      -- vermelho: requisito
+    elseif item.status == S.NEED_CURRENCY then color = "ffffcc55"     -- ambar: falta moeda
+    elseif item.status == S.READY        then color = "ff44dd44"      -- verde: pode pegar
+    elseif item.status == S.UNKNOWN      then color = "ffaaaaaa"      -- cinza: protegido
+    else return "" end                                               -- demais: sem L4
+    return ("|c%s%s|r"):format(color, d)
+end
+
 -- Janela propria para copiar o link do Wowhead (addons nao abrem navegador).
 -- Evitamos StaticPopupDialogs porque seus internos (editBox) sao fonte comum de
 -- erro entre versoes; aqui controlamos tudo com uma EditBox proria.
@@ -174,8 +189,8 @@ local function acquireRow(i)
     r:SetBackdropColor(1, 1, 1, (i % 2 == 0) and 0.04 or 0.07)
 
     r.icon = r:CreateTexture(nil, "ARTWORK")
-    r.icon:SetSize(46, 46)
-    r.icon:SetPoint("LEFT", 6, 0)
+    r.icon:SetSize(52, 52)
+    r.icon:SetPoint("LEFT", 8, 0)
     r.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
     -- Borda brilhante pulsante: sinaliza montaria obtenivel AGORA.
@@ -219,15 +234,15 @@ local function acquireRow(i)
     r.btnObtained = boxBtn("Owned")
     r.btnObtained:SetPoint("TOP", r.btnHide, "BOTTOM", 0, -2)
 
-    -- Texto: 3 linhas, limitadas a esquerda do box (sem transbordar).
-    -- Linha 1: nome + badge.  Linha 2: vendedores.  Linha 3: zona/xpac + custo.
+    -- Texto: 4 linhas, ancoradas ao TOPO da row (nao ao icone) p/ usar toda a altura.
+    -- L1: nome + badge.  L2: origem.  L3: zona/xpac + custo.  L4: status/progresso.
     r.name = r:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    r.name:SetPoint("TOPLEFT", r.icon, "TOPRIGHT", 8, -4)
+    r.name:SetPoint("TOPLEFT", r, "TOPLEFT", 68, -8)
     r.name:SetJustifyH("LEFT")
     r.name:SetWordWrap(false)
 
     r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -5)
+    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -8)
     r.badge:SetJustifyH("RIGHT")
     r.name:SetPoint("RIGHT", r.badge, "LEFT", -6, 0)
 
@@ -242,6 +257,13 @@ local function acquireRow(i)
     r.zonecost:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
     r.zonecost:SetJustifyH("LEFT")
     r.zonecost:SetWordWrap(false)
+
+    -- Linha 4: situacao atual (qual requisito falta + progresso, custo, etc.).
+    r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    r.detail:SetPoint("TOPLEFT", r.zonecost, "BOTTOMLEFT", 0, -4)
+    r.detail:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.detail:SetJustifyH("LEFT")
+    r.detail:SetWordWrap(false)
 
     rows[i] = r
     return r
@@ -262,6 +284,7 @@ local function refreshRow(r, item)
 
     r.vendors:SetText(vendorsText(item))
     r.zonecost:SetText(zoneCostText(item))
+    r.detail:SetText(statusDetailText(item))
 
     -- Glow de "obtenivel agora".
     if item.readyNow then
