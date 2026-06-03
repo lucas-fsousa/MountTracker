@@ -80,6 +80,21 @@ def npc_html(http, nid):
     return http.get(f"{BASE}/npc={nid}")
 
 
+def object_id(http, name):
+    """objectID pelo nome (typeName == Object; tolerante a apostrofo; fallback: 1o)."""
+    if not name:
+        return None
+    objs = [r for r in _suggest(http, name) if r.get("typeName") == "Object"]
+    for r in objs:
+        if _norm(r.get("name")) == _norm(name):
+            return r.get("id")
+    return objs[0].get("id") if objs else None
+
+
+def object_html(http, oid):
+    return http.get(f"{BASE}/object={oid}")
+
+
 def achievement_id(http, name):
     """achievementID exato pelo nome (typeName == Achievement; tolerante a apostrofo)."""
     if not name:

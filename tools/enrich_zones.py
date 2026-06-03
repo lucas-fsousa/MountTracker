@@ -42,17 +42,22 @@ _RARE = re.compile(r"^(.*?)\s+Rare Creatures$", re.I)
 
 
 def resolve_zone(http, source):
-    """Zona de um drop. 1) heuristica local '<Zona> Rare Creatures'; 2) se a fonte e
-    um NPC/boss, a zona vem da pagina do NPC no Wowhead. Itens-container (caches de
+    """Zona de um drop. 1) heuristica local '<Zona> Rare Creatures'; 2) NPC/boss ->
+    pagina do NPC; 3) objeto do mundo -> pagina do objeto. Itens-container (caches de
     faccao, baus de feriado, ovos) nao tem zona unica -> retorna None."""
     m = _RARE.match(source)
     if m:
         return m.group(1).strip()
     name = _DIFF.sub("", source).strip()
     nid = wowhead.npc_id(http, name)
-    if not nid:
-        return None
-    return extract.drop_zone(wowhead.npc_html(http, nid))
+    if nid:
+        z = extract.drop_zone(wowhead.npc_html(http, nid))
+        if z:
+            return z
+    oid = wowhead.object_id(http, name)
+    if oid:
+        return extract.drop_zone(wowhead.object_html(http, oid))
+    return None
 
 
 def main():
