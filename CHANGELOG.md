@@ -22,6 +22,16 @@ HOW TO RELEASE (see RELEASING.md):
   *"Need Requirement"* badge. Works for reputation (current vs required standing),
   renown, achievements, and currency costs. Rows are a bit taller to fit it.
 
+### Added
+- **Zones for boss/rare drops.** Several drop mounts had no location, so the roadmap
+  showed the drop odds but not *where*. Where the source is an NPC/boss (e.g. *Shackled
+  Ur'zul* → Antorus, *Brewfest Bomber* → Blackrock Depths) or a `"<Zone> Rare Creatures"`
+  source (e.g. *Cerulean Hawkstrider* → Eversong Woods), the zone is now filled in and
+  shown / usable by the **Current zone** filter. (Faction reward caches, holiday chests
+  and egg-style item sources genuinely have no single zone, so those keep showing just
+  the source.) New tooling: `tools/enrich_zones.py` + Wowhead NPC/zone extraction in
+  `mtcurate`.
+
 ### Fixed
 - **Treasure-chest mounts (and other unusual sources) now read correctly.** The source
   parser only understood a fixed set of labels (Vendor/Drop/Quest/…), so a

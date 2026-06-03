@@ -44,3 +44,18 @@ def faction_id(http, name):
 
 def item_html(http, iid):
     return http.get(f"{BASE}/item={iid}")
+
+
+def npc_id(http, name):
+    """npcID pelo nome (typeName == NPC; tolerante a apostrofo; fallback: 1o NPC)."""
+    if not name:
+        return None
+    npcs = [r for r in _suggest(http, name) if r.get("typeName") == "NPC"]
+    for r in npcs:
+        if _norm(r.get("name")) == _norm(name):
+            return r.get("id")
+    return npcs[0].get("id") if npcs else None
+
+
+def npc_html(http, nid):
+    return http.get(f"{BASE}/npc={nid}")

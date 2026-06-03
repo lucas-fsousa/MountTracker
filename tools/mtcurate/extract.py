@@ -30,6 +30,17 @@ def requirement(html):
     return None
 
 
+def drop_zone(html):
+    """Zona onde um NPC e encontrado, a partir da pagina de NPC do Wowhead:
+       'This NPC can be found in <span id="locations"> ... <a ...>ZONE</a>'.
+    Retorna o nome da primeira zona (a principal) ou None."""
+    m = re.search(r'found in\s*<span id="locations">(.*?)</span>', html, re.S)
+    if not m:
+        return None
+    names = re.findall(r">([^<>]{2,60})</a>", m.group(1))
+    return names[0].strip() if names else None
+
+
 def drop_chance(html):
     """Estima a chance de drop pela maior amostra (count/outof) da pagina.
     ~1.0 = drop garantido (raro elite); valores baixos = RNG."""
