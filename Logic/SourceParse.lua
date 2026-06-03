@@ -32,10 +32,19 @@ local function parseCosts(value)
     value = value:gsub(",", "")        -- remove separador de milhar antes de parsear
     local costs = {}
 
-    -- 1) moeda/item: NUM|Htype:ID|h|Ticon|t|h  (consome do texto)
-    local rest = value:gsub("(%d+)|H(%a+):(%d+)|h|T(.-):%d+|t|h", function(amount, ctype, id, icon)
+    -- 1) moeda/item via hyperlink COM icone: NUM |Htype:ID[:qty]|h |Ticon|t |h
+    local rest = value:gsub("(%d+)%s*|H(%a+):(%d+)[:%d]*|h|T(.-):%d+|t|h", function(amount, ctype, id, icon)
         costs[#costs + 1] = { amount = tonumber(amount), ctype = ctype, id = tonumber(id), icon = icon }
-        return ""
+        return " "
+    end)
+
+    -- 1b) moeda/item via hyperlink SEM icone: NUM |Htype:ID[:qty]|h
+    --     Ex.: "180 |Hcurrency:515|h" (Darkmoon Prize Ticket). Sem o ID correto aqui,
+    --     o fallback de "numero solto" classificaria errado como gold. Nome e icone
+    --     sao resolvidos depois pelo ID (C_CurrencyInfo/C_Item).
+    rest = rest:gsub("(%d+)%s*|H(%a+):(%d+)[:%d]*|h", function(amount, ctype, id)
+        costs[#costs + 1] = { amount = tonumber(amount), ctype = ctype, id = tonumber(id) }
+        return " "
     end)
 
     -- 2) NUM|Ticon|t (sem |H). Ouro SO se o icone for de dinheiro; alguns tokens
