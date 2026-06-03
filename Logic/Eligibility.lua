@@ -225,6 +225,13 @@ function Eligibility.Evaluate(cand)
     local info, entry, mountID = cand.info, cand.entry, cand.mountID
     local S = ns.STATUS
 
+    -- Texto p/ derivar a expansao: o sourceText AO VIVO + os campos curados
+    -- (source/zone). Drops em zonas reaproveitadas (ex.: "Eversong Woods Rare
+    -- Creatures" do Midnight) muitas vezes nao trazem a zona no texto ao vivo;
+    -- o dado curado preenche essa lacuna p/ a classificacao acertar (Midnight).
+    local expText = cand.sourceText or ""
+    if entry then expText = expText .. " " .. (entry.source or "") .. " " .. (entry.zone or "") end
+
     local item = {
         mountID = mountID,
         spellID = cand.spellID,
@@ -233,7 +240,7 @@ function Eligibility.Evaluate(cand)
         entry   = entry,
         sourceText = cand.sourceText,
         sources = ns.SourceParse and ns.SourceParse(cand.sourceText) or {},
-        expansion = ns.ExpansionFor and ns.ExpansionFor(cand.sourceText, entry and entry.expansion, cand.spellID) or "Unknown",
+        expansion = ns.ExpansionFor and ns.ExpansionFor(expText, entry and entry.expansion, cand.spellID) or "Unknown",
         costPct = 0,
     }
 

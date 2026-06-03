@@ -87,7 +87,12 @@ end
 -- Zonas associadas a uma montaria (curada + parseadas do sourceText).
 local function itemZones(item)
     local z = {}
-    if item.entry and item.entry.zone then z[#z + 1] = item.entry.zone end
+    if item.entry then
+        -- `source` (ex.: "Eversong Woods Rare Creatures") costuma carregar a zona de
+        -- drops curados que nao tem o campo `zone` -- inclui no match de zona.
+        if item.entry.zone then z[#z + 1] = item.entry.zone end
+        if item.entry.source then z[#z + 1] = item.entry.source end
+    end
     for _, src in ipairs(item.sources or {}) do
         if src.zone then z[#z + 1] = src.zone end
     end

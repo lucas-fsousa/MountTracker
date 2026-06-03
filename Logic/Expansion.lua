@@ -54,8 +54,12 @@ function ns.ExpansionFor(sourceText, curatedExp, spellID)
         end
     end
     exp = exp or "Unknown"
-    -- Override: spellID muito alto numa zona "antiga" = conteudo reaproveitado (Midnight).
-    if spellID and spellID >= MIDNIGHT_SPELL and OLD[exp] then
+    -- Override: um spellID muito alto e seguramente do Midnight (12.0). Aplica quando
+    -- a zona caiu num bucket "antigo" reaproveitado (ex.: Quel'Danas/Eversong) OU
+    -- quando nao deu p/ classificar (Unknown) -- ex.: world drops cujo texto ao vivo
+    -- nao cita a zona. Buckets recentes (TWW/Dragonflight) tem spellID < MIDNIGHT_SPELL,
+    -- entao nao sao afetados.
+    if spellID and spellID >= MIDNIGHT_SPELL and (OLD[exp] or exp == "Unknown") then
         return "Midnight"
     end
     return exp

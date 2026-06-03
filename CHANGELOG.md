@@ -15,6 +15,16 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Fixed
+- **World drops in revamped zones no longer vanish under the Midnight filter.** A
+  curated drop whose origin lived only in its `source`/`zone` field (e.g. a mount
+  from *Eversong Woods Rare Creatures* in the Midnight version of the map) was
+  classified from the live source text alone — which often omits the zone — so it
+  fell into *Unknown* and was filtered out of both **Midnight** and **Current zone**.
+  The curated source/zone now feeds the expansion check, the spell-ID override also
+  promotes *Unknown* (not just old buckets) to Midnight, and the zone filter reads
+  the curated `source` too.
+
 ## [0.6.1] - 2026-06-02
 
 ### Changed
