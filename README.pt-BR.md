@@ -68,10 +68,10 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 |:---:|:---:|
 | ![Brilho de obtenível agora](images/glow.png) | ![Detalhe da montaria](images/row.png) |
 | **Brilho verde = dá pra pegar agora** | Vendedor(es), zona e `Cost: N (have X)` |
-| ![Filtro por expansão](images/expansion-filter.png) | ![Mostrar obtidas](images/owned-toggle.png) |
-| Filtrar por expansão | Obtidas (coloridas) vs. faltantes (cinza) |
-
-<p align="center"><img src="images/minimap.png" alt="Botão de minimapa"><br><em>Arraste o botão do minimapa pra qualquer lugar; clique pra abrir.</em></p>
+| ![Filtro por expansão](images/expansion-filter.png) | ![Filtro por zona](images/zone-filter.png) |
+| Filtro por expansão | Filtro pela zona atual (inclui dungeons e raids) |
+| ![Mostrar obtidas](images/owned-toggle.png) | ![Botão de minimapa](images/minimap.png) |
+| Obtidas (coloridas) vs. faltantes (cinza) | Botão de minimapa — arraste e clique pra abrir |
 
 ---
 

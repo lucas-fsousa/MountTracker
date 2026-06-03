@@ -12,6 +12,7 @@ image lines in the READMEs.
 | `glow.png` | A row (or a few) with the green **obtainable-now** glow | The killer feature: "you can get this right now" |
 | `row.png` | A close-up of one row: icon, name, vendor(s), zone + `Cost: N 🪙 Currency (have X)`, button box | Shows the rich per-mount detail |
 | `expansion-filter.png` | The **Expansion** dropdown open | Shows filtering by expansion |
+| `zone-filter.png` | The **Zone** dropdown open (All zones / Current zone) | Shows the current-zone filter (dungeons & raids included) |
 | `owned-toggle.png` | List with **Show owned** ticked (owned = colored, missing = gray) | Shows the owned/missing visual coding |
 | `minimap.png` | The minimap button + its tooltip | Shows the launch button |
 

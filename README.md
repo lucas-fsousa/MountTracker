@@ -68,10 +68,10 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 |:---:|:---:|
 | ![Obtainable-now glow](images/glow.png) | ![Per-mount detail](images/row.png) |
 | **Green glow = you can get it right now** | Vendor(s), zone and `Cost: N (have X)` |
-| ![Expansion filter](images/expansion-filter.png) | ![Show owned](images/owned-toggle.png) |
-| Filter by expansion | Owned (colored) vs. missing (gray) |
-
-<p align="center"><img src="images/minimap.png" alt="Minimap button"><br><em>Drag the minimap button anywhere; click to open.</em></p>
+| ![Expansion filter](images/expansion-filter.png) | ![Zone filter](images/zone-filter.png) |
+| Filter by expansion | Filter by your current zone (dungeons & raids included) |
+| ![Show owned](images/owned-toggle.png) | ![Minimap button](images/minimap.png) |
+| Owned (colored) vs. missing (gray) | Minimap button — drag anywhere, click to open |
 
 ---
 
