@@ -80,22 +80,24 @@ function ns.SourceParse(raw)
     local s = raw:gsub("|c[Ff][Ff]%x%x%x%x%x%x", "\1")
     local sources, cur = {}, nil
 
+    -- Rotulos que sao ATRIBUTOS da fonte atual (nao iniciam uma nova fonte).
+    local ATTR = { Requires = true, Requirement = true, Reward = true }
     for label, value in s:gmatch("\1%s*(.-):%s*|r([^\1]*)") do
-        if label == "Vendor" or label == "Quest" or label == "Drop"
-            or label == "Faction" or label == "Profession" or label == "Achievement"
-            or label == "World Quest" then
-            local who = inline(value)
-            cur = { kind = label, who = who:gsub("%s*%(%a+%)%s*", ""), faction = detectFaction(who) }
-            sources[#sources + 1] = cur
-        elseif label == "Zone" or label == "Location" then
+        if label == "Zone" or label == "Location" then
             if not cur then cur = { kind = "Source" }; sources[#sources + 1] = cur end
             cur.zone = inline(value)
         elseif label == "Cost" then
             if cur then cur.costs = parseCosts(value) end
         elseif label == "Renown" then
             if cur then cur.renown = inline(value) end
-        else
+        elseif ATTR[label] then
             if cur then cur[label] = inline(value) end
+        else
+            -- Qualquer outro rotulo (Vendor/Drop/Quest/Treasure/Object/...) inicia uma
+            -- nova fonte cujo nome ("who") e o valor. Generico, cobre tipos novos.
+            local who = inline(value)
+            cur = { kind = label, who = who:gsub("%s*%(%a+%)%s*", ""), faction = detectFaction(who) }
+            sources[#sources + 1] = cur
         end
     end
 

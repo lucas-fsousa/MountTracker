@@ -211,6 +211,7 @@ local function categorize(sourceText, sourceType)
     if has("profession")      then return "Profession",   4.5 end
     if has("pvp") or has("arena") or has("rated") or has("conquest")
                               then return "PvP",          4.8 end
+    if has("treasure")        then return "Treasure",     4.0 end
     if has("drop")            then return "Drop",         5.0 end
 
     -- Texto nao classificou: cai no tipo de fonte nativo do jogo (sourceType).

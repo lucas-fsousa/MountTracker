@@ -113,11 +113,18 @@ local function handleSlash(msg)
         for _, mid in ipairs(C_MountJournal.GetMountIDs()) do
             local nm = C_MountJournal.GetMountInfoByID(mid)
             if nm and nm:lower():find(q, 1, true) then
-                local _, _, _, _, _, _, _, _, _, _, isColl = C_MountJournal.GetMountInfoByID(mid)
-                ns.Print(("%s (id %d): isCollected=%s | marked=%s")
-                    :format(nm, mid, tostring(isColl), tostring(ns.DB.IsMarkedObtained(mid))))
+                local _, sp, _, _, _, srcType, _, _, _, _, isColl = C_MountJournal.GetMountInfoByID(mid)
+                local _, _, srcText = C_MountJournal.GetMountInfoExtraByID(mid)
+                local label = ns.NativeSourceLabel and ns.NativeSourceLabel(srcType)
+                -- Escapa as barras p/ o texto cru aparecer legivel no chat.
+                local rawSafe = ns.Safe.IsSecret(srcText) and "<secret>"
+                    or (tostring(srcText or ""):gsub("|", "||"))
+                ns.Print(("%s (id %d, spell %s): isCollected=%s | marked=%s")
+                    :format(nm, mid, tostring(sp), tostring(isColl), tostring(ns.DB.IsMarkedObtained(mid))))
+                ns.Print(("  sourceType=%s (%s) | sourceText=[%s]")
+                    :format(tostring(srcType), tostring(label), rawSafe))
                 found = found + 1
-                if found >= 12 then break end
+                if found >= 8 then break end
             end
         end
         if found == 0 then ns.Print("no mount matching '" .. q .. "'") end

@@ -23,11 +23,15 @@ HOW TO RELEASE (see RELEASING.md):
   renown, achievements, and currency costs. Rows are a bit taller to fit it.
 
 ### Fixed
-- **Mounts with an empty source text are no longer dumped into "Other".** Some mounts
-  (e.g. treasure-chest mounts in Zul'Aman) return little or no source text, so they
-  fell through to a generic *Other* badge with a blank source line. They're now
-  classified by the game's native source *type* (Drop / Vendor / Quest / Achievement /
-  World Event / …) as a fallback, and the source line shows that type instead of `?`.
+- **Treasure-chest mounts (and other unusual sources) now read correctly.** The source
+  parser only understood a fixed set of labels (Vendor/Drop/Quest/…), so a
+  `Treasure: <object>` source (e.g. *Hexed Vilefeather Eagle* in Zul'Aman) showed a
+  bare `?`. It now treats **any** non-attribute label as a real source, so the line
+  reads `Treasure: Abandoned Ritual Skull`. *Treasure* is also its own category, and
+  mounts whose text doesn't classify fall back to the game's native source *type*
+  (Drop / Vendor / Quest / …) instead of a generic *Other*.
+- `/mtrack check <name>` now also prints the mount's raw `sourceType`/`sourceText`
+  (a diagnostic aid).
 - **World drops in revamped zones no longer vanish under the Midnight filter.** A
   curated drop whose origin lived only in its `source`/`zone` field (e.g. a mount
   from *Eversong Woods Rare Creatures* in the Midnight version of the map) was
