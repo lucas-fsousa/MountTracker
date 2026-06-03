@@ -1,0 +1,20 @@
+# Configuracao do BigWigs packager (usado pelo job CurseForge da release).
+# https://github.com/BigWigsMods/packager
+
+package-as: MountTracker
+
+enable-nolib-creation: no
+
+# Usa o CHANGELOG do projeto como changelog da release no CurseForge.
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+# Arquivos de desenvolvimento que NAO devem ir no pacote publicado.
+ignore:
+  - .github
+  - tools
+  - images
+  - DESIGN.md
+  - RELEASING.md
+  - "*.ps1"

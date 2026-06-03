@@ -1,7 +1,8 @@
 name: Release
 
-# Dispara ao publicar uma tag vX.Y.Z. Gera o .zip do addon e cria um GitHub
-# Release com link de download permanente (.../releases/latest).
+# Dispara ao publicar uma tag vX.Y.Z. Gera o .zip do addon, cria um GitHub
+# Release com link de download permanente (.../releases/latest/download/MountTracker.zip)
+# e (se os segredos estiverem configurados) publica no CurseForge.
 on:
   push:
     tags:
@@ -30,9 +31,13 @@ jobs:
 
       - name: Build addon zip
         run: |
+          # A pasta DENTRO do zip precisa se chamar exatamente "MountTracker" (sem
+          # versao), senao o WoW nao reconhece o addon ao instalar manualmente.
+          # O nome do arquivo e versionless de proposito: cada Release ja e tagueado,
+          # e isso da uma URL estavel (.../releases/latest/download/MountTracker.zip).
           mkdir -p dist/MountTracker
-          cp -r MountTracker.toc Core Data Logic UI LICENSE README.md dist/MountTracker/
-          (cd dist && zip -rq "MountTracker-${{ steps.v.outputs.version }}.zip" MountTracker)
+          cp -r MountTracker.toc Core Data Logic UI LICENSE README.md README.pt-BR.md dist/MountTracker/
+          (cd dist && zip -rq MountTracker.zip MountTracker)
           ls -la dist
 
       - name: Extract release notes from CHANGELOG
@@ -49,4 +54,36 @@ jobs:
         with:
           name: MountTracker ${{ steps.v.outputs.version }}
           body_path: notes.md
-          files: dist/MountTracker-${{ steps.v.outputs.version }}.zip
+          files: dist/MountTracker.zip
+
+  # Publica no CurseForge usando o empacotador padrao da comunidade (BigWigs
+  # packager). Ele mapeia automaticamente a versao do jogo a partir do
+  # "## Interface:" do .toc, gera o zip e faz o upload.
+  #
+  # So roda se os segredos/variaveis estiverem configurados (caso contrario e
+  # pulado, sem falhar a release):
+  #   - secret CF_API_KEY        -> token de API do CurseForge (Account > API Tokens)
+  #   - variable CF_PROJECT_ID   -> ID numerico do projeto no CurseForge
+  curseforge:
+    needs: release
+    runs-on: ubuntu-latest
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # o packager usa as tags do git p/ versionar
+
+      - name: Package and upload to CurseForge
+        if: ${{ env.CF_API_KEY != '' && env.CF_PROJECT_ID != '' }}
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -p ${{ env.CF_PROJECT_ID }}
+        # Apenas CF_API_KEY no ambiente -> o packager faz upload SO para o
+        # CurseForge. Sem GITHUB_OAUTH/WOWI/WAGO ele nao mexe no GitHub Release
+        # (ja criado pelo job acima) nem em outras plataformas.
+
+      - name: CurseForge upload skipped (no secrets configured)
+        if: ${{ env.CF_API_KEY == '' || env.CF_PROJECT_ID == '' }}
+        run: echo "CF_API_KEY secret and/or CF_PROJECT_ID variable not set — skipping CurseForge upload."

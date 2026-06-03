@@ -15,6 +15,13 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Changed
+- **Release packaging.** The Release asset is now a version-less `MountTracker.zip`
+  (stable URL: `.../releases/latest/download/MountTracker.zip`); the folder inside is
+  always `MountTracker`, so manual installs load correctly. Tagging a version can also
+  publish to **CurseForge** automatically (via the BigWigs packager) once the repo's
+  `CF_API_KEY` secret and `CF_PROJECT_ID` variable are set — see `RELEASING.md`.
+
 ## [0.6.0] - 2026-06-02
 
 ### Added

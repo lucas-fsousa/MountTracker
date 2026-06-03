@@ -77,7 +77,8 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 
 ## 📥 Instalação
 
-1. Baixe o **[`MountTracker-x.y.z.zip`](../../releases/latest)** mais recente na página de **Releases**.
+1. Baixe o **[`MountTracker.zip`](../../releases/latest/download/MountTracker.zip)** (sempre a release mais recente).
+   *(Não use o link "Source code (zip)" — esse não carrega no jogo.)*
 2. Extraia para:
    ```
    World of Warcraft\_retail_\Interface\AddOns\
