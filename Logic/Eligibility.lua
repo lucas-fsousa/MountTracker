@@ -173,9 +173,23 @@ local function cleanSource(s)
 end
 ns.CleanSource = cleanSource
 
--- Categoriza uma montaria nao-curada pelo texto de origem do jogo.
--- Retorna (category, baseDifficulty). Palavras-chave em en-US (cliente do usuario).
-local function categorize(sourceText)
+-- Rotulo nativo do tipo de fonte (sourceType numerico do Mount Journal). Usa as
+-- strings globais do proprio jogo (BATTLE_PET_SOURCE_*), compartilhadas com mounts.
+-- Ex.: 1->"Drop", 2->"Quest", 3->"Vendor", 6->"Achievement", 7->"World Event"...
+-- E o que cobre montarias cujo sourceText vem vazio/curto (ex.: baus de tesouro,
+-- que o jogo marca como "Drop" no tipo, mesmo sem citar nada no texto).
+local function nativeSourceLabel(sourceType)
+    if not sourceType then return nil end
+    local s = _G["BATTLE_PET_SOURCE_" .. sourceType]
+    if s and s ~= "" then return s end
+    return nil
+end
+ns.NativeSourceLabel = nativeSourceLabel
+
+-- Categoriza uma montaria nao-curada. Tenta o texto de origem (palavras-chave en-US)
+-- e, se nao classificar, recorre ao `sourceType` nativo do jogo.
+-- Retorna (category, baseDifficulty).
+local function categorize(sourceText, sourceType)
     local s = (sourceText or ""):lower()
     local function has(p) return s:find(p, 1, true) ~= nil end
 
@@ -198,6 +212,29 @@ local function categorize(sourceText)
     if has("pvp") or has("arena") or has("rated") or has("conquest")
                               then return "PvP",          4.8 end
     if has("drop")            then return "Drop",         5.0 end
+
+    -- Texto nao classificou: cai no tipo de fonte nativo do jogo (sourceType).
+    -- Cobre montarias com sourceText vazio/curto (ex.: bau de tesouro = "Drop").
+    local label = nativeSourceLabel(sourceType)
+    if label then
+        local l = label:lower()
+        local map = {
+            ["drop"]              = { "Drop",         5.0 },
+            ["quest"]             = { "Quest",        2.6 },
+            ["vendor"]            = { "Vendor",       2.2 },
+            ["profession"]        = { "Profession",   4.5 },
+            ["achievement"]       = { "Achievement",  2.4 },
+            ["world event"]       = { "World Event",  3.5 },
+            ["promotion"]         = { "Promotion",    9.0 },
+            ["trading card game"] = { "TCG",          9.0 },
+            ["black market"]      = { "Black Market", 4.0 },
+            ["trading post"]      = { "Trading Post", 4.5 },
+        }
+        local m = map[l]
+        if m then return m[1], m[2] end
+        return label, 4.0   -- tipo desconhecido p/ nos: usa o proprio rotulo do jogo
+    end
+
     return "Other", 4.0
 end
 
@@ -304,11 +341,16 @@ function Eligibility.Evaluate(cand)
     -- 3.5) Nao-curada: usa o texto de origem do proprio jogo (base ao vivo).
     --      Cobertura total imediata; a curadoria (overlay) refina depois.
     if not entry then
-        local cat, baseDiff = categorize(cand.sourceText)
+        local cat, baseDiff = categorize(cand.sourceText, cand.sourceType)
         item.status   = S.MISSING
         item.category = cat
         item._catDiff = baseDiff
         item.detail   = cleanSource(cand.sourceText)
+        -- sourceText vazio (ex.: bau de tesouro): mostra ao menos o tipo nativo,
+        -- p/ a linha de origem nao ficar em branco/"?".
+        if item.detail == "" then
+            item.detail = nativeSourceLabel(cand.sourceType) or ""
+        end
         return item
     end
 

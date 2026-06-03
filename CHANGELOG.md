@@ -23,6 +23,11 @@ HOW TO RELEASE (see RELEASING.md):
   renown, achievements, and currency costs. Rows are a bit taller to fit it.
 
 ### Fixed
+- **Mounts with an empty source text are no longer dumped into "Other".** Some mounts
+  (e.g. treasure-chest mounts in Zul'Aman) return little or no source text, so they
+  fell through to a generic *Other* badge with a blank source line. They're now
+  classified by the game's native source *type* (Drop / Vendor / Quest / Achievement /
+  World Event / …) as a fallback, and the source line shows that type instead of `?`.
 - **World drops in revamped zones no longer vanish under the Midnight filter.** A
   curated drop whose origin lived only in its `source`/`zone` field (e.g. a mount
   from *Eversong Woods Rare Creatures* in the Midnight version of the map) was
