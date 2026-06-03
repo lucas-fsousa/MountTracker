@@ -21,6 +21,11 @@ HOW TO RELEASE (see RELEASING.md):
 - `/mtrack marked` — lists the mounts you manually marked as owned.
 
 ### Fixed
+- **The Midnight expansion now appears in the Expansion filter.** It was missing
+  from the dropdown list, so Midnight mounts could never be filtered to (even though
+  they were correctly classified).
+- **All in-game and tooling messages are now in English** (including developer
+  diagnostics), for consistency across the public release.
 - **Filters no longer leave the window blank.** The virtualized list rows were
   children of the scroll frame, so its internal scroll offset pushed them out of
   view (rows were "shown" but invisible). Rows are now children of the main frame,

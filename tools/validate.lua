@@ -20,7 +20,7 @@ for line in toc:lines() do
     if f then dataFiles[#dataFiles + 1] = f end
 end
 toc:close()
-assert(#dataFiles > 0, "nenhum Data\\Mounts_*.lua no .toc")
+assert(#dataFiles > 0, "no Data\\Mounts_*.lua found in .toc")
 
 for _, f in ipairs(dataFiles) do
     assert(loadfile(root .. "/Data/" .. f))("MountTracker", ns)
@@ -39,12 +39,12 @@ for _, e in ipairs(ns.Data.All) do
     n = n + 1
     local nm = e.name or ("#" .. n)
 
-    if type(e.spellID) ~= "number" then err(nm, "spellID ausente/invalido") end
-    if type(e.name) ~= "string" or e.name == "" then err(nm, "name ausente") end
-    if type(e.acquisition) ~= "string" then err(nm, "acquisition ausente") end
+    if type(e.spellID) ~= "number" then err(nm, "spellID missing/invalid") end
+    if type(e.name) ~= "string" or e.name == "" then err(nm, "name missing") end
+    if type(e.acquisition) ~= "string" then err(nm, "acquisition missing") end
 
     if e.spellID then
-        if seenSpell[e.spellID] then err(nm, "spellID duplicado: " .. e.spellID)
+        if seenSpell[e.spellID] then err(nm, "duplicate spellID: " .. e.spellID)
         else seenSpell[e.spellID] = nm end
     end
 
@@ -52,41 +52,41 @@ for _, e in ipairs(ns.Data.All) do
     if r then
         if r.type == "renown" then
             if not (type(r.factionID) == "number" or type(r.factionName) == "string") then
-                err(nm, "renown sem factionID nem factionName")
+                err(nm, "renown without factionID or factionName")
             end
-            if type(r.renownLevel) ~= "number" then err(nm, "renown sem renownLevel") end
+            if type(r.renownLevel) ~= "number" then err(nm, "renown without renownLevel") end
         elseif r.type == "reputation" then
-            if type(r.factionID) ~= "number" then err(nm, "reputation sem factionID") end
-            if not STANDINGS[r.standing] then err(nm, "standing invalido: " .. tostring(r.standing)) end
+            if type(r.factionID) ~= "number" then err(nm, "reputation without factionID") end
+            if not STANDINGS[r.standing] then err(nm, "invalid standing: " .. tostring(r.standing)) end
         elseif r.type == "achievement" then
-            if type(r.achievementID) ~= "number" then err(nm, "achievement sem achievementID") end
+            if type(r.achievementID) ~= "number" then err(nm, "achievement without achievementID") end
         else
-            err(nm, "requirement.type desconhecido: " .. tostring(r.type))
+            err(nm, "unknown requirement.type: " .. tostring(r.type))
         end
     end
 
     local c = e.cost
     if c then
         local forms = (c.gold and 1 or 0) + (c.currencyID and 1 or 0) + (c.itemID and 1 or 0)
-        if forms ~= 1 then err(nm, "cost deve ter exatamente um de gold/currencyID/itemID") end
+        if forms ~= 1 then err(nm, "cost must have exactly one of gold/currencyID/itemID") end
         if (c.currencyID or c.itemID) and type(c.amount) ~= "number" then
-            err(nm, "cost com currencyID/itemID sem amount")
+            err(nm, "cost with currencyID/itemID but no amount")
         end
     end
 
     if e.dropChance ~= nil then
         if type(e.dropChance) ~= "number" or e.dropChance <= 0 or e.dropChance > 1 then
-            err(nm, "dropChance fora de (0,1]: " .. tostring(e.dropChance))
+            err(nm, "dropChance out of (0,1]: " .. tostring(e.dropChance))
         end
     end
 end
 
-print(("validate: %d arquivos de dados, %d montarias curadas"):format(#dataFiles, n))
+print(("validate: %d data files, %d curated mounts"):format(#dataFiles, n))
 if #errors == 0 then
-    print("OK: integridade do overlay curado validada")
+    print("OK: curated overlay integrity validated")
     os.exit(0)
 else
-    print(("FALHAS (%d):"):format(#errors))
+    print(("FAILURES (%d):"):format(#errors))
     for _, m in ipairs(errors) do print("  " .. m) end
     os.exit(1)
 end

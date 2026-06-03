@@ -5,9 +5,9 @@
 --
 -- Uso: lua dump_to_json.lua <caminho/para/MountTracker.lua>
 
-local path = assert(arg[1], "uso: lua dump_to_json.lua <SavedVariables/MountTracker.lua>")
-assert(loadfile(path))()   -- define os globais MountTrackerDump (e MountTrackerDB)
-assert(MountTrackerDump and MountTrackerDump.mounts, "MountTrackerDump nao encontrado no arquivo")
+local path = assert(arg[1], "usage: lua dump_to_json.lua <SavedVariables/MountTracker.lua>")
+assert(loadfile(path))()   -- defines the MountTrackerDump (and MountTrackerDB) globals
+assert(MountTrackerDump and MountTrackerDump.mounts, "MountTrackerDump not found in file")
 
 local function esc(s)
     return (tostring(s)

@@ -8,7 +8,7 @@ local ADDON, ns = ...
 -- Ordem dos buckets (do mais antigo ao mais novo) -- usada pelo filtro da UI.
 ns.EXPANSIONS = {
     "Classic", "TBC", "WotLK", "Cataclysm", "MoP", "WoD",
-    "Legion", "BfA", "Shadowlands", "Dragonflight", "TWW", "Unknown",
+    "Legion", "BfA", "Shadowlands", "Dragonflight", "TWW", "Midnight", "Unknown",
 }
 
 -- Palavras-chave (substring, lowercase) por expansao. Ordem dentro da lista nao

@@ -108,7 +108,7 @@ local function handleSlash(msg)
     elseif cmd == "check" then
         -- Estado AO VIVO de uma montaria: isCollected (Blizzard) vs marked (nosso DB).
         local q = rest:lower()
-        if q == "" then ns.Print("uso: /mtrack check <parte do nome>") return end
+        if q == "" then ns.Print("usage: /mtrack check <part of name>") return end
         local found = 0
         for _, mid in ipairs(C_MountJournal.GetMountIDs()) do
             local nm = C_MountJournal.GetMountInfoByID(mid)

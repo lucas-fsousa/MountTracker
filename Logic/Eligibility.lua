@@ -86,7 +86,7 @@ local function checkCost(cost)
         have = have or 0
         local need = cost.amount or 0
         local pct = need > 0 and math.min(have / need, 1) or 1
-        local cname = info and info.name or ("moeda " .. cost.currencyID)
+        local cname = info and info.name or ("currency " .. cost.currencyID)
         local posse = ("%d/%d %s"):format(have, need, cname)
         if have >= need then return true, nil, posse, 1, false end
         return false, ("need %d more %s"):format(need - have, cname), posse, pct, false
