@@ -4,7 +4,7 @@
 local ADDON, ns = ...
 
 local UI = ns.UI
-local ROW_HEIGHT = 84
+local ROW_HEIGHT = 72
 local ROW_SPACING = 2
 local ROW_STEP = ROW_HEIGHT + ROW_SPACING
 local frame, scroll
@@ -189,7 +189,7 @@ local function acquireRow(i)
     r:SetBackdropColor(1, 1, 1, (i % 2 == 0) and 0.04 or 0.07)
 
     r.icon = r:CreateTexture(nil, "ARTWORK")
-    r.icon:SetSize(52, 52)
+    r.icon:SetSize(60, 60)
     r.icon:SetPoint("LEFT", 8, 0)
     r.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
@@ -237,30 +237,30 @@ local function acquireRow(i)
     -- Texto: 4 linhas, ancoradas ao TOPO da row (nao ao icone) p/ usar toda a altura.
     -- L1: nome + badge.  L2: origem.  L3: zona/xpac + custo.  L4: status/progresso.
     r.name = r:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    r.name:SetPoint("TOPLEFT", r, "TOPLEFT", 68, -8)
+    r.name:SetPoint("TOPLEFT", r, "TOPLEFT", 76, -6)
     r.name:SetJustifyH("LEFT")
     r.name:SetWordWrap(false)
 
     r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -8)
+    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -6)
     r.badge:SetJustifyH("RIGHT")
     r.name:SetPoint("RIGHT", r.badge, "LEFT", -6, 0)
 
     r.vendors = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    r.vendors:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -4)
+    r.vendors:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3)
     r.vendors:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
     r.vendors:SetJustifyH("LEFT")
     r.vendors:SetWordWrap(false)
 
     r.zonecost = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-    r.zonecost:SetPoint("TOPLEFT", r.vendors, "BOTTOMLEFT", 0, -4)
+    r.zonecost:SetPoint("TOPLEFT", r.vendors, "BOTTOMLEFT", 0, -3)
     r.zonecost:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
     r.zonecost:SetJustifyH("LEFT")
     r.zonecost:SetWordWrap(false)
 
     -- Linha 4: situacao atual (qual requisito falta + progresso, custo, etc.).
     r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    r.detail:SetPoint("TOPLEFT", r.zonecost, "BOTTOMLEFT", 0, -4)
+    r.detail:SetPoint("TOPLEFT", r.zonecost, "BOTTOMLEFT", 0, -3)
     r.detail:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
     r.detail:SetJustifyH("LEFT")
     r.detail:SetWordWrap(false)
