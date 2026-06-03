@@ -441,12 +441,6 @@ function UI.Refresh()
     end
     for i = numVisible + 1, #rows do rows[i]:Hide() end  -- janela encolheu
 
-    -- Diagnostico de render (/mtrack render).
-    ns._rdbg = ("items=%d vis=%d off=%d scrollH=%.0f first=%s row1shown=%s")
-        :format(#items, numVisible, offset, scroll:GetHeight() or 0,
-            (items[offset + 1] and items[offset + 1].name) or "nil",
-            tostring(rows[1] and rows[1]:IsShown()))
-
     frame.title:SetText(("MountTracker  -  mount roadmap  (%d)"):format(#items))
 
     if #items == 0 then

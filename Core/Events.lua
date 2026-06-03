@@ -96,10 +96,6 @@ local function handleSlash(msg)
         ns.Print(("matches %d missing mount(s)%s"):format(
             matched, #examples > 0 and (": " .. table.concat(examples, ", ")) or ""))
 
-    elseif cmd == "render" then
-        if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
-        ns.Print("render: " .. (ns._rdbg or "(janela nao aberta?)"))
-
     elseif cmd == "marked" then
         local names = {}
         for mid in pairs(ns.DB.data.markedObtained or {}) do
