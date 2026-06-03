@@ -2,7 +2,7 @@
 ## Title: MountTracker
 ## Notes: Roadmap of the easiest-to-obtain mounts still missing from your account.
 ## Author: Lucas
-## Version: 0.6.0
+## Version: 0.6.1
 ## SavedVariables: MountTrackerDB, MountTrackerDump
 ## IconTexture: Interface\Icons\Ability_Mount_RidingHorse
 ## X-Category: Collections

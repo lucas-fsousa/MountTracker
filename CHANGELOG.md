@@ -15,6 +15,8 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-06-02
+
 ### Changed
 - **The source line now always shows the source type.** The second row line is
   labelled with the source kind — `Vendor:`, `Drop:`, `Quest:`, `Faction:`, etc. —
@@ -89,6 +91,7 @@ First public release.
 - Zero dependencies (pure Blizzard API). Handles Midnight "Secret Values" safely.
 - Errors are sandboxed — no mid-screen Lua error popups.
 
-[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lucas-fsousa/MountTracker/releases/tag/v0.5.0
