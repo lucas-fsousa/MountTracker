@@ -23,6 +23,14 @@ HOW TO RELEASE (see RELEASING.md):
   renown, achievements, and currency costs. Rows are a bit taller to fit it.
 
 ### Added
+- **Mount data audit tooling** (`tools/audit.lua` + `tools/audit_report.py`): reuses
+  the addon's own parsing over a `/mtrack dump` to list every obtainable mount with
+  incomplete data (missing zone/cost/expansion, or an unverifiable requirement gate),
+  grouped by tier and expansion — so gaps get fixed in batches instead of one-by-one.
+- **Expansion heuristic** learned more raid/dungeon zones (Nerub-ar Palace, Manaforge
+  Omega, Darkflame Cleft, Necrotic Wake, Sepulcher, Ny'alotha, Freehold, Underrot,
+  Chamber of Heart, Horrific Visions, Nighthold, Tyrhold/Time Rifts), correctly filing
+  ~13 more mounts that were showing as *Unknown* expansion.
 - **Curated *Unbound Manawyrm*** (Midnight, Sergeant Vornin in Silvermoon City). It's
   gated by the *Void Response Team* achievement, which the game only exposes by name
   (no checkable ID) in the source text — so an uncurated copy never lit up the

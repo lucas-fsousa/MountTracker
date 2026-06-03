@@ -14,11 +14,11 @@ ns.EXPANSIONS = {
 -- Palavras-chave (substring, lowercase) por expansao. Ordem dentro da lista nao
 -- importa; a ordem das regras sim (do mais novo/especifico ao mais antigo).
 local RULES = {
-    { "TWW",          { "k.aresh", "isle of dorn", "dornogal", "ringing deeps", "azj-kahet", "hallowfall", "undermine", "city of threads", "shadow point", "khaz algar", "siren isle" } },
-    { "Dragonflight", { "emerald dream", "thaldraszus", "ohn.ahran", "azure span", "waking shores", "zaralek", "forbidden reach", "valdrakken", "dragon isles", "amirdrassil", "dragonflight" } },
-    { "Shadowlands",  { "oribos", "bastion", "maldraxxus", "ardenweald", "revendreth", "the maw", "korthia", "zereth mortis", "torghast", "sanctum of domination", "shadowlands" } },
-    { "BfA",          { "zuldazar", "nazmir", "vol.dun", "tiragarde", "drustvar", "stormsong", "nazjatar", "mechagon", "boralus", "dazar.alor", "zandalar", "kul tiras", "uldir" } },
-    { "Legion",       { "suramar", "val.sharah", "highmountain", "stormheim", "azsuna", "broken shore", "argus", "mac.aree", "antoran", "krokuun", "trueshot lodge", "mardum", "broken isles", "skyhold", "sanctum of light", "dreadscar" } },
+    { "TWW",          { "k.aresh", "isle of dorn", "dornogal", "ringing deeps", "azj-kahet", "hallowfall", "undermine", "city of threads", "shadow point", "khaz algar", "siren isle", "nerub.ar palace", "manaforge omega", "darkflame cleft" } },
+    { "Dragonflight", { "emerald dream", "thaldraszus", "ohn.ahran", "azure span", "waking shores", "zaralek", "forbidden reach", "valdrakken", "dragon isles", "amirdrassil", "tyrhold", "time rift", "dragonflight" } },
+    { "Shadowlands",  { "oribos", "bastion", "maldraxxus", "ardenweald", "revendreth", "the maw", "korthia", "zereth mortis", "torghast", "sanctum of domination", "necrotic wake", "sepulcher", "shadowlands" } },
+    { "BfA",          { "zuldazar", "nazmir", "vol.dun", "tiragarde", "drustvar", "stormsong", "nazjatar", "mechagon", "boralus", "dazar.alor", "zandalar", "kul tiras", "uldir", "ny.alotha", "horrific visions", "freehold", "underrot", "chamber of heart" } },
+    { "Legion",       { "suramar", "val.sharah", "highmountain", "stormheim", "azsuna", "broken shore", "argus", "mac.aree", "antoran", "krokuun", "trueshot lodge", "mardum", "broken isles", "skyhold", "sanctum of light", "dreadscar", "nighthold" } },
     { "WoD",          { "draenor", "tanaan", "frostfire", "gorgrond", "talador", "spires of arak", "warspear", "stormshield", "ashran", "shadowmoon valley", "nagrand" } },
     { "MoP",          { "pandaria", "jade forest", "valley of the four winds", "kun-lai", "townlong", "dread wastes", "vale of eternal", "timeless isle", "krasarang", "isle of thunder", "isle of giants", "veiled stair", "throne of thunder", "mogu" } },
     { "Cataclysm",    { "mount hyjal", "vashj.ir", "deepholm", "uldum", "twilight highlands", "tol barad", "firelands", "dragon soul", "blackwing descent", "gilneas" } },

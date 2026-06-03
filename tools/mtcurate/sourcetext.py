@@ -19,7 +19,8 @@ def costs(src):
     """Lista de custos: [{amount, ctype(currency|item|gold), id}]."""
     s = (src or "").replace(",", "")
     out = []
-    for amount, ctype, cid in re.findall(r"(\d+)\|H(currency|item):(\d+)\|h\|T.+?\|t\|h", s):
+    # moeda/item via hyperlink, COM ou SEM icone (NUM |Htype:ID[:qty]|h [|Ticon|t])
+    for amount, ctype, cid in re.findall(r"(\d+)\s*\|H(currency|item):(\d+)(?::\d+)*\|h", s):
         out.append({"amount": int(amount), "ctype": ctype, "id": int(cid)})
     if not out:
         for amount in re.findall(r"(\d+)\|T[^|]*?(?:MoneyFrame|GoldIcon)[^|]*?\|t", s, re.I):
@@ -43,11 +44,11 @@ def requirement(src):
 
 # Heuristica de expansao por zona (do mais novo/especifico ao mais antigo).
 EXP_RULES = [
-    ("TWW", ["k'aresh", "kʼaresh", "isle of dorn", "dornogal", "ringing deeps", "azj-kahet", "hallowfall", "undermine", "city of threads", "khaz algar", "siren isle"]),
-    ("Dragonflight", ["emerald dream", "thaldraszus", "ohn'ahran", "azure span", "waking shores", "zaralek", "forbidden reach", "valdrakken", "dragon isles", "amirdrassil"]),
-    ("Shadowlands", ["oribos", "bastion", "maldraxxus", "ardenweald", "revendreth", "the maw", "korthia", "zereth mortis", "torghast"]),
-    ("BfA", ["zuldazar", "nazmir", "vol'dun", "tiragarde", "drustvar", "stormsong", "nazjatar", "mechagon", "boralus", "dazar'alor", "zandalar", "kul tiras"]),
-    ("Legion", ["suramar", "val'sharah", "highmountain", "stormheim", "azsuna", "broken shore", "argus", "mac'aree", "antoran", "krokuun", "trueshot lodge", "broken isles"]),
+    ("TWW", ["k'aresh", "kʼaresh", "isle of dorn", "dornogal", "ringing deeps", "azj-kahet", "hallowfall", "undermine", "city of threads", "khaz algar", "siren isle", "nerub-ar palace", "manaforge omega", "darkflame cleft"]),
+    ("Dragonflight", ["emerald dream", "thaldraszus", "ohn'ahran", "azure span", "waking shores", "zaralek", "forbidden reach", "valdrakken", "dragon isles", "amirdrassil", "tyrhold", "time rift"]),
+    ("Shadowlands", ["oribos", "bastion", "maldraxxus", "ardenweald", "revendreth", "the maw", "korthia", "zereth mortis", "torghast", "necrotic wake", "sepulcher"]),
+    ("BfA", ["zuldazar", "nazmir", "vol'dun", "tiragarde", "drustvar", "stormsong", "nazjatar", "mechagon", "boralus", "dazar'alor", "zandalar", "kul tiras", "ny'alotha", "horrific visions", "freehold", "underrot", "chamber of heart"]),
+    ("Legion", ["suramar", "val'sharah", "highmountain", "stormheim", "azsuna", "broken shore", "argus", "mac'aree", "antoran", "krokuun", "trueshot lodge", "broken isles", "nighthold"]),
     ("WoD", ["draenor", "tanaan", "frostfire", "gorgrond", "talador", "spires of arak", "warspear", "stormshield", "ashran", "shadowmoon valley", "nagrand"]),
     ("MoP", ["pandaria", "jade forest", "valley of the four winds", "kun-lai", "townlong", "dread wastes", "vale of eternal", "timeless isle", "krasarang", "isle of thunder", "mogu"]),
     ("Cataclysm", ["mount hyjal", "vashj'ir", "deepholm", "uldum", "twilight highlands", "tol barad", "firelands", "gilneas"]),
