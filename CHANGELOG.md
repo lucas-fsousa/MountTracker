@@ -23,6 +23,11 @@ HOW TO RELEASE (see RELEASING.md):
   renown, achievements, and currency costs. Rows are a bit taller to fit it.
 
 ### Added
+- **Curated *Unbound Manawyrm*** (Midnight, Sergeant Vornin in Silvermoon City). It's
+  gated by the *Void Response Team* achievement, which the game only exposes by name
+  (no checkable ID) in the source text — so an uncurated copy never lit up the
+  "obtainable now" glow even with the achievement done. Curated with the achievement
+  ID (62563) + cost (200 Field Accolade), so it now evaluates and glows correctly.
 - **Zones for boss/rare drops.** Several drop mounts had no location, so the roadmap
   showed the drop odds but not *where*. Where the source is an NPC/boss (e.g. *Shackled
   Ur'zul* → Antorus, *Brewfest Bomber* → Blackrock Depths) or a `"<Zone> Rare Creatures"`

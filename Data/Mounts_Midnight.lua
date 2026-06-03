@@ -5,6 +5,21 @@
 local ADDON, ns = ...
 
 ns.Data.Register("Midnight", {
+    -- Vendedor de Silvermoon (Sergeant Vornin): liberada pela conquista
+    -- "Void Response Team" (62563) + custo em Field Accolade (currency 3405).
+    -- O jogo so expoe o NOME da conquista no sourceText (sem ID verificavel), entao
+    -- mounts gated por conquista precisam ser curadas p/ o glow funcionar.
+    {
+        name    = "Unbound Manawyrm",
+        spellID = 1271698,
+        acquisition = "vendor",
+        vendor  = "Sergeant Vornin",
+        zone    = "Silvermoon City",
+        requirement = { type = "achievement", achievementID = 62563 },
+        cost    = { currencyID = 3405, amount = 200 },
+        wowhead = "https://www.wowhead.com/spell=1271698",
+    },
+
     -- Amani Tribe (faction 2696), vendedor Magovu em Zul'Aman.
     -- Moeda: Voidlight Marl (currency 3316).
     -- OBS: parear renome<->montaria conforme o vendedor (verificar in-game);
