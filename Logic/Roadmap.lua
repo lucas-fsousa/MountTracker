@@ -94,15 +94,32 @@ local function itemZones(item)
     return z
 end
 
--- Nomes da localizacao do personagem (lowercase): subzona, zona, e toda a
--- hierarquia de mapas (sub-area -> zona -> ...) parando antes do continente/mundo.
--- Resolve o caso "estou em Tazavesh (subzona) mas a montaria e de K'aresh (mapa)".
+-- Tipo de mapa "Dungeon" (raids tambem usam este tipo). Fallback ao literal 4
+-- se o Enum nao existir no cliente.
+local DUNGEON_MAPTYPE = (Enum and Enum.UIMapType and Enum.UIMapType.Dungeon) or 4
+
+-- Nomes da localizacao do personagem (lowercase): subzona, zona, toda a hierarquia
+-- de mapas (sub-area -> zona -> ...) parando antes do continente/mundo, E TAMBEM as
+-- dungeons/raids que pertencem a essas zonas (uma dungeon faz parte da zona, entao
+-- seus drops de montaria devem aparecer no filtro "Current zone").
+-- Resolve dois casos:
+--   * "estou em Tazavesh (subzona) mas a montaria e de K'aresh (mapa)" -> sobe a arvore.
+--   * "estou em Tanaris (zona aberta) e a montaria dropa em Zul'Farrak (dungeon)"
+--     -> desce a arvore, incluindo as instancias filhas da zona.
 local function playerZoneCandidates()
     local names, seen = {}, {}
     local function add(t)
         if t and t ~= "" then
             local l = t:lower()
             if not seen[l] then seen[l] = true; names[#names + 1] = l end
+        end
+    end
+    -- Adiciona dungeons/raids cuja zona-pai (em qualquer profundidade) e `mid`.
+    local function addChildInstances(mid)
+        if not (mid and C_Map and C_Map.GetMapChildrenInfo) then return end
+        local kids = C_Map.GetMapChildrenInfo(mid, DUNGEON_MAPTYPE, true)
+        if kids then
+            for _, k in ipairs(kids) do add(k.name) end
         end
     end
     add(GetSubZoneText and GetSubZoneText())
@@ -117,6 +134,7 @@ local function playerZoneCandidates()
             if not info then break end
             if info.mapType and info.mapType <= 2 then break end  -- 2 = Continent (para)
             add(info.name)
+            addChildInstances(mid)  -- inclui as dungeons/raids desta zona
             mid = info.parentMapID
         end
     end

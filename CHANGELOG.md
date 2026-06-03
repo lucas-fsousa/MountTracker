@@ -20,6 +20,13 @@ HOW TO RELEASE (see RELEASING.md):
   missing mounts match (diagnostics for the **Current zone** filter).
 - `/mtrack marked` — lists the mounts you manually marked as owned.
 
+### Changed
+- **"Current zone" now includes the zone's dungeons and raids.** A dungeon is part
+  of the zone it sits in, so mounts that drop there (e.g. a Zul'Farrak drop while
+  you're standing in Tanaris) now show under the current-zone filter — you no longer
+  have to be physically inside the instance. The addon walks down the map tree to
+  each zone's child instances, in addition to walking up sub-zones to the parent map.
+
 ### Fixed
 - **The Midnight expansion now appears in the Expansion filter.** It was missing
   from the dropdown list, so Midnight mounts could never be filtered to (even though
