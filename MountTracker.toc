@@ -16,6 +16,7 @@ Core\Init.lua
 Core\Safe.lua
 Core\Database.lua
 Core\Version.lua
+Core\Waypoint.lua
 
 # Dados curados (um arquivo por expansao = uma sprint)
 Data\Schema.lua

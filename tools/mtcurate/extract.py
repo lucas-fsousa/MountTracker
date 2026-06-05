@@ -10,17 +10,51 @@ import re
 from .sourcetext import STANDINGS
 
 
-def _balanced(s, start):
-    """Retorna a substring '[...]' balanceada que comeca em `start` (que aponta p/ '[')."""
+def _balanced(s, start, op="[", cl="]"):
+    """Retorna a substring delimitada balanceada que comeca em `start` (aponta p/ `op`)."""
     depth = 0
     for i in range(start, len(s)):
-        if s[i] == "[":
+        if s[i] == op:
             depth += 1
-        elif s[i] == "]":
+        elif s[i] == cl:
             depth -= 1
             if depth == 0:
                 return s[start:i + 1]
     return None
+
+
+def npc_coords(html, prefer_zone=None):
+    """Coordenadas de um NPC a partir do g_mapperData do Wowhead.
+    So retorna quando ha uiMapId (conteudo moderno). Prefere a entrada cujo uiMapName
+    casa com `prefer_zone` (a zona curada). Retorna (uiMapId, x, y) em 0-100 ou None."""
+    m = re.search(r"g_mapperData\s*=\s*(\{)", html or "")
+    if not m:
+        return None
+    seg = _balanced(html, m.start(1), "{", "}")
+    if not seg:
+        return None
+    try:
+        data = json.loads(seg)
+    except Exception:                       # noqa: BLE001
+        return None
+    cands = []
+    for _zid, lst in data.items():
+        if isinstance(lst, list):
+            for e in lst:
+                if isinstance(e, dict) and e.get("uiMapId") and e.get("coords"):
+                    cands.append(e)
+    if not cands:
+        return None
+    chosen = None
+    if prefer_zone:
+        pz = prefer_zone.strip().lower()
+        for e in cands:
+            if (e.get("uiMapName") or "").strip().lower() == pz:
+                chosen = e
+                break
+    chosen = chosen or cands[0]
+    co = chosen["coords"][0]
+    return int(chosen["uiMapId"]), round(float(co[0]), 1), round(float(co[1]), 1)
 
 
 def sold_cost(html):

@@ -15,6 +15,13 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **Waypoint to the vendor.** Vendor mounts now have a **Way** button on the row that
+  drops a map waypoint at the vendor — the native Blizzard arrow/pin (no dependency)
+  plus a TomTom waypoint if you have TomTom installed. Vendor coordinates are harvested
+  from Wowhead (`coords = { map, x, y }`), so 55 of the curated vendor mounts already
+  point you straight to the seller. New module `Core/Waypoint.lua`.
+
 ## [0.7.0] - 2026-06-03
 
 ### Added

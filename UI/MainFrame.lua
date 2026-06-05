@@ -222,17 +222,19 @@ local function acquireRow(i)
 
     local function boxBtn(text)
         local b = CreateFrame("Button", nil, r.btnBox, "UIPanelButtonTemplate")
-        b:SetSize(BOX_W - 8, 17)
+        b:SetSize(BOX_W - 8, 14)
         b:SetText(text)
         b:GetFontString():SetWordWrap(false)
         return b
     end
     r.btnWowhead = boxBtn("Wowhead")
-    r.btnWowhead:SetPoint("TOP", 0, -4)
+    r.btnWowhead:SetPoint("TOP", 0, -3)
     r.btnHide = boxBtn("Hide")
-    r.btnHide:SetPoint("TOP", r.btnWowhead, "BOTTOM", 0, -2)
+    r.btnHide:SetPoint("TOP", r.btnWowhead, "BOTTOM", 0, -1)
     r.btnObtained = boxBtn("Owned")
-    r.btnObtained:SetPoint("TOP", r.btnHide, "BOTTOM", 0, -2)
+    r.btnObtained:SetPoint("TOP", r.btnHide, "BOTTOM", 0, -1)
+    r.btnWay = boxBtn("Way")            -- so aparece em vendor com coords (ultimo slot)
+    r.btnWay:SetPoint("TOP", r.btnObtained, "BOTTOM", 0, -1)
 
     -- Texto: 4 linhas, ancoradas ao TOPO da row (nao ao icone) p/ usar toda a altura.
     -- L1: nome + badge.  L2: origem.  L3: zona/xpac + custo.  L4: status/progresso.
@@ -324,6 +326,17 @@ local function refreshRow(r, item)
             UI.Refresh()
         end))
         r.btnObtained:SetShown(not item.owned)  -- esconde nas realmente coletadas
+    end
+
+    -- Botao "Way": cria um waypoint para o vendedor (so quando ha coords curadas).
+    local co = item.entry and item.entry.coords
+    if co and co.map and ns.Waypoint then
+        r.btnWay:SetScript("OnClick", ns.Safe.Wrap("set waypoint", function()
+            ns.Waypoint.ToItem(item)
+        end))
+        r.btnWay:Show()
+    else
+        r.btnWay:Hide()
     end
 
     r:Show()

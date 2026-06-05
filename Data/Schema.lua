@@ -12,7 +12,8 @@
 --     source      = "vendor",
 --     vendor      = "Fedryen Swiftspear",
 --     zone        = "Zangarmarsh",
---     coords      = { x = 79.2, y = 63.5 },       -- opcional
+--     coords      = { map = 2112, x = 53.0, y = 56.8 },  -- opcional: waypoint do
+--                                                  -- vendedor (uiMapID + x,y em 0-100)
 --
 --     requirement = {                              -- o que te torna ELEGIVEL a comprar
 --         type      = "reputation",                -- "reputation" | "renown" | "achievement"

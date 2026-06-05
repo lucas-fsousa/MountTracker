@@ -13,6 +13,7 @@ Uso:
 
 import argparse
 import os
+import re
 import subprocess
 import sys
 
@@ -86,6 +87,13 @@ def main():
         vendor = st.field(src, "Vendor")
         zone = st.field(src, "Zone") or st.field(src, "Location")
         cost, how = resolve_cost(http, m["name"], src)
+        # Coordenadas do vendedor (p/ o waypoint): NPC -> g_mapperData do Wowhead.
+        coords = None
+        vendor_npc = re.sub(r"\s*\((?:Alliance|Horde)\)\s*$", "", vendor or "").strip()
+        if vendor_npc:
+            nid = wowhead.npc_id(http, vendor_npc)
+            if nid:
+                coords = extract.npc_coords(wowhead.npc_html(http, nid), prefer_zone=zone)
         req = st.requirement(src)
         fid = None
         if req:
@@ -93,7 +101,8 @@ def main():
         exp = extract.expansion(wowhead.spell_html(http, sid)) or "Unknown"
 
         costtxt = (",".join(f"{k}={v}" for k, v in cost.items()) if cost else "NENHUM")
-        sys.stderr.write(f"  {m['name']:30s} [{exp}] vendor={vendor} cost={costtxt} ({how})"
+        cotxt = f" coords={coords[0]}:{coords[1]},{coords[2]}" if coords else ""
+        sys.stderr.write(f"  {m['name']:30s} [{exp}] vendor={vendor} cost={costtxt} ({how}){cotxt}"
                          f"{' req=' + req['type'] + '/' + str(fid) if req else ''}\n")
 
         if not cost:
@@ -108,6 +117,8 @@ def main():
             L.append(f"        vendor  = {emit.lua_str(vendor)},")
         if zone:
             L.append(f"        zone    = {emit.lua_str(zone)},")
+        if coords:
+            L.append(f"        coords  = {{ map = {coords[0]}, x = {coords[1]}, y = {coords[2]} }},")
         if req and req["type"] == "renown":
             fpart = f"factionID = {fid}" if fid else f'factionName = {emit.lua_str(req.get("faction") or "")}'
             L.append(f'        requirement = {{ type = "renown", {fpart}, renownLevel = {req["renownLevel"]} }},')
