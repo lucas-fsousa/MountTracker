@@ -178,11 +178,13 @@ end
 -- tirando os botoes da linha (que ficava apertada). Lazy: criado no 1o uso.
 local detailFrame
 local function buildDetail()
-    local f = CreateFrame("Frame", "MountTrackerDetailFrame", UIParent, "BasicFrameTemplateWithInset")
+    -- Filho do frame principal: e uma EXTENSAO do roadmap -> fecha junto (auto, por ser
+    -- filho) e se move junto (ancorado a direita do roadmap; nao tem drag proprio).
+    local f = CreateFrame("Frame", "MountTrackerDetailFrame", frame, "BasicFrameTemplateWithInset")
     f:SetSize(340, 470)
     f:SetFrameStrata("DIALOG")
-    f:SetMovable(true); f:EnableMouse(true); f:RegisterForDrag("LeftButton")
-    f:SetScript("OnDragStart", f.StartMoving); f:SetScript("OnDragStop", f.StopMovingOrSizing)
+    f:SetPoint("TOPLEFT", frame, "TOPRIGHT", 6, 0)  -- ancora fixa: acompanha o roadmap
+    f:EnableMouse(true)                              -- bloqueia cliques passarem por baixo
     tinsert(UISpecialFrames, "MountTrackerDetailFrame")  -- fecha com ESC
 
     f.title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -229,14 +231,6 @@ function UI.ShowDetail(item)
     if not item then return end
     local f = detailFrame or buildDetail()
     f._item = item
-
-    -- Posiciona ao lado da janela principal (se aberta), senao centraliza.
-    f:ClearAllPoints()
-    if frame and frame:IsShown() then
-        f:SetPoint("TOPLEFT", frame, "TOPRIGHT", 6, 0)
-    else
-        f:SetPoint("CENTER")
-    end
 
     -- Modelo 3D do proprio mount (creatureDisplayInfoID via API do jogo).
     local disp
@@ -427,6 +421,13 @@ local function buildFrame()
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
     frame:SetFrameStrata("HIGH")
     tinsert(UISpecialFrames, "MountTrackerFrame") -- fecha com ESC
+
+    -- O painel de detalhes e uma extensao do roadmap: fecha junto (e nao reaparece
+    -- "stale" ao reabrir). Por ser filho do frame ele ja some visualmente; aqui
+    -- garantimos o estado Hidden.
+    frame:HookScript("OnHide", function()
+        if detailFrame then detailFrame:Hide() end
+    end)
 
     frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     frame.title:SetPoint("TOP", 0, -5)

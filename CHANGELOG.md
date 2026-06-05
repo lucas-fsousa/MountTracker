@@ -33,7 +33,9 @@ HOW TO RELEASE (see RELEASING.md):
 - **Rows are now click-to-open a detail panel.** The per-row action buttons were
   getting cramped, so clicking a mount opens a clean detail window with a **3D model
   preview**, its source/zone/cost and current standing, and roomy buttons for every
-  action — leaving the list itself uncluttered (just a `›` hint on hover).
+  action — leaving the list itself uncluttered (just a `›` hint on hover). The panel is
+  an extension of the roadmap window: it's docked to its side, **moves with it and
+  closes with it** (no longer left floating).
 
 ### Added
 - **Waypoint to the vendor.** Vendor mounts get a **Set waypoint to vendor** button in
