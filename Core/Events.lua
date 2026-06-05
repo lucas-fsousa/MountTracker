@@ -119,15 +119,53 @@ local function handleSlash(msg)
                 -- Escapa as barras p/ o texto cru aparecer legivel no chat.
                 local rawSafe = ns.Safe.IsSecret(srcText) and "<secret>"
                     or (tostring(srcText or ""):gsub("|", "||"))
-                ns.Print(("%s (id %d, spell %s): isCollected=%s | marked=%s")
-                    :format(nm, mid, tostring(sp), tostring(isColl), tostring(ns.DB.IsMarkedObtained(mid))))
+                ns.Print(("%s (id %d, spell %s): isCollected=%s | marked=%s | hidden=%s")
+                    :format(nm, mid, tostring(sp), tostring(isColl),
+                        tostring(ns.DB.IsMarkedObtained(mid)), tostring(ns.DB.IsHidden(mid))))
                 ns.Print(("  sourceType=%s (%s) | sourceText=[%s]")
                     :format(tostring(srcType), tostring(label), rawSafe))
+                -- Status calculado + faction curada (procura no roadmap ja construido).
+                for _, it in ipairs(ns._roadmap or {}) do
+                    if it.mountID == mid then
+                        ns.Print(("  status=%s | readyNow=%s | curated.faction=%s | detail=%s")
+                            :format(tostring(it.status), tostring(it.readyNow),
+                                tostring(it.entry and it.entry.faction), tostring(it.detail)))
+                        break
+                    end
+                end
                 found = found + 1
                 if found >= 8 then break end
             end
         end
         if found == 0 then ns.Print("no mount matching '" .. q .. "'") end
+
+    elseif cmd == "hidden" then
+        -- Lista as montarias ocultadas manualmente (status HIDDEN).
+        local names = {}
+        for mid in pairs(ns.DB.data.hidden or {}) do
+            local nm = C_MountJournal and C_MountJournal.GetMountInfoByID(mid)
+            names[#names + 1] = (nm or "?") .. " (" .. tostring(mid) .. ")"
+        end
+        ns.Print(("manually hidden (%d): %s"):format(
+            #names, #names > 0 and table.concat(names, ", ")
+                or "(none) — use the Hide button to hide a mount"))
+
+    elseif cmd == "unhide" then
+        -- Desfaz o "hide" de UMA montaria pelo nome (sem apagar o resto, como o reset).
+        local q = rest:lower()
+        if q == "" then ns.Print("usage: /mtrack unhide <part of name>") return end
+        local n = 0
+        for mid in pairs(ns.DB.data.hidden or {}) do
+            local nm = C_MountJournal and C_MountJournal.GetMountInfoByID(mid)
+            if nm and nm:lower():find(q, 1, true) then
+                ns.DB.SetHidden(mid, false)
+                ns.Print("unhidden: " .. nm)
+                n = n + 1
+            end
+        end
+        if n == 0 then ns.Print("no hidden mount matching '" .. q .. "'") end
+        ns.Logic.Roadmap.Build()
+        if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
 
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
@@ -151,7 +189,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | hidden | unhide <name> | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

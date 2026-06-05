@@ -15,6 +15,12 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **`/mtrack unhide <name>` and `/mtrack hidden`.** Undo an accidental *Hide* on a
+  single mount without wiping all your overrides (`/mtrack reset` was the only option
+  before), and list everything you've hidden. `/mtrack check` now also reports a
+  mount's `hidden` flag and computed status, for quicker diagnosis.
+
 ### Fixed
 - **Opposite-faction mounts no longer show as obtainable.** Some account-wide mounts
   are gated by a faction-specific *acquisition* (e.g. *Ankoan Waveray* needs Ankoan
