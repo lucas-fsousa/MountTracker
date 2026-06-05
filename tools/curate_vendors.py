@@ -94,6 +94,11 @@ def main():
             nid = wowhead.npc_id(http, vendor_npc)
             if nid:
                 coords = extract.npc_coords(wowhead.npc_html(http, nid), prefer_zone=zone)
+        # Restricao de faccao (side da pagina de item): 1=Alliance, 2=Horde.
+        side = None
+        fiid = wowhead.item_id(http, m["name"])
+        if fiid:
+            side = extract.faction_side(wowhead.item_html(http, fiid))
         req = st.requirement(src)
         fid = None
         if req:
@@ -119,6 +124,8 @@ def main():
             L.append(f"        zone    = {emit.lua_str(zone)},")
         if coords:
             L.append(f"        coords  = {{ map = {coords[0]}, x = {coords[1]}, y = {coords[2]} }},")
+        if side:
+            L.append(f'        faction = "{side}",')
         if req and req["type"] == "renown":
             fpart = f"factionID = {fid}" if fid else f'factionName = {emit.lua_str(req.get("faction") or "")}'
             L.append(f'        requirement = {{ type = "renown", {fpart}, renownLevel = {req["renownLevel"]} }},')

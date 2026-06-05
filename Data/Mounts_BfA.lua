@@ -6,6 +6,7 @@ local ADDON, ns = ...
 ns.Data.Register("BfA", {
     {
         name    = "Unshackled Waveray",
+        faction = "Horde",
         spellID = 291538,
         acquisition = "reputation",
         vendor  = "Finder Pruc",
@@ -16,6 +17,7 @@ ns.Data.Register("BfA", {
     },
     {
         name    = "Ankoan Waveray",
+        faction = "Alliance",
         spellID = 292407,
         acquisition = "reputation",
         vendor  = "Artisan Okata",

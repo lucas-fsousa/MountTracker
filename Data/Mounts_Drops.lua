@@ -451,6 +451,7 @@ ns.Data.Register(nil, {
     },
     {
         name    = "Broken Highland Mustang",
+        faction = "Horde",
         spellID = 279457,
         acquisition = "drop",
         source  = "Knight-Captain Aldrin",
@@ -580,6 +581,7 @@ ns.Data.Register(nil, {
     },
     {
         name    = "Royal Snapdragon",
+        faction = "Alliance",
         spellID = 294038,
         acquisition = "drop",
         source  = "Ankoan Supplies",

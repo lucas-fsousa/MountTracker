@@ -15,6 +15,14 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Fixed
+- **Opposite-faction mounts no longer show as obtainable.** Some account-wide mounts
+  are gated by a faction-specific *acquisition* (e.g. *Ankoan Waveray* needs Ankoan
+  reputation, which only Alliance can earn) — the game doesn't flag the mount itself,
+  so a Horde character saw it as just "need requirement." Curated entries now carry a
+  `faction` tag (harvested from Wowhead's faction side) and the wrong-faction ones are
+  hidden unless *Show unavailable / hidden* is on. 25 mounts tagged so far.
+
 ### Changed
 - **Rows are now click-to-open a detail panel.** The per-row action buttons were
   getting cramped, so clicking a mount opens a clean detail window with a **3D model

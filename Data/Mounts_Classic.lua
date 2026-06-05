@@ -8,6 +8,7 @@ ns.Data.Register("Classic", {
     -- Alterac Valley (reputacao Exalted). Faction-specific: um Alliance, um Horde.
     {
         name    = "Stormpike Battle Charger",
+        faction = "Alliance",
         spellID = 23510,
         acquisition = "reputation",
         vendor  = "Stormpike Quartermaster",

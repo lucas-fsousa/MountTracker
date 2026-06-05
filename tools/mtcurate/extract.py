@@ -134,6 +134,15 @@ def expansion(html):
     return _WH_EXP.get(m.group(1).strip())
 
 
+def faction_side(html):
+    """Lado da faccao a partir do "side":N da pagina de item do Wowhead.
+    1 = Alliance, 2 = Horde; 0/3 (ambos/neutro) -> None (sem restricao)."""
+    m = re.search(r'"side":(\d)', html or "")
+    if not m:
+        return None
+    return {"1": "Alliance", "2": "Horde"}.get(m.group(1))
+
+
 def drop_zone(html):
     """Zona onde um NPC e encontrado, a partir da pagina de NPC do Wowhead:
        'This NPC can be found in <span id="locations"> ... <a ...>ZONE</a>'.

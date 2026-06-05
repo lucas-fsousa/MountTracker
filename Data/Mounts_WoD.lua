@@ -6,6 +6,7 @@ local ADDON, ns = ...
 ns.Data.Register("WoD", {
     {
         name    = "Breezestrider Stallion",
+        faction = "Horde",
         spellID = 171832,
         acquisition = "reputation",
         vendor  = "Dazzerian",
@@ -16,6 +17,7 @@ ns.Data.Register("WoD", {
     },
     {
         name    = "Pale Thorngrazer",
+        faction = "Alliance",
         spellID = 171833,
         acquisition = "reputation",
         vendor  = "Crafticus Mindbender",

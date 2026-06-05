@@ -20,6 +20,7 @@ ns.Data.Register("BfA", {
     },
     {
         name    = "Bloodflank Charger",
+        faction = "Horde",
         spellID = 295387,
         acquisition = "achievement",
         requirement = { type = "achievement", achievementID = 13517 },
@@ -34,6 +35,7 @@ ns.Data.Register("BfA", {
     },
     {
         name    = "Conqueror's Scythemaw",
+        faction = "Horde",
         spellID = 279454,
         acquisition = "achievement",
         requirement = { type = "achievement", achievementID = 12604 },
@@ -55,6 +57,7 @@ ns.Data.Register("BfA", {
     },
     {
         name    = "Ironclad Frostclaw",
+        faction = "Alliance",
         spellID = 295386,
         acquisition = "achievement",
         requirement = { type = "achievement", achievementID = 13517 },

@@ -6,6 +6,7 @@ local ADDON, ns = ...
 ns.Data.Register("MoP", {
     {
         name    = "Grand Armored Wyvern",
+        faction = "Horde",
         spellID = 135418,
         acquisition = "reputation",
         vendor  = "Tuskripper Grukna",

@@ -331,12 +331,24 @@ function Eligibility.Evaluate(cand)
         return item
     end
 
-    -- 3) Faccao oposta (inelegivel).
+    -- 3) Faccao oposta (inelegivel) -- sinal do proprio mount (quando o jogo flaga).
     local pf = playerFactionId()
     if info.isFactionSpecific and info.faction ~= nil and pf ~= nil and info.faction ~= pf then
         item.status = S.WRONG_FACTION
         item.detail = "Opposite faction mount"
         return item
+    end
+
+    -- 3b) Restricao de faccao do CONTEUDO curado (ex.: reputacao Ankoan = so Alliance).
+    --     O jogo NAO flaga a montaria (ela e account-wide), mas a aquisicao pertence a
+    --     uma unica faccao -> esconde para a faccao oposta (so aparece com "show hidden").
+    if entry and entry.faction then
+        local g = UnitFactionGroup("player")
+        if (g == "Alliance" or g == "Horde") and entry.faction ~= g then
+            item.status = S.WRONG_FACTION
+            item.detail = entry.faction .. "-only (acquisition)"
+            return item
+        end
     end
 
     -- 3.5) Nao-curada: usa o texto de origem do proprio jogo (base ao vivo).
