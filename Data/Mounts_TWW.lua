@@ -11,6 +11,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Waxmonger Squick",
         zone    = "The Ringing Deeps",
+        coords  = { map = 2214, x = 43.2, y = 32.8 },
         requirement = { type = "renown", factionID = 2594, renownLevel = 19 }, -- The Assembly of the Deeps
         cost    = { currencyID = 2815, amount = 11375 },
         wowhead = "https://www.wowhead.com/spell=447176",
@@ -31,6 +32,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Smaks Topskimmer",
         zone    = "Undermine",
+        coords  = { map = 2346, x = 43.6, y = 50.2 },
         requirement = { type = "renown", factionID = 2653, renownLevel = 15 }, -- Bilgewater Cartel
         cost    = { currencyID = 2815, amount = 8125 },
         wowhead = "https://www.wowhead.com/spell=466002",
@@ -61,6 +63,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Smaks Topskimmer",
         zone    = "Undermine",
+        coords  = { map = 2346, x = 43.6, y = 50.2 },
         requirement = { type = "renown", factionID = 2653, renownLevel = 19 }, -- Bilgewater Cartel
         cost    = { currencyID = 2815, amount = 11375 },
         wowhead = "https://www.wowhead.com/spell=466016",
@@ -71,6 +74,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Om'sirik",
         zone    = "K'aresh",
+        coords  = { map = 2472, x = 40.6, y = 29.2 },
         requirement = { type = "renown", factionID = 2658, renownLevel = 19 }, -- K'aresh Trust
         cost    = { currencyID = 2815, amount = 11375 },
         wowhead = "https://www.wowhead.com/spell=1223187",
@@ -81,6 +85,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Om'sirik",
         zone    = "K'aresh",
+        coords  = { map = 2472, x = 40.6, y = 29.2 },
         requirement = { type = "renown", factionID = 2658, renownLevel = 15 }, -- K'aresh Trust
         cost    = { currencyID = 2815, amount = 8125 },
         wowhead = "https://www.wowhead.com/spell=1233546",

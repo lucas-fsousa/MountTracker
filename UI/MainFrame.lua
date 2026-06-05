@@ -270,8 +270,7 @@ function UI.ShowDetail(item)
     f.btnWowhead:SetShown(url ~= nil)
     f.btnWowhead:SetScript("OnClick", ns.Safe.Wrap("open Wowhead link", function() ShowWowhead(url) end))
 
-    local co = e and e.coords
-    if co and co.map and ns.Waypoint then
+    if ns.Waypoint and ns.Waypoint.CanRoute(item) then
         f.btnWay:Show()
         f.btnWay:SetScript("OnClick", ns.Safe.Wrap("set waypoint", function() ns.Waypoint.ToItem(item) end))
     else

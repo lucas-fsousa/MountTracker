@@ -39,8 +39,10 @@ HOW TO RELEASE (see RELEASING.md):
 - **Waypoint to the vendor.** Vendor mounts get a **Set waypoint to vendor** button in
   the detail panel that drops a map waypoint at the seller — the native Blizzard
   arrow/pin (no dependency) plus a TomTom waypoint if you have TomTom installed. Vendor
-  coordinates are harvested from Wowhead (`coords = { map, x, y }`), so most curated
-  vendor mounts point you straight there. New module `Core/Waypoint.lua`.
+  coordinates are harvested from Wowhead; **much broader coverage now** — when Wowhead
+  exposes a map ID we use it directly, and for older zones (where it doesn't) we store
+  the coordinates against the zone name and resolve the map at runtime. The button only
+  appears when a route can actually be made. New module `Core/Waypoint.lua`.
 
 ## [0.7.0] - 2026-06-03
 

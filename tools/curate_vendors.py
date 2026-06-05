@@ -106,7 +106,7 @@ def main():
         exp = extract.expansion(wowhead.spell_html(http, sid)) or "Unknown"
 
         costtxt = (",".join(f"{k}={v}" for k, v in cost.items()) if cost else "NENHUM")
-        cotxt = f" coords={coords[0]}:{coords[1]},{coords[2]}" if coords else ""
+        cotxt = (" coords=%s:%s,%s" % (coords[0] or ("zone:" + str(zone)), coords[1], coords[2])) if coords else ""
         sys.stderr.write(f"  {m['name']:30s} [{exp}] vendor={vendor} cost={costtxt} ({how}){cotxt}"
                          f"{' req=' + req['type'] + '/' + str(fid) if req else ''}\n")
 
@@ -123,7 +123,11 @@ def main():
         if zone:
             L.append(f"        zone    = {emit.lua_str(zone)},")
         if coords:
-            L.append(f"        coords  = {{ map = {coords[0]}, x = {coords[1]}, y = {coords[2]} }},")
+            cmap, cx, cy = coords
+            if cmap:
+                L.append(f"        coords  = {{ map = {cmap}, x = {cx}, y = {cy} }},")
+            elif zone:   # sem uiMapId -> pareia com a zona (resolvida em runtime)
+                L.append(f"        coords  = {{ zone = {emit.lua_str(zone)}, x = {cx}, y = {cy} }},")
         if side:
             L.append(f'        faction = "{side}",')
         if req and req["type"] == "renown":

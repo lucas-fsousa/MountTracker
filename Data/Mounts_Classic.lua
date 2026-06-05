@@ -23,6 +23,7 @@ ns.Data.Register("Classic", {
         acquisition = "reputation",
         vendor  = "Frostwolf Quartermaster",
         zone    = "Alterac Valley / Hillsbrad Foothills",
+        coords  = { zone = "Alterac Valley / Hillsbrad Foothills", x = 46.6, y = 84.0 },
         requirement = { type = "reputation", factionID = 729, standing = "Exalted" }, -- Frostwolf Clan (Horde)
         cost    = { gold = 60 },
         wowhead = "https://www.wowhead.com/spell=23509",
@@ -35,6 +36,7 @@ ns.Data.Register("Classic", {
         acquisition = "reputation",
         vendor  = "Rivern Frostwind",
         zone    = "Winterspring (Frostsaber Rock)",
+        coords  = { map = 83, x = 46.4, y = 17.6 },
         requirement = { type = "reputation", factionID = 589, standing = "Exalted" }, -- Wintersaber Trainers
         wowhead = "https://www.wowhead.com/spell=17229",
     },

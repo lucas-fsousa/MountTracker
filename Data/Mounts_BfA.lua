@@ -11,6 +11,7 @@ ns.Data.Register("BfA", {
         acquisition = "reputation",
         vendor  = "Finder Pruc",
         zone    = "Nazjatar",
+        coords  = { map = 1355, x = 49.0, y = 62.2 },
         requirement = { type = "reputation", factionID = 2373, standing = "Exalted" }, -- Unshackled
         cost    = { currencyID = 1721, amount = 250 }, -- Prismatic Manapearl
         wowhead = "https://www.wowhead.com/spell=291538",
@@ -22,6 +23,7 @@ ns.Data.Register("BfA", {
         acquisition = "reputation",
         vendor  = "Artisan Okata",
         zone    = "Nazjatar",
+        coords  = { map = 1355, x = 37.8, y = 55.6 },
         requirement = { type = "reputation", factionID = 2400, standing = "Exalted" }, -- Ankoan
         cost    = { currencyID = 1721, amount = 250 },
         wowhead = "https://www.wowhead.com/spell=292407",
@@ -32,6 +34,7 @@ ns.Data.Register("BfA", {
         acquisition = "reputation",
         vendor  = "Provisioner Qorra",
         zone    = "Uldum",
+        coords  = { map = 2025, x = 51.0, y = 56.6 },
         requirement = { type = "reputation", factionID = 2417, standing = "Exalted" }, -- Uldum Accord
         cost    = { gold = 24000 },
         wowhead = "https://www.wowhead.com/spell=316276",

@@ -25,8 +25,11 @@ def _balanced(s, start, op="[", cl="]"):
 
 def npc_coords(html, prefer_zone=None):
     """Coordenadas de um NPC a partir do g_mapperData do Wowhead.
-    So retorna quando ha uiMapId (conteudo moderno). Prefere a entrada cujo uiMapName
-    casa com `prefer_zone` (a zona curada). Retorna (uiMapId, x, y) em 0-100 ou None."""
+    Retorna (uiMapId_ou_None, x, y) em 0-100, ou None se nao houver coords.
+    - Entradas com uiMapId (conteudo moderno): prefere a que casa com `prefer_zone`;
+      retorna o uiMapId -> waypoint direto.
+    - Entradas SEM uiMapId (conteudo antigo): retorna (None, x, y); quem chama pareia
+      com a ZONA curada (o addon resolve a zona -> uiMapID em runtime)."""
     m = re.search(r"g_mapperData\s*=\s*(\{)", html or "")
     if not m:
         return None
@@ -37,24 +40,33 @@ def npc_coords(html, prefer_zone=None):
         data = json.loads(seg)
     except Exception:                       # noqa: BLE001
         return None
-    cands = []
+
+    withmap, anycoords = [], None
     for _zid, lst in data.items():
-        if isinstance(lst, list):
-            for e in lst:
-                if isinstance(e, dict) and e.get("uiMapId") and e.get("coords"):
-                    cands.append(e)
-    if not cands:
-        return None
-    chosen = None
-    if prefer_zone:
-        pz = prefer_zone.strip().lower()
-        for e in cands:
-            if (e.get("uiMapName") or "").strip().lower() == pz:
-                chosen = e
-                break
-    chosen = chosen or cands[0]
-    co = chosen["coords"][0]
-    return int(chosen["uiMapId"]), round(float(co[0]), 1), round(float(co[1]), 1)
+        if not isinstance(lst, list):
+            continue
+        for e in lst:
+            if isinstance(e, dict) and e.get("coords"):
+                anycoords = anycoords or e
+                if e.get("uiMapId"):
+                    withmap.append(e)
+
+    if withmap:
+        chosen = None
+        if prefer_zone:
+            pz = prefer_zone.strip().lower()
+            for e in withmap:
+                if (e.get("uiMapName") or "").strip().lower() == pz:
+                    chosen = e
+                    break
+        chosen = chosen or withmap[0]
+        co = chosen["coords"][0]
+        return int(chosen["uiMapId"]), round(float(co[0]), 1), round(float(co[1]), 1)
+
+    if anycoords:                            # tem coords mas sem uiMapId -> usa a zona
+        co = anycoords["coords"][0]
+        return None, round(float(co[0]), 1), round(float(co[1]), 1)
+    return None
 
 
 def sold_cost(html):
