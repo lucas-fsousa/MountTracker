@@ -15,12 +15,18 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Changed
+- **Rows are now click-to-open a detail panel.** The per-row action buttons were
+  getting cramped, so clicking a mount opens a clean detail window with a **3D model
+  preview**, its source/zone/cost and current standing, and roomy buttons for every
+  action — leaving the list itself uncluttered (just a `›` hint on hover).
+
 ### Added
-- **Waypoint to the vendor.** Vendor mounts now have a **Way** button on the row that
-  drops a map waypoint at the vendor — the native Blizzard arrow/pin (no dependency)
-  plus a TomTom waypoint if you have TomTom installed. Vendor coordinates are harvested
-  from Wowhead (`coords = { map, x, y }`), so 55 of the curated vendor mounts already
-  point you straight to the seller. New module `Core/Waypoint.lua`.
+- **Waypoint to the vendor.** Vendor mounts get a **Set waypoint to vendor** button in
+  the detail panel that drops a map waypoint at the seller — the native Blizzard
+  arrow/pin (no dependency) plus a TomTom waypoint if you have TomTom installed. Vendor
+  coordinates are harvested from Wowhead (`coords = { map, x, y }`), so most curated
+  vendor mounts point you straight there. New module `Core/Waypoint.lua`.
 
 ## [0.7.0] - 2026-06-03
 

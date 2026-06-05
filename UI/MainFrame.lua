@@ -173,6 +173,136 @@ local function ShowWowhead(url)
     eb:HighlightText()
 end
 
+-- ---- Painel de detalhes (abre ao clicar numa linha) ----
+-- Mostra o modelo 3D da montaria + origem/zona/custo/situacao e TODAS as acoes,
+-- tirando os botoes da linha (que ficava apertada). Lazy: criado no 1o uso.
+local detailFrame
+local function buildDetail()
+    local f = CreateFrame("Frame", "MountTrackerDetailFrame", UIParent, "BasicFrameTemplateWithInset")
+    f:SetSize(340, 470)
+    f:SetFrameStrata("DIALOG")
+    f:SetMovable(true); f:EnableMouse(true); f:RegisterForDrag("LeftButton")
+    f:SetScript("OnDragStart", f.StartMoving); f:SetScript("OnDragStop", f.StopMovingOrSizing)
+    tinsert(UISpecialFrames, "MountTrackerDetailFrame")  -- fecha com ESC
+
+    f.title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    f.title:SetPoint("TOP", 0, -5)
+    f.title:SetText("Mount detail")
+
+    -- Modelo 3D da montaria (gira sozinho devagar).
+    f.model = CreateFrame("PlayerModel", nil, f)
+    f.model:SetPoint("TOPLEFT", 12, -28)
+    f.model:SetPoint("TOPRIGHT", -12, -28)
+    f.model:SetHeight(190)
+    f.model:SetScript("OnUpdate", function(self, elapsed)
+        self._rot = ((self._rot or 0) + elapsed * 0.5) % (2 * math.pi)
+        self:SetFacing(self._rot)
+    end)
+
+    f.name = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+    f.name:SetPoint("TOPLEFT", 14, -224); f.name:SetPoint("RIGHT", -14, 0)
+    f.name:SetJustifyH("LEFT"); f.name:SetWordWrap(false)
+
+    f.badge = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    f.badge:SetPoint("TOPLEFT", 14, -246); f.badge:SetJustifyH("LEFT")
+
+    f.info = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    f.info:SetPoint("TOPLEFT", 14, -270); f.info:SetPoint("TOPRIGHT", -14, -270)
+    f.info:SetJustifyH("LEFT"); f.info:SetSpacing(4); f.info:SetWordWrap(true)
+
+    local function actBtn(text)
+        local b = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+        b:SetSize(312, 22); b:SetText(text)
+        b:GetFontString():SetWordWrap(false)
+        return b
+    end
+    f.btnWay = actBtn("Set waypoint to vendor"); f.btnWay:SetPoint("BOTTOM", 0, 96)
+    f.btnWowhead = actBtn("Copy Wowhead link"); f.btnWowhead:SetPoint("BOTTOM", 0, 70)
+    f.btnObtained = actBtn("Mark as owned"); f.btnObtained:SetPoint("BOTTOM", 0, 44)
+    f.btnHide = actBtn("Hide from roadmap"); f.btnHide:SetPoint("BOTTOM", 0, 18)
+
+    detailFrame = f
+    return f
+end
+
+function UI.ShowDetail(item)
+    if not item then return end
+    local f = detailFrame or buildDetail()
+    f._item = item
+
+    -- Posiciona ao lado da janela principal (se aberta), senao centraliza.
+    f:ClearAllPoints()
+    if frame and frame:IsShown() then
+        f:SetPoint("TOPLEFT", frame, "TOPRIGHT", 6, 0)
+    else
+        f:SetPoint("CENTER")
+    end
+
+    -- Modelo 3D do proprio mount (creatureDisplayInfoID via API do jogo).
+    local disp
+    if item.mountID and C_MountJournal and C_MountJournal.GetMountInfoExtraByID then
+        disp = select(1, C_MountJournal.GetMountInfoExtraByID(item.mountID))
+    end
+    f.model:ClearModel()
+    if disp and disp > 0 then
+        f.model:SetDisplayInfo(disp)
+        f.model:SetPortraitZoom(0)
+        f.model:Show()
+    else
+        f.model:Hide()
+    end
+
+    f.name:SetText(item.name or "?")
+    local c = ns.STATUS_COLOR[item.status] or { 1, 1, 1 }
+    local badgeText = (item.status == ns.STATUS.MISSING and item.category)
+        or ns.STATUS_LABEL[item.status] or item.status
+    f.badge:SetText(badgeText)
+    f.badge:SetTextColor(c[1], c[2], c[3])
+
+    local lines = {}
+    local v = vendorsText(item);       if v ~= "" then lines[#lines + 1] = v end
+    local zc = zoneCostText(item);     if zc ~= "" then lines[#lines + 1] = zc end
+    local sd = statusDetailText(item); if sd ~= "" then lines[#lines + 1] = sd end
+    f.info:SetText(table.concat(lines, "\n"))
+
+    local e = item.entry
+    local url = (e and e.wowhead) or (item.spellID and ("https://www.wowhead.com/spell=" .. item.spellID))
+    f.btnWowhead:SetShown(url ~= nil)
+    f.btnWowhead:SetScript("OnClick", ns.Safe.Wrap("open Wowhead link", function() ShowWowhead(url) end))
+
+    local co = e and e.coords
+    if co and co.map and ns.Waypoint then
+        f.btnWay:Show()
+        f.btnWay:SetScript("OnClick", ns.Safe.Wrap("set waypoint", function() ns.Waypoint.ToItem(item) end))
+    else
+        f.btnWay:Hide()
+    end
+
+    if item.markedOnly then
+        f.btnObtained:SetText("Unmark (not actually owned)")
+        f.btnObtained:SetScript("OnClick", ns.Safe.Wrap("unmark", function()
+            ns.DB.SetMarkedObtained(item.mountID, false); ns.Logic.Roadmap.Build(); UI.Refresh(); f:Hide()
+        end))
+        f.btnObtained:Show()
+    elseif not item.owned then
+        f.btnObtained:SetText("Mark as owned")
+        f.btnObtained:SetScript("OnClick", ns.Safe.Wrap("mark owned", function()
+            ns.DB.SetMarkedObtained(item.mountID, true); ns.Logic.Roadmap.Build(); UI.Refresh(); f:Hide()
+        end))
+        f.btnObtained:Show()
+    else
+        f.btnObtained:Hide()
+    end
+
+    local hidden = ns.DB.IsHidden(item.mountID)
+    f.btnHide:SetText(hidden and "Unhide from roadmap" or "Hide from roadmap")
+    f.btnHide:SetScript("OnClick", ns.Safe.Wrap("hide mount", function()
+        ns.DB.SetHidden(item.mountID, not hidden); UI.Refresh(); f:Hide()
+    end))
+
+    f:Show()
+end
+
 -- Cria (ou reutiliza) uma linha visual.
 local function acquireRow(i)
     if rows[i] then return rows[i] end
@@ -207,34 +337,15 @@ local function acquireRow(i)
     r.glow.ag = ag
     r.glow:Hide()
 
-    -- Box de acoes a direita: tres botoes empilhados (grid vertical).
-    local BOX_W = 78
-    r.btnBox = CreateFrame("Frame", nil, r, "BackdropTemplate")
-    r.btnBox:SetWidth(BOX_W)
-    r.btnBox:SetPoint("TOPRIGHT", -4, -4)
-    r.btnBox:SetPoint("BOTTOMRIGHT", -4, 4)
-    r.btnBox:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8x8",
-        edgeFile = "Interface\\Buttons\\WHITE8x8", edgeSize = 1,
-    })
-    r.btnBox:SetBackdropColor(1, 1, 1, 0.05)
-    r.btnBox:SetBackdropBorderColor(1, 1, 1, 0.10)
+    -- A row inteira e clicavel -> abre o painel de detalhes (com os botoes de acao).
+    -- Realce ao passar o mouse + uma seta sutil indicando que da pra clicar.
+    local hl = r:CreateTexture(nil, "HIGHLIGHT")
+    hl:SetAllPoints()
+    hl:SetColorTexture(1, 1, 1, 0.09)
 
-    local function boxBtn(text)
-        local b = CreateFrame("Button", nil, r.btnBox, "UIPanelButtonTemplate")
-        b:SetSize(BOX_W - 8, 14)
-        b:SetText(text)
-        b:GetFontString():SetWordWrap(false)
-        return b
-    end
-    r.btnWowhead = boxBtn("Wowhead")
-    r.btnWowhead:SetPoint("TOP", 0, -3)
-    r.btnHide = boxBtn("Hide")
-    r.btnHide:SetPoint("TOP", r.btnWowhead, "BOTTOM", 0, -1)
-    r.btnObtained = boxBtn("Owned")
-    r.btnObtained:SetPoint("TOP", r.btnHide, "BOTTOM", 0, -1)
-    r.btnWay = boxBtn("Way")            -- so aparece em vendor com coords (ultimo slot)
-    r.btnWay:SetPoint("TOP", r.btnObtained, "BOTTOM", 0, -1)
+    r.chevron = r:CreateFontString(nil, "OVERLAY", "GameFontDisableLarge")
+    r.chevron:SetPoint("RIGHT", r, "RIGHT", -10, 0)
+    r.chevron:SetText("\226\128\186")   -- "›"
 
     -- Texto: 4 linhas, ancoradas ao TOPO da row (nao ao icone) p/ usar toda a altura.
     -- L1: nome + badge.  L2: origem.  L3: zona/xpac + custo.  L4: status/progresso.
@@ -244,26 +355,26 @@ local function acquireRow(i)
     r.name:SetWordWrap(false)
 
     r.badge = r:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    r.badge:SetPoint("TOPRIGHT", r.btnBox, "TOPLEFT", -8, -6)
+    r.badge:SetPoint("TOPRIGHT", r, "TOPRIGHT", -22, -6)
     r.badge:SetJustifyH("RIGHT")
     r.name:SetPoint("RIGHT", r.badge, "LEFT", -6, 0)
 
     r.vendors = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     r.vendors:SetPoint("TOPLEFT", r.name, "BOTTOMLEFT", 0, -3)
-    r.vendors:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.vendors:SetPoint("RIGHT", r, "RIGHT", -22, 0)
     r.vendors:SetJustifyH("LEFT")
     r.vendors:SetWordWrap(false)
 
     r.zonecost = r:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     r.zonecost:SetPoint("TOPLEFT", r.vendors, "BOTTOMLEFT", 0, -3)
-    r.zonecost:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.zonecost:SetPoint("RIGHT", r, "RIGHT", -22, 0)
     r.zonecost:SetJustifyH("LEFT")
     r.zonecost:SetWordWrap(false)
 
     -- Linha 4: situacao atual (qual requisito falta + progresso, custo, etc.).
     r.detail = r:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     r.detail:SetPoint("TOPLEFT", r.zonecost, "BOTTOMLEFT", 0, -3)
-    r.detail:SetPoint("RIGHT", r.btnBox, "LEFT", -8, 0)
+    r.detail:SetPoint("RIGHT", r, "RIGHT", -22, 0)
     r.detail:SetJustifyH("LEFT")
     r.detail:SetWordWrap(false)
 
@@ -297,47 +408,10 @@ local function refreshRow(r, item)
         r.glow:Hide()
     end
 
-    -- Link do Wowhead: usa o curado, senao gera a partir do spellID (todas tem).
-    local e = item.entry
-    local url = (e and e.wowhead) or (item.spellID and ("https://www.wowhead.com/spell=" .. item.spellID))
-    r.btnWowhead:SetScript("OnClick", ns.Safe.Wrap("open Wowhead link", function()
-        ShowWowhead(url)
+    -- Clicar na row abre o painel de detalhes (modelo 3D + todas as acoes).
+    r:SetScript("OnClick", ns.Safe.Wrap("open mount detail", function()
+        UI.ShowDetail(item)
     end))
-    r.btnWowhead:SetShown(url ~= nil)
-
-    r.btnHide:SetScript("OnClick", ns.Safe.Wrap("hide mount", function()
-        ns.DB.SetHidden(item.mountID, not ns.DB.IsHidden(item.mountID))
-        UI.Refresh()
-    end))
-    if item.markedOnly then
-        -- Marcada a mao (nao coletada de fato) -> permite desfazer.
-        r.btnObtained:SetText("Unmark")
-        r.btnObtained:SetScript("OnClick", ns.Safe.Wrap("unmark", function()
-            ns.DB.SetMarkedObtained(item.mountID, false)
-            ns.Logic.Roadmap.Build()
-            UI.Refresh()
-        end))
-        r.btnObtained:Show()
-    else
-        r.btnObtained:SetText("Owned")
-        r.btnObtained:SetScript("OnClick", ns.Safe.Wrap("mark as owned", function()
-            ns.DB.SetMarkedObtained(item.mountID, true)
-            ns.Logic.Roadmap.Build()
-            UI.Refresh()
-        end))
-        r.btnObtained:SetShown(not item.owned)  -- esconde nas realmente coletadas
-    end
-
-    -- Botao "Way": cria um waypoint para o vendedor (so quando ha coords curadas).
-    local co = item.entry and item.entry.coords
-    if co and co.map and ns.Waypoint then
-        r.btnWay:SetScript("OnClick", ns.Safe.Wrap("set waypoint", function()
-            ns.Waypoint.ToItem(item)
-        end))
-        r.btnWay:Show()
-    else
-        r.btnWay:Hide()
-    end
 
     r:Show()
 end
