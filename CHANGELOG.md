@@ -15,36 +15,31 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-06-07
+
 ### Added
-- **`/mtrack unhide <name>` and `/mtrack hidden`.** Undo an accidental *Hide* on a
-  single mount without wiping all your overrides (`/mtrack reset` was the only option
-  before), and list everything you've hidden. `/mtrack check` now also reports a
-  mount's `hidden` flag and computed status, for quicker diagnosis.
+- **Detail panel with a 3D model preview.** Clicking a mount opens a panel docked to the
+  roadmap with a rotating 3D model, its source/zone/cost and current standing, and roomy
+  action buttons. It moves and closes with the roadmap (and flips to the other side when
+  there's no room). This declutters the list — rows are now clean and click-to-open
+  (just a `›` hint on hover).
+- **Waypoint to the vendor.** Vendor mounts get a **Set waypoint to vendor** button that
+  drops a map waypoint at the seller — the native Blizzard arrow/pin (no dependency) plus
+  a TomTom waypoint if you have it installed. Coordinates are harvested from Wowhead: when
+  a map ID is exposed we use it directly, otherwise we store the zone name and resolve the
+  map at runtime. The button only appears when a route can actually be made.
+  (`Core/Waypoint.lua`)
+- **`/mtrack unhide <name>` and `/mtrack hidden`.** Undo an accidental *Hide* on a single
+  mount without wiping all your overrides, and list everything you've hidden. `/mtrack
+  check` now also reports a mount's `hidden` flag and computed status.
 
 ### Fixed
-- **Opposite-faction mounts no longer show as obtainable.** Some account-wide mounts
-  are gated by a faction-specific *acquisition* (e.g. *Ankoan Waveray* needs Ankoan
-  reputation, which only Alliance can earn) — the game doesn't flag the mount itself,
-  so a Horde character saw it as just "need requirement." Curated entries now carry a
-  `faction` tag (harvested from Wowhead's faction side) and the wrong-faction ones are
-  hidden unless *Show unavailable / hidden* is on. 25 mounts tagged so far.
-
-### Changed
-- **Rows are now click-to-open a detail panel.** The per-row action buttons were
-  getting cramped, so clicking a mount opens a clean detail window with a **3D model
-  preview**, its source/zone/cost and current standing, and roomy buttons for every
-  action — leaving the list itself uncluttered (just a `›` hint on hover). The panel is
-  an extension of the roadmap window: it's docked to its side, **moves with it and
-  closes with it** (no longer left floating).
-
-### Added
-- **Waypoint to the vendor.** Vendor mounts get a **Set waypoint to vendor** button in
-  the detail panel that drops a map waypoint at the seller — the native Blizzard
-  arrow/pin (no dependency) plus a TomTom waypoint if you have TomTom installed. Vendor
-  coordinates are harvested from Wowhead; **much broader coverage now** — when Wowhead
-  exposes a map ID we use it directly, and for older zones (where it doesn't) we store
-  the coordinates against the zone name and resolve the map at runtime. The button only
-  appears when a route can actually be made. New module `Core/Waypoint.lua`.
+- **Opposite-faction mounts no longer show as obtainable.** Some account-wide mounts are
+  gated by a faction-specific *acquisition* (e.g. *Ankoan Waveray* needs Ankoan reputation,
+  which only Alliance can earn) — the game doesn't flag the mount itself, so a Horde
+  character saw it as just "need requirement." Curated entries now carry a `faction` tag
+  (from Wowhead's faction side); wrong-faction ones are hidden unless *Show unavailable /
+  hidden* is on.
 
 ## [0.7.0] - 2026-06-03
 
@@ -185,7 +180,8 @@ First public release.
 - Zero dependencies (pure Blizzard API). Handles Midnight "Secret Values" safely.
 - Errors are sandboxed — no mid-screen Lua error popups.
 
-[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.5.0...v0.6.0
