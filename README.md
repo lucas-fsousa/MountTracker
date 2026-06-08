@@ -170,6 +170,19 @@ No. It's pure Blizzard API with zero dependencies.
 
 ---
 
+## 🏆 Companion addon — AchievementTracker
+
+Love how MountTracker surfaces the easiest mounts to grab? There's a sibling addon for
+**achievements**: **[AchievementTracker](https://github.com/lucas-fsousa/AchievementTracker)**.
+
+It builds the same kind of priority roadmap for the achievements you're missing — sorted
+**easiest first, "can do it solo right now"** at the top, with the group-required and
+multi-day grinds pushed to the bottom. Same clean UI, same zero-fuss philosophy.
+
+👉 **Get it here: https://github.com/lucas-fsousa/AchievementTracker**
+
+---
+
 ## 📜 License
 
 Released under the **MIT License** — free to use, study and improve. See `LICENSE`.

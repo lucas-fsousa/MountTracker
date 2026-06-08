@@ -170,6 +170,20 @@ Não. É API pura do Blizzard, com zero dependências.
 
 ---
 
+## 🏆 Addon companheiro — AchievementTracker
+
+Curtiu como o MountTracker mostra as montarias mais fáceis de pegar? Existe um addon irmão
+para **conquistas**: **[AchievementTracker](https://github.com/lucas-fsousa/AchievementTracker)**.
+
+Ele monta o mesmo tipo de roadmap priorizado das conquistas que faltam — ordenado do
+**mais fácil primeiro, "dá pra fazer sozinho agora"** no topo, com as que precisam de grupo
+ou de vários dias de empenho empurradas pro fim. Mesma UI limpa, mesma filosofia sem
+complicação.
+
+👉 **Pega aqui: https://github.com/lucas-fsousa/AchievementTracker**
+
+---
+
 ## 📜 Licença
 
 Lançado sob a **Licença MIT** — livre para usar, estudar e melhorar. Veja `LICENSE`.
