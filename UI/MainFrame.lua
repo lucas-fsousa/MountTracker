@@ -183,8 +183,9 @@ local function buildDetail()
     local f = CreateFrame("Frame", "MountTrackerDetailFrame", frame, "BasicFrameTemplateWithInset")
     f:SetSize(340, 470)
     f:SetFrameStrata("DIALOG")
-    f:SetPoint("TOPLEFT", frame, "TOPRIGHT", 6, 0)  -- ancora fixa: acompanha o roadmap
     f:EnableMouse(true)                              -- bloqueia cliques passarem por baixo
+    -- A ancora (lado direito/esquerdo do roadmap) e definida no ShowDetail conforme
+    -- o espaco disponivel na tela. De qualquer lado, e filho do frame -> acompanha.
     tinsert(UISpecialFrames, "MountTrackerDetailFrame")  -- fecha com ESC
 
     f.title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -231,6 +232,17 @@ function UI.ShowDetail(item)
     if not item then return end
     local f = detailFrame or buildDetail()
     f._item = item
+
+    -- Lado em que abre: direita por padrao; esquerda se nao couber na tela.
+    -- (Reavaliado a cada abertura, pois o roadmap pode ter sido movido.)
+    f:ClearAllPoints()
+    local right = frame:GetRight()
+    local screenW = UIParent:GetWidth() or 0
+    if right and screenW > 0 and (right + 6 + f:GetWidth()) > screenW then
+        f:SetPoint("TOPRIGHT", frame, "TOPLEFT", -6, 0)
+    else
+        f:SetPoint("TOPLEFT", frame, "TOPRIGHT", 6, 0)
+    end
 
     -- Modelo 3D do proprio mount (creatureDisplayInfoID via API do jogo).
     local disp
