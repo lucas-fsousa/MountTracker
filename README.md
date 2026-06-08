@@ -67,7 +67,9 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 | | |
 |:---:|:---:|
 | ![Obtainable-now glow](images/glow.png) | ![Per-mount detail](images/row.png) |
-| **Green glow = you can get it right now** | Vendor(s), zone and `Cost: N (have X)` |
+| **Green glow = you can get it right now** | Clean, click-to-open rows |
+| ![Detail panel](images/detail-panel.png) | ![Vendor waypoint](images/waypoint.png) |
+| Click a mount → detail panel with a **3D model** + all actions | One click sets a **waypoint** to the vendor |
 | ![Expansion filter](images/expansion-filter.png) | ![Zone filter](images/zone-filter.png) |
 | Filter by expansion | Filter by your current zone (dungeons & raids included) |
 | ![Show owned](images/owned-toggle.png) | ![Minimap button](images/minimap.png) |

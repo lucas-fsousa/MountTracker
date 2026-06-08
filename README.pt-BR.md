@@ -67,7 +67,9 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 | | |
 |:---:|:---:|
 | ![Brilho de obtenível agora](images/glow.png) | ![Detalhe da montaria](images/row.png) |
-| **Brilho verde = dá pra pegar agora** | Vendedor(es), zona e `Cost: N (have X)` |
+| **Brilho verde = dá pra pegar agora** | Linhas limpas, clique pra abrir |
+| ![Painel de detalhes](images/detail-panel.png) | ![Waypoint do vendedor](images/waypoint.png) |
+| Clique numa montaria → painel com **modelo 3D** + ações | Um clique cria um **waypoint** até o vendedor |
 | ![Filtro por expansão](images/expansion-filter.png) | ![Filtro por zona](images/zone-filter.png) |
 | Filtro por expansão | Filtro pela zona atual (inclui dungeons e raids) |
 | ![Mostrar obtidas](images/owned-toggle.png) | ![Botão de minimapa](images/minimap.png) |
