@@ -424,7 +424,7 @@ end
 -- Constroi a janela (lazy, na primeira abertura).
 local function buildFrame()
     frame = CreateFrame("Frame", "MountTrackerFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(560, 570)   -- altura aumentada p/ mostrar mais linhas (rows ficaram mais altas)
+    frame:SetSize(560, 596)   -- +linha de filtro (Category); mantem a area da lista
     frame:SetPoint("CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -494,9 +494,34 @@ local function buildFrame()
     end)
     frame.ddZone = zd
 
+    -- Dropdown: filtro por categoria (Vendor / Reputation / Drop / Achievement / ...).
+    local cdLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    cdLabel:SetPoint("TOPLEFT", 14, -54)
+    cdLabel:SetText("Category:")
+
+    local cdd = CreateFrame("Frame", "MountTrackerCatDropdown", frame, "UIDropDownMenuTemplate")
+    cdd:SetPoint("LEFT", cdLabel, "RIGHT", -6, -2)
+    UIDropDownMenu_SetWidth(cdd, 150)
+    UIDropDownMenu_Initialize(cdd, function(_, level)
+        local function add(label, value)
+            local info = UIDropDownMenu_CreateInfo()
+            info.text, info.value = label, value
+            info.checked = (ns.DB.Settings().categoryFilter or "All") == value
+            info.func = ns.Safe.Wrap("apply category filter", function()
+                ns.DB.Settings().categoryFilter = value
+                UIDropDownMenu_SetText(cdd, label)
+                UI.RefreshTop()
+            end)
+            UIDropDownMenu_AddButton(info)
+        end
+        add("All categories", "All")
+        for _, c in ipairs(ns.Logic.Roadmap.Categories()) do add(c, c) end
+    end)
+    frame.ddCat = cdd
+
     -- Checkbox: mostrar indisponiveis / ocultas.
     local cb = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb:SetPoint("TOPLEFT", 16, -56)
+    cb:SetPoint("TOPLEFT", 16, -82)
     local cbLabel = cb:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cbLabel:SetPoint("LEFT", cb, "RIGHT", 2, 0)
     cbLabel:SetText("Show unavailable / hidden")
@@ -510,7 +535,7 @@ local function buildFrame()
 
     -- Checkbox: mostrar montarias ja obtidas (aparecem coloridas; as faltantes, cinza).
     local cb2 = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb2:SetPoint("TOPLEFT", 320, -56)
+    cb2:SetPoint("TOPLEFT", 320, -82)
     local cb2Label = cb2:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cb2Label:SetPoint("LEFT", cb2, "RIGHT", 2, 0)
     cb2Label:SetText("Show owned")
@@ -523,7 +548,7 @@ local function buildFrame()
     -- Scroll virtualizado (FauxScrollFrame): renderiza so as linhas visiveis e
     -- recicla ao rolar -> aguenta milhares de itens (inclui as owned) sem travar.
     scroll = CreateFrame("ScrollFrame", "MountTrackerScrollFrame", frame, "FauxScrollFrameTemplate")
-    scroll:SetPoint("TOPLEFT", 10, -84)
+    scroll:SetPoint("TOPLEFT", 10, -110)
     scroll:SetPoint("BOTTOMRIGHT", -30, 10)
     scroll:SetScript("OnVerticalScroll", function(self, offset)
         FauxScrollFrame_OnVerticalScroll(self, offset, ROW_STEP, UI.Refresh)
@@ -581,6 +606,8 @@ function UI.Refresh()
     frame.cbOwned:SetChecked(ns.DB.Settings().showOwned)
     local ef = ns.DB.Settings().expansionFilter or "All"
     UIDropDownMenu_SetText(frame.ddExp, ef == "All" and "All expansions" or ef)
+    local cf = ns.DB.Settings().categoryFilter or "All"
+    if frame.ddCat then UIDropDownMenu_SetText(frame.ddCat, cf == "All" and "All categories" or cf) end
     if (ns.DB.Settings().zoneFilter or "All") == "Current" then
         -- Mostra o nome da zona atual direto (o label "Zone:" ja contextualiza).
         local z = GetRealZoneText() or GetZoneText() or "current"

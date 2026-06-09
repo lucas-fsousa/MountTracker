@@ -307,6 +307,16 @@ function Eligibility.Evaluate(cand)
         costPct = 0,
     }
 
+    -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas recebem
+    -- a categoria do heuristico `categorize` na sua branch (mais abaixo).
+    if entry then
+        local a = entry.acquisition
+        item.category = (a == "reputation" and "Reputation")
+            or ((a == "drop" or a == "world" or a == "rare") and "Drop")
+            or (a == "achievement" and "Achievement")
+            or "Vendor"
+    end
+
     -- 1) Ja coletada ou marcada como obtida -> status OWNED (so aparece com "Show owned").
     if info.isCollected or ns.DB.IsMarkedObtained(mountID) then
         item.owned = true

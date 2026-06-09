@@ -195,17 +195,31 @@ local function zoneMatches(item, ctx)
     return false
 end
 
--- Aplica os filtros de settings (expansao / zona / faccao errada / ocultas).
+-- Categorias distintas presentes no roadmap (p/ popular o dropdown de categoria),
+-- ordenadas alfabeticamente. Inclui owned/unavailable (o filtro e independente).
+function Roadmap.Categories()
+    local seen, list = {}, {}
+    for _, item in ipairs(ns._roadmap or Roadmap.Build()) do
+        local c = item.category
+        if c and not seen[c] then seen[c] = true; list[#list + 1] = c end
+    end
+    table.sort(list)
+    return list
+end
+
+-- Aplica os filtros de settings (expansao / categoria / zona / faccao errada / ocultas).
 function Roadmap.Filtered()
     local items = ns._roadmap or Roadmap.Build()
     local s = ns.DB.Settings()
     local out = {}
     local expFilter = s.expansionFilter
+    local catFilter = s.categoryFilter
     local zoneCurrent = (s.zoneFilter == "Current")
     local ctx = zoneCurrent and playerLocationCtx() or nil
     for _, item in ipairs(items) do
         local show = true
         if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
+        if catFilter and catFilter ~= "All" and item.category ~= catFilter then show = false end
         if zoneCurrent and not zoneMatches(item, ctx) then show = false end
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end

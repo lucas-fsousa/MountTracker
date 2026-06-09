@@ -15,6 +15,12 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **Filter by category.** A new *Category* dropdown narrows the roadmap to how a mount is
+  obtained — Vendor, Reputation, Drop, Achievement, and the source types of uncurated
+  mounts (Quest, PvP, Profession, Holiday, Treasure, …). The list is built from whatever's
+  actually in your roadmap.
+
 ### Fixed
 - **"Current zone" now matches by map ID, not zone name — no more wrong-expansion mixups.**
   Zones reused across expansions share a name (Nagrand TBC vs WoD, Shadowmoon Valley,

@@ -14,6 +14,7 @@ local DEFAULTS = {
         minimapHide      = false,  -- esconder o botao do minimapa
         expansionFilter  = "All",  -- filtro por expansao ("All" ou nome da expansao)
         zoneFilter       = "All",  -- filtro por zona ("All" ou "Current")
+        categoryFilter   = "All",  -- filtro por categoria ("All" ou Vendor/Drop/...)
     },
 }
 
