@@ -364,6 +364,7 @@ ns.Data.Register(nil, {
     {
         name    = "Shadowhide Pearltusk",
         spellID = 171624,
+        expansion = "WoD",
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
         dropChance = 0.013423,
@@ -372,6 +373,7 @@ ns.Data.Register(nil, {
     {
         name    = "Giant Coldsnout",
         spellID = 171635,
+        expansion = "WoD",
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
         dropChance = 0.007452,
@@ -380,6 +382,7 @@ ns.Data.Register(nil, {
     {
         name    = "Garn Steelmaw",
         spellID = 171836,
+        expansion = "WoD",
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
         dropChance = 0.008111,
@@ -388,6 +391,7 @@ ns.Data.Register(nil, {
     {
         name    = "Smoky Direwolf",
         spellID = 171843,
+        expansion = "WoD",
         acquisition = "drop",
         source  = "Invader's Forgotten Treasure",
         dropChance = 0.010027,
@@ -396,6 +400,7 @@ ns.Data.Register(nil, {
     {
         name    = "Wild Dreamrunner",
         spellID = 242875,
+        expansion = "Legion",
         acquisition = "drop",
         source  = "Dreamweaver Cache",
         dropChance = 0.115866,
@@ -404,6 +409,7 @@ ns.Data.Register(nil, {
     {
         name    = "Cloudwing Hippogryph",
         spellID = 242881,
+        expansion = "Legion",
         acquisition = "drop",
         source  = "Farondis Chest",
         dropChance = 0.029811,
@@ -412,6 +418,7 @@ ns.Data.Register(nil, {
     {
         name    = "Valarjar Stormwing",
         spellID = 242882,
+        expansion = "Legion",
         acquisition = "drop",
         source  = "Valarjar Strongbox",
         dropChance = 0.046751,
@@ -420,6 +427,7 @@ ns.Data.Register(nil, {
     {
         name    = "Glorious Felcrusher",
         spellID = 254069,
+        expansion = "Legion",
         acquisition = "drop",
         source  = "Gleaming Footlocker",
         dropChance = 0.047189,
@@ -428,6 +436,7 @@ ns.Data.Register(nil, {
     {
         name    = "Blessed Felcrusher",
         spellID = 254258,
+        expansion = "Legion",
         acquisition = "drop",
         source  = "Gleaming Footlocker",
         dropChance = 0.042572,
@@ -436,6 +445,7 @@ ns.Data.Register(nil, {
     {
         name    = "Squawks",
         spellID = 254811,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.045381,
@@ -444,6 +454,7 @@ ns.Data.Register(nil, {
     {
         name    = "Surf Jelly",
         spellID = 278979,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.001660,
@@ -453,6 +464,7 @@ ns.Data.Register(nil, {
         name    = "Broken Highland Mustang",
         faction = "Horde",
         spellID = 279457,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Knight-Captain Aldrin",
         zone    = "Arathi Highlands",
@@ -462,6 +474,7 @@ ns.Data.Register(nil, {
     {
         name    = "Twilight Avenger",
         spellID = 279466,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.062399,
@@ -470,6 +483,7 @@ ns.Data.Register(nil, {
     {
         name    = "Craghorn Chasm-Leaper",
         spellID = 279467,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.034441,
@@ -478,6 +492,7 @@ ns.Data.Register(nil, {
     {
         name    = "Swift Albino Raptor",
         spellID = 279569,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Beastrider Kama",
         zone    = "Arathi Highlands",
@@ -487,6 +502,7 @@ ns.Data.Register(nil, {
     {
         name    = "Lil' Donkey",
         spellID = 279608,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Overseer Krix",
         zone    = "Arathi Highlands",
@@ -496,6 +512,7 @@ ns.Data.Register(nil, {
     {
         name    = "Skullripper",
         spellID = 279611,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Skullripper",
         zone    = "Arathi Highlands",
@@ -505,6 +522,7 @@ ns.Data.Register(nil, {
     {
         name    = "Witherbark Direwing",
         spellID = 279868,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Nimar the Slayer",
         zone    = "Arathi Highlands",
@@ -514,6 +532,7 @@ ns.Data.Register(nil, {
     {
         name    = "Blackpaw",
         spellID = 288438,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Agathe Wyrmwood",
         zone    = "Darkshore",
@@ -532,6 +551,7 @@ ns.Data.Register(nil, {
     {
         name    = "Umber Nightsaber",
         spellID = 288503,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Moxo the Beheader",
         zone    = "Darkshore",
@@ -541,6 +561,7 @@ ns.Data.Register(nil, {
     {
         name    = "Kaldorei Nightsaber",
         spellID = 288505,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Croz Bloodrage",
         zone    = "Darkshore",
@@ -550,6 +571,7 @@ ns.Data.Register(nil, {
     {
         name    = "Stonehide Elderhorn",
         spellID = 288712,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.014587,
@@ -558,6 +580,7 @@ ns.Data.Register(nil, {
     {
         name    = "Bloodgorged Hunter",
         spellID = 288720,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.013371,
@@ -566,6 +589,7 @@ ns.Data.Register(nil, {
     {
         name    = "Island Thunderscale",
         spellID = 288721,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.092010,
@@ -574,6 +598,7 @@ ns.Data.Register(nil, {
     {
         name    = "Risen Mare",
         spellID = 288722,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Island Expeditions",
         dropChance = 0.120702,
@@ -583,6 +608,7 @@ ns.Data.Register(nil, {
         name    = "Royal Snapdragon",
         faction = "Alliance",
         spellID = 294038,
+        expansion = "BfA",
         acquisition = "drop",
         source  = "Ankoan Supplies",
         dropChance = 0.062586,
@@ -609,6 +635,7 @@ ns.Data.Register(nil, {
     {
         name    = "Bulbous Necroray",
         spellID = 344574,
+        expansion = "Shadowlands",
         acquisition = "drop",
         source  = "Oozing Necroray Egg",
         dropChance = 0.339419,
@@ -617,6 +644,7 @@ ns.Data.Register(nil, {
     {
         name    = "Infested Necroray",
         spellID = 344576,
+        expansion = "Shadowlands",
         acquisition = "drop",
         source  = "Oozing Necroray Egg",
         dropChance = 0.328614,
@@ -625,6 +653,7 @@ ns.Data.Register(nil, {
     {
         name    = "Cartel Master's Gearglider",
         spellID = 353263,
+        expansion = "Shadowlands",
         acquisition = "drop",
         source  = "So'leah",
         zone    = "Tazavesh, the Veiled Market",
@@ -642,6 +671,7 @@ ns.Data.Register(nil, {
     {
         name    = "Spring Butterfly",
         spellID = 1218013,
+        expansion = "TWW",
         acquisition = "drop",
         source  = "Apothecary Hummel",
         zone    = "Shadowfang Keep",

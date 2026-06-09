@@ -24,6 +24,10 @@ HOW TO RELEASE (see RELEASING.md):
 - **Garrison mounts now show under "Current zone".** Your garrison's zone name
   (Lunarfall/Frostwall/…) didn't match the curated `Garrison: …` source, so they never
   appeared; the filter now recognises when you're on your garrison map.
+- **More reliable expansion tagging.** 30 curated drops in reused/ambiguous zones that the
+  heuristic couldn't place (Arathi/Darkshore Warfronts, Island Expeditions, Tazavesh, …)
+  now carry an explicit expansion harvested from Wowhead, so the expansion filter and the
+  current-zone disambiguation are accurate for them too.
 
 ## [0.8.0] - 2026-06-07
 
