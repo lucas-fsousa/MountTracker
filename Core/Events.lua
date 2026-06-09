@@ -91,8 +91,8 @@ local function handleSlash(msg)
         if ns.UI.Minimap then ns.UI.Minimap.Toggle() end
 
     elseif cmd == "zone" then
-        local cands, matched, examples = ns.Logic.Roadmap.ZoneDebug()
-        ns.Print("current zone -> [" .. table.concat(cands, "] [") .. "]")
+        local cands, matched, examples, playerExp = ns.Logic.Roadmap.ZoneDebug()
+        ns.Print(("current zone (exp=%s) -> [%s]"):format(tostring(playerExp), table.concat(cands, "] [")))
         ns.Print(("matches %d missing mount(s)%s"):format(
             matched, #examples > 0 and (": " .. table.concat(examples, ", ")) or ""))
 
