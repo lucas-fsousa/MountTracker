@@ -10,6 +10,7 @@ ns.Data.Register("Shadowlands", {
         acquisition = "reputation",
         vendor  = "Vilo",
         zone    = "Zereth Mortis",
+        map     = 1970,
         coords  = { map = 1970, x = 34.8, y = 64.2 },
         requirement = { type = "reputation", factionID = 2478, standing = "Exalted" }, -- The Enlightened
         cost    = { currencyID = 1813, amount = 5000 }, -- Reservoir Anima

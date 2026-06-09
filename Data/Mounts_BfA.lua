@@ -11,6 +11,7 @@ ns.Data.Register("BfA", {
         acquisition = "reputation",
         vendor  = "Finder Pruc",
         zone    = "Nazjatar",
+        map     = 1355,
         coords  = { map = 1355, x = 49.0, y = 62.2 },
         requirement = { type = "reputation", factionID = 2373, standing = "Exalted" }, -- Unshackled
         cost    = { currencyID = 1721, amount = 250 }, -- Prismatic Manapearl
@@ -23,6 +24,7 @@ ns.Data.Register("BfA", {
         acquisition = "reputation",
         vendor  = "Artisan Okata",
         zone    = "Nazjatar",
+        map     = 1355,
         coords  = { map = 1355, x = 37.8, y = 55.6 },
         requirement = { type = "reputation", factionID = 2400, standing = "Exalted" }, -- Ankoan
         cost    = { currencyID = 1721, amount = 250 },

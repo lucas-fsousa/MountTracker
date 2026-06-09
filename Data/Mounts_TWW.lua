@@ -11,6 +11,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Waxmonger Squick",
         zone    = "The Ringing Deeps",
+        map     = 2214,
         coords  = { map = 2214, x = 43.2, y = 32.8 },
         requirement = { type = "renown", factionID = 2594, renownLevel = 19 }, -- The Assembly of the Deeps
         cost    = { currencyID = 2815, amount = 11375 },
@@ -32,6 +33,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Smaks Topskimmer",
         zone    = "Undermine",
+        map     = 2346,
         coords  = { map = 2346, x = 43.6, y = 50.2 },
         requirement = { type = "renown", factionID = 2653, renownLevel = 15 }, -- Bilgewater Cartel
         cost    = { currencyID = 2815, amount = 8125 },
@@ -63,6 +65,7 @@ ns.Data.Register("TWW", {
         acquisition = "reputation",
         vendor  = "Smaks Topskimmer",
         zone    = "Undermine",
+        map     = 2346,
         coords  = { map = 2346, x = 43.6, y = 50.2 },
         requirement = { type = "renown", factionID = 2653, renownLevel = 19 }, -- Bilgewater Cartel
         cost    = { currencyID = 2815, amount = 11375 },

@@ -12,6 +12,9 @@
 --     source      = "vendor",
 --     vendor      = "Fedryen Swiftspear",
 --     zone        = "Zangarmarsh",
+--     map         = 107,                           -- uiMapID ESTRITO da zona de obtencao
+--                                                  -- (filtro "Current zone" casa por ID,
+--                                                  -- imune a nomes homonimos entre xpacs)
 --     coords      = { map = 2112, x = 53.0, y = 56.8 },  -- opcional: waypoint do
 --                                                  -- vendedor (uiMapID + x,y em 0-100)
 --

@@ -10,6 +10,7 @@ ns.Data.Register("Cataclysm", {
         acquisition = "reputation",
         vendor  = "Pogg",
         zone    = "Tol Barad Peninsula",
+        map     = 245,
         coords  = { map = 245, x = 54.4, y = 80.4 },
         requirement = { type = "reputation", factionID = 1178, standing = "Exalted" }, -- Hellscream's Reach
         cost    = { currencyID = 391, amount = 165 },

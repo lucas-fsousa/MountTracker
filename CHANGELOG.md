@@ -16,11 +16,14 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Fixed
-- **"Current zone" no longer matches a same-named zone from another expansion.** Zones
-  reused across expansions (Nagrand TBC vs WoD, Shadowmoon Valley, Dalaran…) made the
-  filter show, e.g., the TBC *Dark Riding Talbuk* while you stood in WoD Nagrand. The
-  filter now also derives your **current expansion** (from the continent) and requires
-  the mount's expansion to match before a same-named zone counts.
+- **"Current zone" now matches by map ID, not zone name — no more wrong-expansion mixups.**
+  Zones reused across expansions share a name (Nagrand TBC vs WoD, Shadowmoon Valley,
+  Dalaran…), which made the filter show the wrong one (e.g. the TBC *Dark Riding Talbuk*
+  while you stood in WoD Nagrand). Each curated mount now carries a strict **`map`
+  (uiMapID)** for its obtain zone — harvested from Wowhead — and the filter compares
+  unique IDs, which can't collide. Mounts without a map fall back to name matching, now
+  also gated by your current expansion (derived from the continent). This is data-driven:
+  no per-mount fixes, it just resolves itself from the harvested IDs.
 - **Garrison mounts now show under "Current zone".** Your garrison's zone name
   (Lunarfall/Frostwall/…) didn't match the curated `Garrison: …` source, so they never
   appeared; the filter now recognises when you're on your garrison map.

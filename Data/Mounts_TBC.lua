@@ -11,6 +11,7 @@ ns.Data.Register("TBC", {
         acquisition = "reputation",
         vendor  = "Fedryen Swiftspear",
         zone    = "Zangarmarsh",
+        map     = 102,
         coords  = { map = 102, x = 1.0, y = 48.8 },
         requirement = { type = "reputation", factionID = 942, standing = "Exalted" }, -- Cenarion Expedition
         cost    = { gold = 1600 },

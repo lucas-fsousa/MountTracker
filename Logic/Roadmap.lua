@@ -111,32 +111,35 @@ local DUNGEON_MAPTYPE = (Enum and Enum.UIMapType and Enum.UIMapType.Dungeon) or 
 --   * "estou em Tazavesh (subzona) mas a montaria e de K'aresh (mapa)" -> sobe a arvore.
 --   * "estou em Tanaris (zona aberta) e a montaria dropa em Zul'Farrak (dungeon)"
 --     -> desce a arvore, incluindo as instancias filhas da zona.
--- Retorna (names, playerExp): os nomes de localizacao do personagem E a expansao atual
--- (derivada da hierarquia + continente). O continente desambigua zonas homonimas entre
--- expansoes (Nagrand TBC vs WoD, Shadowmoon Valley TBC vs WoD, Dalaran WotLK vs Legion).
-local function playerZoneCandidates()
-    local names, seen = {}, {}
-    local function add(t)
+-- Contexto da localizacao atual do jogador:
+--   set   = conjunto de uiMapIDs (mapa atual + ancestrais ate antes do continente +
+--           dungeons/raids filhas). uiMapID e UNICO por zona -> SEM colisao de nome
+--           (Nagrand TBC=107 != Nagrand WoD=550). Esse e o casamento primario.
+--   names = nomes (lowercase) -> FALLBACK p/ montarias sem uiMapID nos dados.
+--   exp   = expansao atual (continente) -> desambigua o fallback por nome.
+local function playerLocationCtx()
+    local set, names, seen = {}, {}, {}
+    local function addName(t)
         if t and t ~= "" then
             local l = t:lower()
             if not seen[l] then seen[l] = true; names[#names + 1] = l end
         end
     end
-    -- Adiciona dungeons/raids cuja zona-pai (em qualquer profundidade) e `mid`.
-    local function addChildInstances(mid)
+    local function addChildren(mid)
         if not (mid and C_Map and C_Map.GetMapChildrenInfo) then return end
         local kids = C_Map.GetMapChildrenInfo(mid, DUNGEON_MAPTYPE, true)
         if kids then
-            for _, k in ipairs(kids) do add(k.name) end
+            for _, k in ipairs(kids) do
+                if k.mapID then set[k.mapID] = true end
+                addName(k.name)
+            end
         end
     end
-    add(GetSubZoneText and GetSubZoneText())
-    add(GetZoneText and GetZoneText())
-    add(GetRealZoneText and GetRealZoneText())
-    -- Garrison (WoD): a zona do jogador (Lunarfall/Frostwall/...) nao bate com
-    -- "Garrison: ..." dos dados curados -> adiciona o termo explicitamente.
+    addName(GetSubZoneText and GetSubZoneText())
+    addName(GetZoneText and GetZoneText())
+    addName(GetRealZoneText and GetRealZoneText())
     if C_Garrison and C_Garrison.IsOnGarrisonMap and ns.Safe.Value(C_Garrison.IsOnGarrisonMap(), false) then
-        add("garrison")
+        addName("garrison")
     end
 
     local continent
@@ -147,34 +150,42 @@ local function playerZoneCandidates()
             guard = guard + 1
             local info = C_Map.GetMapInfo(mid)
             if not info then break end
-            if info.mapType and info.mapType <= 2 then       -- 2 = Continent (para aqui)
-                continent = info.name
-                break
-            end
-            add(info.name)
-            addChildInstances(mid)  -- inclui as dungeons/raids desta zona
+            if info.mapType and info.mapType <= 2 then continent = info.name; break end
+            set[mid] = true
+            addName(info.name)
+            addChildren(mid)
             mid = info.parentMapID
         end
     end
 
-    -- Expansao atual: heuristica sobre (zonas + continente). O continente e a chave p/
-    -- desambiguar homonimas (ex.: continente "Outland" -> TBC; "Draenor" -> WoD).
     local expText = table.concat(names, " ") .. " " .. (continent or "")
-    local playerExp = (ns.ExpansionFor and ns.ExpansionFor(expText, nil, nil)) or "Unknown"
-    return names, playerExp
+    local exp = (ns.ExpansionFor and ns.ExpansionFor(expText, nil, nil)) or "Unknown"
+    return { set = set, names = names, exp = exp }
 end
 
--- Casa a montaria com qualquer nome de localizacao do personagem (zona/dungeon/subzona).
--- Quando ha match de NOME, exige tambem EXPANSAO compativel (so se ambas conhecidas),
--- p/ nao casar uma zona homonima de outra expansao (Nagrand TBC aparecendo no WoD).
-local function zoneMatches(item, playerZones, playerExp)
-    if not playerZones or #playerZones == 0 then return false end
+-- uiMapID ESTRITO da zona de obtencao (campo `map`, colhido com match de zona
+-- verificado). NAO usa `coords.map` aqui: aquele e nao-estrito (serve so p/ o waypoint)
+-- e poderia apontar pra zona errada -> o filtro de zona nunca pode errar.
+local function itemMapId(item)
+    return (item.entry and item.entry.map) or nil
+end
+
+-- Casa a montaria com a localizacao atual.
+--   1) PREFERE uiMapID: match exato por ID -> imune a colisao de nome/expansao.
+--   2) Fallback por NOME (+ expansao compativel) so quando a montaria nao tem uiMapID
+--      nos dados (nao-curada, ou curada ainda sem `map`/coords).
+local function zoneMatches(item, ctx)
+    if not ctx then return false end
+    local imap = itemMapId(item)
+    if imap then
+        return ctx.set[imap] == true
+    end
     local ie = item.expansion
-    local expCompatible = (not ie or ie == "Unknown" or not playerExp or playerExp == "Unknown")
-        or (ie == playerExp)
+    local expCompatible = (not ie or ie == "Unknown" or not ctx.exp or ctx.exp == "Unknown")
+        or (ie == ctx.exp)
     local zones = itemZones(item)
     local st = item.sourceText and item.sourceText:gsub("|T.-|t", ""):lower()
-    for _, pz in ipairs(playerZones) do
+    for _, pz in ipairs(ctx.names) do
         for _, z in ipairs(zones) do
             local lz = z:lower()
             if lz:find(pz, 1, true) or pz:find(lz, 1, true) then return expCompatible end
@@ -191,12 +202,11 @@ function Roadmap.Filtered()
     local out = {}
     local expFilter = s.expansionFilter
     local zoneCurrent = (s.zoneFilter == "Current")
-    local playerZones, playerExp
-    if zoneCurrent then playerZones, playerExp = playerZoneCandidates() end
+    local ctx = zoneCurrent and playerLocationCtx() or nil
     for _, item in ipairs(items) do
         local show = true
         if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
-        if zoneCurrent and not zoneMatches(item, playerZones, playerExp) then show = false end
+        if zoneCurrent and not zoneMatches(item, ctx) then show = false end
         if item.owned and not s.showOwned then show = false end
         if item.status == ns.STATUS.WRONG_FACTION and not s.showWrongFaction then show = false end
         if item.status == ns.STATUS.UNAVAILABLE and not s.showWrongFaction then show = false end
@@ -209,14 +219,16 @@ end
 -- Diagnostico do filtro de zona (/mtrack zone): nomes de localizacao detectados +
 -- montarias (nao-obtidas) que casam, com exemplos.
 function Roadmap.ZoneDebug()
-    local cands, playerExp = playerZoneCandidates()
+    local ctx = playerLocationCtx()
     local items = ns._roadmap or Roadmap.Build()
     local matched, examples = 0, {}
     for _, item in ipairs(items) do
-        if not item.owned and zoneMatches(item, cands, playerExp) then
+        if not item.owned and zoneMatches(item, ctx) then
             matched = matched + 1
             if #examples < 5 then examples[#examples + 1] = item.name end
         end
     end
-    return cands, matched, examples, playerExp
+    local nmaps = 0
+    for _ in pairs(ctx.set) do nmaps = nmaps + 1 end
+    return ctx.names, matched, examples, ctx.exp, nmaps
 end

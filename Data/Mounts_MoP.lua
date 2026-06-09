@@ -11,6 +11,7 @@ ns.Data.Register("MoP", {
         acquisition = "reputation",
         vendor  = "Tuskripper Grukna",
         zone    = "Krasarang Wilds",
+        map     = 418,
         coords  = { map = 418, x = 9.6, y = 50.8 },
         requirement = { type = "reputation", factionID = 1375, standing = "Exalted" }, -- Dominance Offensive
         cost    = { gold = 2000 },
@@ -22,6 +23,7 @@ ns.Data.Register("MoP", {
         acquisition = "reputation",
         vendor  = "Vasarin Redmorn",
         zone    = "Isle of Thunder",
+        map     = 504,
         coords  = { map = 504, x = 28.2, y = 51.6 },
         requirement = { type = "reputation", factionID = 1388, standing = "Exalted" }, -- Sunreaver Onslaught
         cost    = { gold = 3000 },

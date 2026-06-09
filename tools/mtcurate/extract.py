@@ -23,13 +23,31 @@ def _balanced(s, start, op="[", cl="]"):
     return None
 
 
-def npc_coords(html, prefer_zone=None):
+def _norm_zone(s):
+    """Normaliza um nome de zona p/ comparacao: remove sufixo de dificuldade e baixa."""
+    s = re.sub(r"\s*\((?:Mythic|Heroic|Normal|Raid Finder|Looking For Raid)\)\s*$",
+               "", s or "", flags=re.I)
+    return s.strip().lower()
+
+
+def _zone_eq(a, b):
+    """Zonas equivalentes? Tolera o sufixo ", Continente" do sourceText do jogo:
+    "Nagrand, Outland" == "Nagrand"; mantem nomes com virgula propria
+    ("Tazavesh, the Veiled Market")."""
+    a, b = _norm_zone(a), _norm_zone(b)
+    if not a or not b:
+        return False
+    return a == b or a.startswith(b + ",") or b.startswith(a + ",")
+
+
+def npc_coords(html, prefer_zone=None, strict=False):
     """Coordenadas de um NPC a partir do g_mapperData do Wowhead.
     Retorna (uiMapId_ou_None, x, y) em 0-100, ou None se nao houver coords.
-    - Entradas com uiMapId (conteudo moderno): prefere a que casa com `prefer_zone`;
-      retorna o uiMapId -> waypoint direto.
-    - Entradas SEM uiMapId (conteudo antigo): retorna (None, x, y); quem chama pareia
-      com a ZONA curada (o addon resolve a zona -> uiMapID em runtime)."""
+    - Entradas com uiMapId: prefere a que CASA com `prefer_zone` (uiMapName == zona).
+    - `strict=True`: SO retorna quando a zona casa (nao cai pro 1o mapa) -> uiMapID
+      garantidamente correto (usado p/ o `map` do filtro de zona, que nao pode errar).
+    - `strict=False`: cai pro 1o mapa se nao casar; e, se nenhuma entrada tiver uiMapId,
+      retorna (None, x, y) p/ parear com a zona curada (usado p/ coords do waypoint)."""
     m = re.search(r"g_mapperData\s*=\s*(\{)", html or "")
     if not m:
         return None
@@ -54,16 +72,18 @@ def npc_coords(html, prefer_zone=None):
     if withmap:
         chosen = None
         if prefer_zone:
-            pz = prefer_zone.strip().lower()
             for e in withmap:
-                if (e.get("uiMapName") or "").strip().lower() == pz:
+                if _zone_eq(e.get("uiMapName"), prefer_zone):
                     chosen = e
                     break
-        chosen = chosen or withmap[0]
+        if not chosen:
+            if strict:
+                return None                  # exige match de zona -> nao chuta mapa
+            chosen = withmap[0]
         co = chosen["coords"][0]
         return int(chosen["uiMapId"]), round(float(co[0]), 1), round(float(co[1]), 1)
 
-    if anycoords:                            # tem coords mas sem uiMapId -> usa a zona
+    if anycoords and not strict:             # coords sem uiMapId -> pareia com a zona
         co = anycoords["coords"][0]
         return None, round(float(co[0]), 1), round(float(co[1]), 1)
     return None

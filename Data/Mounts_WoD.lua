@@ -33,6 +33,7 @@ ns.Data.Register("WoD", {
         acquisition = "reputation",
         vendor  = "Dawn-Seeker Krisek",
         zone    = "Tanaan Jungle",
+        map     = 534,
         coords  = { map = 534, x = 57.8, y = 59.4 },
         requirement = { type = "reputation", factionID = 1849, standing = "Friendly" }, -- Order of the Awakened
         cost    = { currencyID = 823, amount = 150000 },
