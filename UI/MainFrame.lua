@@ -477,7 +477,7 @@ local function buildFrame()
 
     local zd = CreateFrame("Frame", "MountTrackerZoneDropdown", frame, "UIDropDownMenuTemplate")
     zd:SetPoint("LEFT", zdLabel, "RIGHT", -6, -2)
-    UIDropDownMenu_SetWidth(zd, 110)
+    UIDropDownMenu_SetWidth(zd, 150)
     UIDropDownMenu_Initialize(zd, function(_, level)
         local function add(label, value)
             local info = UIDropDownMenu_CreateInfo()
@@ -582,8 +582,9 @@ function UI.Refresh()
     local ef = ns.DB.Settings().expansionFilter or "All"
     UIDropDownMenu_SetText(frame.ddExp, ef == "All" and "All expansions" or ef)
     if (ns.DB.Settings().zoneFilter or "All") == "Current" then
-        local z = GetRealZoneText() or GetZoneText() or "?"
-        UIDropDownMenu_SetText(frame.ddZone, "Current: " .. z)
+        -- Mostra o nome da zona atual direto (o label "Zone:" ja contextualiza).
+        local z = GetRealZoneText() or GetZoneText() or "current"
+        UIDropDownMenu_SetText(frame.ddZone, z)
     else
         UIDropDownMenu_SetText(frame.ddZone, "All zones")
     end
