@@ -257,33 +257,42 @@ end
 local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:",
     "achievement", "requires", "holiday:", "event:", "brawl'gar", "brawlpub", "(rank" }
 
--- Brawler's Guild: o "rank" e uma friendship reputation (faction-especifica).
--- Faction Horde = 2766 (Brawl'gar Arena), Alliance = 2767 (Bizmo's Brawlpub).
+-- Gates por RANK/TIER -- friendship reputations cujo gate NAO e a reputacao padrao,
+-- mas um nivel (rank/tier) progressivo, lido por C_GossipInfo.GetFriendshipReputationRanks.
+--   Brawler's Guild: faction-especifica (Horde 2766 / Alliance 2767), nivel = "(Rank N)".
+--   The Archivists' Codex (Korthia): faction 2472, nivel = "Tier N".
 local BRAWLERS_VENUES = { ["brawl'gar arena"] = true, ["bizmo's brawlpub"] = true }
 local BRAWLERS_FACTION = { Alliance = 2767, Horde = 2766 }
+local ARCHIVISTS_FACTION = 2472
 
--- A montaria e do Brawler's Guild? (texto cita "brawler" OU vendedor num venue.)
-local function isBrawlers(cand, entry, sources)
-    if (cand.sourceText or ""):lower():find("brawler", 1, true) then return true end
-    for _, s in ipairs(sources or {}) do
-        if s.zone and BRAWLERS_VENUES[s.zone:lower()] then return true end
+-- Detecta um gate de rank/tier. Retorna { fid, need, label } ou nil.
+local function rankTierGate(cand, entry, sources)
+    local st = (cand.sourceText or ""):lower()
+    local isBG = st:find("brawler", 1, true) and true or false
+    if not isBG then
+        for _, s in ipairs(sources or {}) do
+            if s.zone and BRAWLERS_VENUES[s.zone:lower()] then isBG = true break end
+        end
+        if not isBG and entry and entry.zone and BRAWLERS_VENUES[entry.zone:lower()] then isBG = true end
     end
-    return entry and entry.zone and BRAWLERS_VENUES[entry.zone:lower()] and true or false
+    if isBG then
+        local n = (cand.sourceText or ""):match("[Rr]ank%s*(%d+)")
+        return { fid = BRAWLERS_FACTION[UnitFactionGroup("player")],
+                 need = n and tonumber(n), label = "Brawler's Guild" }
+    end
+    if st:find("archivist", 1, true) then
+        local n = (cand.sourceText or ""):match("[Tt]ier%s*(%d+)")
+        return { fid = ARCHIVISTS_FACTION, need = n and tonumber(n), label = "Archivists' Codex" }
+    end
+    return nil
 end
 
--- Rank atual / maximo do Brawler's Guild do personagem (via friendship reputation).
-local function brawlersRank()
-    local fid = BRAWLERS_FACTION[UnitFactionGroup("player")]
+-- Nivel atual / maximo de uma friendship reputation (rank/tier).
+local function friendshipLevel(fid)
     if not (fid and C_GossipInfo and C_GossipInfo.GetFriendshipReputationRanks) then return nil end
     local r = C_GossipInfo.GetFriendshipReputationRanks(fid)
     if r and r.currentLevel then return r.currentLevel, r.maxLevel end
     return nil
-end
-
--- Rank exigido, parseado do sourceText ("(Rank 6)"). nil se nao informado.
-local function requiredBrawlersRank(cand)
-    local n = (cand.sourceText or ""):match("[Rr]ank%s*(%d+)")
-    return n and tonumber(n) or nil
 end
 
 -- Gate de requisito que NAO da pra verificar -> nao podemos afirmar "pode pegar agora".
@@ -460,20 +469,21 @@ function Eligibility.Evaluate(cand)
     elseif not costOk then
         item.status = S.NEED_CURRENCY
         item.detail = costMissing
-    elseif isBrawlers(cand, entry, item.sources) then
-        -- Brawler's Guild: rank verificavel via friendship reputation.
-        local cur, maxr = brawlersRank()
-        local need = requiredBrawlersRank(cand)
-        if cur and ((need and cur >= need) or (not need and maxr and cur >= maxr)) then
+    elseif rankTierGate(cand, entry, item.sources) then
+        -- Gate de rank/tier (Brawler's Guild, Archivists' Codex): nivel verificavel
+        -- via friendship reputation. Glow so quando o nivel atinge o exigido.
+        local rt = rankTierGate(cand, entry, item.sources)
+        local cur, maxr = friendshipLevel(rt.fid)
+        if cur and ((rt.need and cur >= rt.need) or (not rt.need and maxr and cur >= maxr)) then
             item.status = S.READY
             item.detail = "Can buy now"
         elseif cur then
             item.status = S.NEED_REQUIREMENT
-            item.detail = need and ("Brawler's Guild: Rank %d / %d"):format(cur, need)
-                or ("Brawler's Guild rank %d (need higher rank)"):format(cur)
+            item.detail = rt.need and ("%s: %d / %d"):format(rt.label, cur, rt.need)
+                or ("%s: level %d"):format(rt.label, cur)
         else
             item.status = S.NEED_REQUIREMENT
-            item.detail = "Requires a Brawler's Guild rank — verify in-game"
+            item.detail = "Requires " .. rt.label .. " progress — verify in-game"
         end
     else
         -- Custo/requisito curados "ok": so afirma READY se NAO houver um gate que nao
