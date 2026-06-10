@@ -254,7 +254,35 @@ function ns.CostHave(c)
 end
 
 -- Palavras que indicam um requisito no texto do jogo (camada 1 = consulta nativa).
-local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:", "achievement", "requires", "holiday:", "event:" }
+local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:",
+    "achievement", "requires", "holiday:", "event:", "brawl'gar", "brawlpub", "(rank" }
+
+-- Venues do Brawler's Guild: o acesso aos vendedores e gated por RANK do Brawler's
+-- Guild, que o jogo NAO expoe na API -- e, no caso do Mushan Beast, nem no sourceText
+-- (so o local "Brawl'gar Arena"/"Bizmo's Brawlpub" denuncia).
+local BRAWLERS_VENUES = { ["brawl'gar arena"] = true, ["bizmo's brawlpub"] = true }
+
+-- Gate de requisito que NAO da pra verificar -> nao podemos afirmar "pode pegar agora".
+-- Retorna a descricao do gate (string) ou nil. Cobre dois casos sistemicos:
+--   a) curada SEM requisito, mas o jogo mostra Faction:/Renown:/Rank no texto
+--      (ex.: Brawlin' Bruno = "Faction: Brawler's Guild (Rank 6)") -> nao curamos o gate;
+--   b) vendedor num venue do Brawler's Guild (gate de rank implicito no local).
+local function unverifiableGate(cand, entry, sources)
+    if not (entry and entry.requirement) then
+        local st = (cand.sourceText or ""):lower()
+        if st:find("faction:", 1, true) or st:find("renown:", 1, true)
+            or st:find("rank ", 1, true) or st:find("(rank", 1, true) then
+            return "a faction/rank requirement"
+        end
+    end
+    for _, s in ipairs(sources or {}) do
+        if s.zone and BRAWLERS_VENUES[s.zone:lower()] then return "a Brawler's Guild rank" end
+    end
+    if entry and entry.zone and BRAWLERS_VENUES[entry.zone:lower()] then
+        return "a Brawler's Guild rank"
+    end
+    return nil
+end
 
 -- "Da pra pegar AGORA?" -> glow + topo da lista. Double-check em camadas:
 --   1. Curado (Wowhead): READY = elegibilidade verificada.
@@ -409,8 +437,16 @@ function Eligibility.Evaluate(cand)
         item.status = S.NEED_CURRENCY
         item.detail = costMissing
     else
-        item.status = S.READY
-        item.detail = "Can buy now"
+        -- Custo/requisito curados "ok": so afirma READY se NAO houver um gate que nao
+        -- da pra verificar (ex.: Brawler's Guild rank) -> senao, NEED_REQUIREMENT (sem glow).
+        local gate = unverifiableGate(cand, entry, item.sources)
+        if gate then
+            item.status = S.NEED_REQUIREMENT
+            item.detail = "Requires " .. gate .. " — verify in-game"
+        else
+            item.status = S.READY
+            item.detail = "Can buy now"
+        end
     end
 
     return item

@@ -15,6 +15,15 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Fixed
+- **No more false "obtainable now" glow on gated vendor mounts.** Mounts behind a gate the
+  addon can't verify — Brawler's Guild rank, or any `Faction:`/`Rank` requirement the game
+  shows but we haven't curated — were treated as a plain gold purchase and lit up green
+  (e.g. *Brawler's Burly Mushan Beast*, *Brawlin' Bruno*). They now show *Need requirement*
+  ("verify in-game") instead of glowing, detected systemically: an unresolved faction/rank
+  line in the source text, or a vendor in a Brawler's Guild venue (Brawl'gar Arena /
+  Bizmo's Brawlpub).
+
 ## [0.9.0] - 2026-06-10
 
 ### Added
