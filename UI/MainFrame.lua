@@ -424,7 +424,7 @@ end
 -- Constroi a janela (lazy, na primeira abertura).
 local function buildFrame()
     frame = CreateFrame("Frame", "MountTrackerFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(560, 596)   -- +linha de filtro (Category); mantem a area da lista
+    frame:SetSize(560, 570)
     frame:SetPoint("CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -470,33 +470,9 @@ local function buildFrame()
     end)
     frame.ddExp = dd
 
-    -- Dropdown: filtro por zona (All / zona atual do personagem).
-    local zdLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    zdLabel:SetPoint("TOPLEFT", 250, -28)
-    zdLabel:SetText("Zone:")
-
-    local zd = CreateFrame("Frame", "MountTrackerZoneDropdown", frame, "UIDropDownMenuTemplate")
-    zd:SetPoint("LEFT", zdLabel, "RIGHT", -6, -2)
-    UIDropDownMenu_SetWidth(zd, 150)
-    UIDropDownMenu_Initialize(zd, function(_, level)
-        local function add(label, value)
-            local info = UIDropDownMenu_CreateInfo()
-            info.text, info.value = label, value
-            info.checked = (ns.DB.Settings().zoneFilter or "All") == value
-            info.func = ns.Safe.Wrap("apply zone filter", function()
-                ns.DB.Settings().zoneFilter = value
-                UI.RefreshTop()
-            end)
-            UIDropDownMenu_AddButton(info)
-        end
-        add("All zones", "All")
-        add("Current zone", "Current")
-    end)
-    frame.ddZone = zd
-
     -- Dropdown: filtro por categoria (Vendor / Reputation / Drop / Achievement / ...).
     local cdLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    cdLabel:SetPoint("TOPLEFT", 14, -54)
+    cdLabel:SetPoint("TOPLEFT", 250, -28)
     cdLabel:SetText("Category:")
 
     local cdd = CreateFrame("Frame", "MountTrackerCatDropdown", frame, "UIDropDownMenuTemplate")
@@ -521,7 +497,7 @@ local function buildFrame()
 
     -- Checkbox: mostrar indisponiveis / ocultas.
     local cb = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb:SetPoint("TOPLEFT", 16, -82)
+    cb:SetPoint("TOPLEFT", 14, -56)
     local cbLabel = cb:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cbLabel:SetPoint("LEFT", cb, "RIGHT", 2, 0)
     cbLabel:SetText("Show unavailable / hidden")
@@ -535,7 +511,7 @@ local function buildFrame()
 
     -- Checkbox: mostrar montarias ja obtidas (aparecem coloridas; as faltantes, cinza).
     local cb2 = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    cb2:SetPoint("TOPLEFT", 320, -82)
+    cb2:SetPoint("TOPLEFT", 215, -56)
     local cb2Label = cb2:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     cb2Label:SetPoint("LEFT", cb2, "RIGHT", 2, 0)
     cb2Label:SetText("Show owned")
@@ -545,10 +521,22 @@ local function buildFrame()
     end))
     frame.cbOwned = cb2
 
+    -- Checkbox: so a zona atual (substitui o antigo dropdown de zona).
+    local cb3 = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    cb3:SetPoint("TOPLEFT", 360, -56)
+    local cb3Label = cb3:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    cb3Label:SetPoint("LEFT", cb3, "RIGHT", 2, 0)
+    cb3Label:SetText("Only current zone")
+    cb3:SetScript("OnClick", ns.Safe.Wrap("apply filter", function(self)
+        ns.DB.Settings().zoneFilter = self:GetChecked() and "Current" or "All"
+        UI.RefreshTop()
+    end))
+    frame.cbZone = cb3
+
     -- Scroll virtualizado (FauxScrollFrame): renderiza so as linhas visiveis e
     -- recicla ao rolar -> aguenta milhares de itens (inclui as owned) sem travar.
     scroll = CreateFrame("ScrollFrame", "MountTrackerScrollFrame", frame, "FauxScrollFrameTemplate")
-    scroll:SetPoint("TOPLEFT", 10, -110)
+    scroll:SetPoint("TOPLEFT", 10, -84)
     scroll:SetPoint("BOTTOMRIGHT", -30, 10)
     scroll:SetScript("OnVerticalScroll", function(self, offset)
         FauxScrollFrame_OnVerticalScroll(self, offset, ROW_STEP, UI.Refresh)
@@ -604,17 +592,11 @@ function UI.Refresh()
     end
     frame.cbWrong:SetChecked(ns.DB.Settings().showWrongFaction)
     frame.cbOwned:SetChecked(ns.DB.Settings().showOwned)
+    frame.cbZone:SetChecked((ns.DB.Settings().zoneFilter or "All") == "Current")
     local ef = ns.DB.Settings().expansionFilter or "All"
     UIDropDownMenu_SetText(frame.ddExp, ef == "All" and "All expansions" or ef)
     local cf = ns.DB.Settings().categoryFilter or "All"
     if frame.ddCat then UIDropDownMenu_SetText(frame.ddCat, cf == "All" and "All categories" or cf) end
-    if (ns.DB.Settings().zoneFilter or "All") == "Current" then
-        -- Mostra o nome da zona atual direto (o label "Zone:" ja contextualiza).
-        local z = GetRealZoneText() or GetZoneText() or "current"
-        UIDropDownMenu_SetText(frame.ddZone, z)
-    else
-        UIDropDownMenu_SetText(frame.ddZone, "All zones")
-    end
 end
 
 -- Volta a lista ao topo e re-renderiza (usado quando um filtro muda).
