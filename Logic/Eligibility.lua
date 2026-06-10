@@ -257,10 +257,34 @@ end
 local READY_GATE_WORDS = { "renown", "exalted", "revered", "honored", "friendly", "faction:",
     "achievement", "requires", "holiday:", "event:", "brawl'gar", "brawlpub", "(rank" }
 
--- Venues do Brawler's Guild: o acesso aos vendedores e gated por RANK do Brawler's
--- Guild, que o jogo NAO expoe na API -- e, no caso do Mushan Beast, nem no sourceText
--- (so o local "Brawl'gar Arena"/"Bizmo's Brawlpub" denuncia).
+-- Brawler's Guild: o "rank" e uma friendship reputation (faction-especifica).
+-- Faction Horde = 2766 (Brawl'gar Arena), Alliance = 2767 (Bizmo's Brawlpub).
 local BRAWLERS_VENUES = { ["brawl'gar arena"] = true, ["bizmo's brawlpub"] = true }
+local BRAWLERS_FACTION = { Alliance = 2767, Horde = 2766 }
+
+-- A montaria e do Brawler's Guild? (texto cita "brawler" OU vendedor num venue.)
+local function isBrawlers(cand, entry, sources)
+    if (cand.sourceText or ""):lower():find("brawler", 1, true) then return true end
+    for _, s in ipairs(sources or {}) do
+        if s.zone and BRAWLERS_VENUES[s.zone:lower()] then return true end
+    end
+    return entry and entry.zone and BRAWLERS_VENUES[entry.zone:lower()] and true or false
+end
+
+-- Rank atual / maximo do Brawler's Guild do personagem (via friendship reputation).
+local function brawlersRank()
+    local fid = BRAWLERS_FACTION[UnitFactionGroup("player")]
+    if not (fid and C_GossipInfo and C_GossipInfo.GetFriendshipReputationRanks) then return nil end
+    local r = C_GossipInfo.GetFriendshipReputationRanks(fid)
+    if r and r.currentLevel then return r.currentLevel, r.maxLevel end
+    return nil
+end
+
+-- Rank exigido, parseado do sourceText ("(Rank 6)"). nil se nao informado.
+local function requiredBrawlersRank(cand)
+    local n = (cand.sourceText or ""):match("[Rr]ank%s*(%d+)")
+    return n and tonumber(n) or nil
+end
 
 -- Gate de requisito que NAO da pra verificar -> nao podemos afirmar "pode pegar agora".
 -- Retorna a descricao do gate (string) ou nil. Cobre dois casos sistemicos:
@@ -436,9 +460,24 @@ function Eligibility.Evaluate(cand)
     elseif not costOk then
         item.status = S.NEED_CURRENCY
         item.detail = costMissing
+    elseif isBrawlers(cand, entry, item.sources) then
+        -- Brawler's Guild: rank verificavel via friendship reputation.
+        local cur, maxr = brawlersRank()
+        local need = requiredBrawlersRank(cand)
+        if cur and ((need and cur >= need) or (not need and maxr and cur >= maxr)) then
+            item.status = S.READY
+            item.detail = "Can buy now"
+        elseif cur then
+            item.status = S.NEED_REQUIREMENT
+            item.detail = need and ("Brawler's Guild: Rank %d / %d"):format(cur, need)
+                or ("Brawler's Guild rank %d (need higher rank)"):format(cur)
+        else
+            item.status = S.NEED_REQUIREMENT
+            item.detail = "Requires a Brawler's Guild rank — verify in-game"
+        end
     else
         -- Custo/requisito curados "ok": so afirma READY se NAO houver um gate que nao
-        -- da pra verificar (ex.: Brawler's Guild rank) -> senao, NEED_REQUIREMENT (sem glow).
+        -- da pra verificar (Faction:/Rank nao curado) -> senao, NEED_REQUIREMENT (sem glow).
         local gate = unverifiableGate(cand, entry, item.sources)
         if gate then
             item.status = S.NEED_REQUIREMENT

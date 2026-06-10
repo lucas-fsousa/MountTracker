@@ -197,6 +197,13 @@ local function handleSlash(msg)
                     tostring(f.reactionText)))
             else ns.Print("  C_GossipInfo.GetFriendshipReputation: none for " .. id) end
         end
+        if C_GossipInfo and C_GossipInfo.GetFriendshipReputationRanks then
+            local ok, r = pcall(C_GossipInfo.GetFriendshipReputationRanks, id)
+            if ok and r and r.currentLevel then
+                ns.Print(("ranks %d: currentLevel=%s maxLevel=%s"):format(id,
+                    tostring(r.currentLevel), tostring(r.maxLevel)))
+            else ns.Print("  C_GossipInfo.GetFriendshipReputationRanks: none for " .. id) end
+        end
 
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
