@@ -16,6 +16,12 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Fixed
+- **"Current zone" no longer hides mounts obtained in revamped old zones.** A recent mount
+  sold in an old-world venue (e.g. *Brawlin' Bruno* / *Ballistic Bronco* at the Brawl'gar
+  Arena, which the game places in Classic Orgrimmar) was wrongly filtered out because its
+  expansion didn't match the zone's. The name-fallback no longer gates on expansion at all
+  — same-name cross-expansion collisions (Nagrand TBC vs WoD, …) are already handled by the
+  strict map-ID match, so the expansion check only caused false negatives.
 - **No more false "obtainable now" glow on gated vendor mounts.** Mounts behind a gate the
   addon can't verify — Brawler's Guild rank, or any `Faction:`/`Rank` requirement the game
   shows but we haven't curated — were treated as a plain gold purchase and lit up green

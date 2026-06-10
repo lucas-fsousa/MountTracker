@@ -178,19 +178,20 @@ local function zoneMatches(item, ctx)
     if not ctx then return false end
     local imap = itemMapId(item)
     if imap then
-        return ctx.set[imap] == true
+        return ctx.set[imap] == true   -- match exato por uiMapID (curadas com `map`)
     end
-    local ie = item.expansion
-    local expCompatible = (not ie or ie == "Unknown" or not ctx.exp or ctx.exp == "Unknown")
-        or (ie == ctx.exp)
+    -- Fallback por NOME/sourceText (montarias sem `map`). SEM gate de expansao: ele
+    -- causava falsos negativos -- mounts recentes obtidos em zonas antigas revampadas
+    -- (ex.: Brawlin' Bruno no Brawl'gar Arena, que resolve como "Classic"). As colisoes
+    -- de nome homonimo entre expansoes ja sao resolvidas pelo `map` estrito.
     local zones = itemZones(item)
     local st = item.sourceText and item.sourceText:gsub("|T.-|t", ""):lower()
     for _, pz in ipairs(ctx.names) do
         for _, z in ipairs(zones) do
             local lz = z:lower()
-            if lz:find(pz, 1, true) or pz:find(lz, 1, true) then return expCompatible end
+            if lz:find(pz, 1, true) or pz:find(lz, 1, true) then return true end
         end
-        if st and st:find(pz, 1, true) then return expCompatible end
+        if st and st:find(pz, 1, true) then return true end
     end
     return false
 end
