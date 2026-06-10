@@ -128,9 +128,11 @@ local function handleSlash(msg)
                 -- Status calculado + faction curada (procura no roadmap ja construido).
                 for _, it in ipairs(ns._roadmap or {}) do
                     if it.mountID == mid then
-                        ns.Print(("  status=%s | readyNow=%s | curated.faction=%s | detail=%s")
+                        ns.Print(("  status=%s | readyNow=%s | category=%s | expansion=%s | map=%s")
                             :format(tostring(it.status), tostring(it.readyNow),
-                                tostring(it.entry and it.entry.faction), tostring(it.detail)))
+                                tostring(it.category), tostring(it.expansion),
+                                tostring(it.entry and it.entry.map)))
+                        ns.Print("  filter -> " .. tostring(ns.Logic.Roadmap.WhyHidden(it)))
                         break
                     end
                 end

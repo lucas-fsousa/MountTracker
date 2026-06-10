@@ -196,6 +196,26 @@ local function zoneMatches(item, ctx)
     return false
 end
 
+-- Diagnostico (/mtrack check): por que uma montaria NAO aparece com os filtros atuais?
+-- Retorna "shown" ou o nome do primeiro filtro que a esconde.
+function Roadmap.WhyHidden(item)
+    local s = ns.DB.Settings()
+    if s.expansionFilter and s.expansionFilter ~= "All" and item.expansion ~= s.expansionFilter then
+        return "expansion filter = " .. s.expansionFilter .. " (item=" .. tostring(item.expansion) .. ")"
+    end
+    if s.categoryFilter and s.categoryFilter ~= "All" and item.category ~= s.categoryFilter then
+        return "category filter = " .. s.categoryFilter .. " (item=" .. tostring(item.category) .. ")"
+    end
+    if (s.zoneFilter or "All") == "Current" and not zoneMatches(item, playerLocationCtx()) then
+        return "current-zone filter (no map/name match)"
+    end
+    if item.owned and not s.showOwned then return "owned + 'Show owned' off" end
+    if (item.status == ns.STATUS.WRONG_FACTION or item.status == ns.STATUS.UNAVAILABLE)
+        and not s.showWrongFaction then return "wrong-faction/unavailable + 'Show unavailable' off" end
+    if item.status == ns.STATUS.HIDDEN and not s.showHidden then return "hidden + 'Show hidden' off" end
+    return "shown"
+end
+
 -- Categorias distintas presentes no roadmap (p/ popular o dropdown de categoria),
 -- ordenadas alfabeticamente. Inclui owned/unavailable (o filtro e independente).
 function Roadmap.Categories()
