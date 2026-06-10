@@ -15,6 +15,8 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-06-10
+
 ### Added
 - **Filter by category.** A new *Category* dropdown (next to *Expansion* on the top row)
   narrows the roadmap to how a mount is obtained — Vendor, Reputation, Drop, Achievement,
@@ -208,7 +210,8 @@ First public release.
 - Zero dependencies (pure Blizzard API). Handles Midnight "Secret Values" safely.
 - Errors are sandboxed — no mid-screen Lua error popups.
 
-[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/lucas-fsousa/MountTracker/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/lucas-fsousa/MountTracker/compare/v0.6.0...v0.6.1
