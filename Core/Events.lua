@@ -170,6 +170,34 @@ local function handleSlash(msg)
         ns.Logic.Roadmap.Build()
         if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
 
+    elseif cmd == "faction" then
+        -- Diagnostico: dump das APIs de reputacao p/ um factionID (ex.: Brawler's Guild
+        -- Horde 2766 / Alliance 2767), p/ descobrir como ler o "rank".
+        local id = tonumber(rest)
+        if not id then ns.Print("usage: /mtrack faction <factionID>") return end
+        if C_Reputation and C_Reputation.GetFactionDataByID then
+            local d = C_Reputation.GetFactionDataByID(id)
+            if d then
+                ns.Print(("rep %d: name=%s reaction=%s standing=%s/%s"):format(id,
+                    tostring(d.name), tostring(ns.Safe.Value(d.reaction, "?")),
+                    tostring(ns.Safe.Value(d.currentStanding, "?")),
+                    tostring(ns.Safe.Value(d.currentReactionThreshold, "?"))))
+            else ns.Print("  C_Reputation: nil for " .. id) end
+        end
+        if C_MajorFactions and C_MajorFactions.GetMajorFactionData then
+            local m = C_MajorFactions.GetMajorFactionData(id)
+            ns.Print(m and ("major %d: name=%s renown=%s"):format(id, tostring(m.name),
+                tostring(m.renownLevel)) or ("  C_MajorFactions: nil for " .. id))
+        end
+        if C_GossipInfo and C_GossipInfo.GetFriendshipReputation then
+            local ok, f = pcall(C_GossipInfo.GetFriendshipReputation, id)
+            if ok and f and f.friendshipFactionID and f.friendshipFactionID ~= 0 then
+                ns.Print(("friendship %d: name=%s rank=%s/%s text=%s"):format(id,
+                    tostring(f.name), tostring(f.reaction), tostring(f.maxRank),
+                    tostring(f.reactionText)))
+            else ns.Print("  C_GossipInfo.GetFriendshipReputation: none for " .. id) end
+        end
+
     elseif cmd == "scan" then
         ns.Logic.Roadmap.Build()
         local s = ns._stats or {}
@@ -192,7 +220,7 @@ local function handleSlash(msg)
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | hidden | unhide <name> | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | hidden | unhide <name> | faction <id> | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")
