@@ -15,6 +15,10 @@ ns.UI = ns.UI or {}            -- frames
 -- Lista mestra agregada de TODAS as entradas curadas (todas as expansoes).
 ns.Data.All = ns.Data.All or {}
 
+-- Overlay de metadados por spellID (map/zona + expansao) p/ os filtros -- inclusive de
+-- montarias NAO-curadas. Preenchido por Data/Mounts_Meta.lua. Nao afeta status/glow.
+ns.Meta = ns.Meta or {}
+
 -- Cada arquivo Data/Mounts_<Exp>.lua chama isto para registrar suas montarias.
 -- `expansion` rotula a sprint (ex.: "Classic", "TBC"); cada entrada recebe esse campo.
 -- `expansion` pode ser nil: nesse caso a expansao e derivada do sourceText pelo

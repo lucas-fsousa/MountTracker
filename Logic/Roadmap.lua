@@ -163,11 +163,19 @@ local function playerLocationCtx()
     return { set = set, names = names, exp = exp }
 end
 
--- uiMapID ESTRITO da zona de obtencao (campo `map`, colhido com match de zona
--- verificado). NAO usa `coords.map` aqui: aquele e nao-estrito (serve so p/ o waypoint)
--- e poderia apontar pra zona errada -> o filtro de zona nunca pode errar.
+-- uiMapID ESTRITO da zona de obtencao. Prioridade: `map` curado -> overlay de
+-- metadados (ns.Meta, cobre ate nao-curadas) por `map` direto ou por `zone` resolvida
+-- em runtime (ns.Waypoint.MapForZone). NAO usa `coords.map` (nao-estrito, so waypoint).
 local function itemMapId(item)
-    return (item.entry and item.entry.map) or nil
+    if item.entry and item.entry.map then return item.entry.map end
+    local meta = ns.Meta and ns.Meta[item.spellID]
+    if meta then
+        if meta.map then return meta.map end
+        if meta.zone and ns.Waypoint and ns.Waypoint.MapForZone then
+            return ns.Waypoint.MapForZone(meta.zone)
+        end
+    end
+    return nil
 end
 
 -- Casa a montaria com a localizacao atual.

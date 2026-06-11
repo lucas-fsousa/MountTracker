@@ -368,6 +368,13 @@ function Eligibility.Evaluate(cand)
         costPct = 0,
     }
 
+    -- Expansao: se a heuristica nao soube ("Unknown"), usa o overlay de metadados
+    -- (ns.Meta, colhido do Wowhead) -- cobre ate montarias nao-curadas.
+    if item.expansion == "Unknown" then
+        local meta = ns.Meta and ns.Meta[cand.spellID]
+        if meta and meta.expansion then item.expansion = meta.expansion end
+    end
+
     -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas recebem
     -- a categoria do heuristico `categorize` na sua branch (mais abaixo).
     if entry then
