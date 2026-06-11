@@ -239,6 +239,7 @@ ns.Data.Register("Legion", {
         map     = 650,
         coords  = { map = 650, x = 32.4, y = 66.8 },
         cost    = { gold = 10000 },
+        requirement = { type = "reputation", factionID = 2018, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=230401",
     },
     {
@@ -537,6 +538,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 39.0, y = 22.0 },
         cost    = { currencyID = 2815, amount = 8125 },
+        requirement = { type = "renown", factionID = 2653, renownLevel = 15 },
         wowhead = "https://www.wowhead.com/spell=465999",
     },
     {
@@ -568,6 +570,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 43.0, y = 82.2 },
         cost    = { itemID = 234741, amount = 25 },
+        requirement = { type = "renown", factionID = 2653, renownLevel = 19 },
         wowhead = "https://www.wowhead.com/spell=466017",
     },
     {
@@ -641,6 +644,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 53.2, y = 72.4 },
         cost    = { currencyID = 2815, amount = 11375 },
+        requirement = { type = "renown", factionID = 2653, renownLevel = 19 },
         wowhead = "https://www.wowhead.com/spell=466013",
     },
     {

@@ -118,23 +118,21 @@ def sold_cost(html):
 
 
 def requirement(html):
-    """Requisito do tooltip do item. Captura o factionID direto do link quando a
-    faccao e hyperlinkada; senao guarda o nome para resolver depois."""
-    for kind, pat in (("renown", r"Renown Rank (\d+) with (?:the )?"),
-                      ("reputation", r"Requires (%s) with (?:the )?" % "|".join(STANDINGS))):
-        m = re.search(pat, html)
-        if not m:
-            continue
-        tail = html[m.end():m.end() + 160]
-        fm = re.search(r"faction=(\d+)", tail)
-        nm = re.search(r">([^<]+)</a>", tail) or re.search(r"^\s*([^.<]+)", tail)
-        req = {"type": kind, "factionID": int(fm.group(1)) if fm else None,
-               "faction": nm.group(1).strip() if nm else None}
-        if kind == "renown":
-            req["renownLevel"] = int(m.group(1))
-        else:
-            req["standing"] = m.group(1)
-        return req
+    """Requisito de reputacao/renome do tooltip do Wowhead (o jogo as vezes ESCONDE
+    isso no sourceText). Captura o factionID do link `faction=N`. Cobre:
+      - "Renown Rank N with [faction=M]"            -> renown
+      - "<Standing> with [faction=M]"  (Exalted...)  -> reputation
+        (inclui "Requires you to be exalted with [faction=M]")
+    Retorna o dict do requisito ou None."""
+    h = html or ""
+    m = re.search(r"Renown Rank (\d+) with[^.]{0,80}?faction=(\d+)", h, re.I)
+    if m:
+        return {"type": "renown", "renownLevel": int(m.group(1)),
+                "factionID": int(m.group(2))}
+    m = re.search(r"\b(%s)\s+with[^.]{0,80}?faction=(\d+)" % "|".join(STANDINGS), h, re.I)
+    if m:
+        return {"type": "reputation", "standing": m.group(1).capitalize(),
+                "factionID": int(m.group(2))}
     return None
 
 
