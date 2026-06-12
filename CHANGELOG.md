@@ -36,12 +36,24 @@ HOW TO RELEASE (see RELEASING.md):
 - **Classic-reputation fallback for expansion.** When neither the expansion meta nor an
   introduction patch is available, a mount bought with a vanilla reputation (Orgrimmar,
   Stormwind, Wintersaber Trainers, Brood of Nozdormu, … — the Classic faction set) is now
-  classified as Classic. (Doesn't reach the "Legacy" racials above, whose source text and
-  Wowhead spell page expose no faction at all, but covers any Classic rep-gated mount.)
+  classified as Classic.
+- **Expansion is also read from the *teaching item linked on the spell page*.** Some mounts'
+  spell pages don't carry a patch but link the item that grants them (e.g. *Headless
+  Horseman's Mount* → *The Horseman's Reins*), alongside unrelated items. The harvester now
+  follows those links, keeps only the actual mount item (tooltip "summon this mount"), and
+  reads its introduction patch — pulling a few more mounts out of Unknown. Combined with the
+  manual overlay, the Unknown bucket is down to **10** (all class mounts with no item and a
+  couple of irregular-item racials).
 
 ## [0.10.0] - 2026-06-11
 
 ### Added
+- **Hand-curated metadata overlay (`Data/Mounts_ManualMeta.lua`) with a `manualUpdate` flag.**
+  A few mounts can't be resolved safely from Wowhead — racials the game reports only as
+  "Legacy", with no patch on the spell page and an irregular/absent item (Winter Wolf,
+  Felsteed, Skeletal Horse, Tiger, Black Qiraji Battle Tank, …). These get expansion/zone by
+  hand. Every entry carries `manualUpdate = true`, which the harvest scripts (`enrich_meta`,
+  `enrich_requirement`) **skip entirely** — they're never regenerated or overwritten.
 - **"Current zone" and the filters now cover *uncurated* mounts too.** A metadata overlay
   (`Data/Mounts_Meta.lua`, harvested from Wowhead and keyed by spell ID) gives every mount
   a strict obtain **map** and **expansion** — even the ones that aren't in the curated

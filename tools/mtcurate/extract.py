@@ -222,6 +222,13 @@ CLASSIC_FACTIONS = {
 }
 
 
+def is_mount_item(html):
+    """True se a pagina e de um ITEM que concede uma montaria (tooltip 'summon this
+    mount'). Serve p/ escolher, entre os itens linkados numa spell page, o item-de-montaria
+    correto (ex.: 'The Horseman's Reins') e ignorar os alheios ('Loot-Filled Pumpkin')."""
+    return bool(re.search(r"summon this mount", html or "", re.I))
+
+
 def classic_rep_expansion(html):
     """'Classic' se a pagina exige reputacao com uma faccao do Classic (CLASSIC_FACTIONS);
     senao None. Fallback p/ montaria sem expansao/patch cujo unico sinal e o gate de rep

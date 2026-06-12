@@ -88,7 +88,7 @@ M[23338] = { map = 89 }  -- Swift Stormsaber
 M[23509] = { map = 25 }  -- Frostwolf Howler
 M[23510] = { map = 25 }  -- Stormpike Battle Charger
 M[24242] = { zone = "Zul'Gurub" }  -- Swift Razzashi Raptor
-M[24252] = { expansion = "Classic" }  -- Swift Zulian Tiger
+M[24252] = { expansion = "Cataclysm" }  -- Swift Zulian Tiger
 M[28828] = { map = 104 }  -- Nether Drake
 M[30174] = { zone = "The Cape of Stranglethorn", expansion = "TBC" }  -- Riding Turtle
 M[32235] = { map = 84 }  -- Golden Gryphon
@@ -150,10 +150,12 @@ M[44744] = { expansion = "TBC" }  -- Merciless Nether Drake
 M[46197] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- X-51 Nether-Rocket
 M[46199] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- X-51 Nether-Rocket X-TREME
 M[46628] = { zone = "The Eye", expansion = "TBC" }  -- Swift White Hawkstrider
+M[48025] = { expansion = "TBC" }  -- Headless Horseman's Mount
 M[48027] = { map = 84 }  -- Black War Elekk
 M[48954] = { expansion = "TBC" }  -- Swift Zhevra
 M[49193] = { expansion = "TBC" }  -- Vengeful Nether Drake
 M[49322] = { expansion = "TBC" }  -- Swift Zhevra
+M[49378] = { expansion = "TBC" }  -- Brewfest Riding Kodo
 M[49379] = { expansion = "TBC" }  -- Great Brewfest Kodo
 M[51412] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Big Battle Bear
 M[54729] = { map = 23 }  -- Winged Steed of the Ebon Blade
@@ -165,6 +167,7 @@ M[59568] = { expansion = "WotLK" }  -- Blue Drake
 M[59569] = { zone = "The Culling of Stratholme" }  -- Bronze Drake
 M[59570] = { map = 115 }  -- Red Drake
 M[59571] = { zone = "The Obsidian Sanctum", expansion = "WotLK" }  -- Twilight Drake
+M[59572] = { expansion = "WotLK" }  -- Black Polar Bear
 M[59650] = { zone = "The Obsidian Sanctum", expansion = "WotLK" }  -- Black Drake
 M[59785] = { map = 123 }  -- Black War Mammoth
 M[59788] = { map = 123 }  -- Black War Mammoth
@@ -209,6 +212,7 @@ M[63641] = { map = 118 }  -- Thunder Bluff Kodo
 M[63642] = { map = 118 }  -- Silvermoon Hawkstrider
 M[63643] = { map = 118 }  -- Forsaken Warhorse
 M[63796] = { zone = "Ulduar" }  -- Mimiron's Head
+M[64656] = { expansion = "WotLK" }  -- Blue Skeletal Warhorse
 M[64657] = { map = 7 }  -- White Kodo
 M[64658] = { expansion = "WotLK" }  -- Black Wolf
 M[64731] = { expansion = "WotLK" }  -- Sea Turtle

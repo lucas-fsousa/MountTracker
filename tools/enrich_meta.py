@@ -34,10 +34,22 @@ from mtcurate.http import Http
 HERE = os.path.dirname(os.path.abspath(__file__))
 ALL = os.path.join(HERE, "_all.jsonl")
 OUT = os.path.join(HERE, "..", "Data", "Mounts_Meta.lua")
+MANUAL = os.path.join(HERE, "..", "Data", "Mounts_ManualMeta.lua")
 
 _DIFF = re.compile(r"\s*\((?:Mythic|Heroic|Normal|Raid Finder|Looking For Raid)\)\s*$", re.I)
 _FACTAG = re.compile(r"\s*\((?:Alliance|Horde)\)\s*$", re.I)
 _RARE = re.compile(r"(.*?)\s+Rare Creatures$", re.I)
+_MANUAL_RE = re.compile(r"M\[(\d+)\]\s*=\s*\{[^}]*manualUpdate\s*=\s*true", re.I)
+
+
+def manual_spellids():
+    """spellIDs marcados manualUpdate=true no overlay manual (Mounts_ManualMeta.lua).
+    Sao INTOCAVEIS: enrich_meta nunca os regenera/sobrescreve."""
+    try:
+        with open(MANUAL, encoding="utf-8") as f:
+            return {int(m.group(1)) for m in _MANUAL_RE.finditer(f.read())}
+    except FileNotFoundError:
+        return set()
 
 
 def clean_name(s):
@@ -46,19 +58,43 @@ def clean_name(s):
     return m.group(1).strip() if m else s
 
 
+def exp_from_linked_items(http, spell_html):
+    """Expansao pelo item-de-montaria LINKADO na spell page. A pagina do spell costuma
+    referenciar /item=N do item que ensina a mount (e as vezes itens alheios juntos, como
+    'Loot-Filled Pumpkin'); filtramos pelo tooltip 'summon this mount' (is_mount_item) e so
+    aceitamos se os itens-de-montaria concordam na expansao (senao ambiguo -> None)."""
+    seen, ids = set(), []
+    for m in re.finditer(r"/item=(\d+)", spell_html or ""):
+        i = int(m.group(1))
+        if i not in seen:
+            seen.add(i)
+            ids.append(i)
+    exps = set()
+    for iid in ids[:12]:
+        h = wowhead.item_html(http, iid)
+        if extract.is_mount_item(h):
+            e = extract.expansion(h)
+            if e:
+                exps.add(e)
+    return exps.pop() if len(exps) == 1 else None
+
+
 def resolve_exp(http, sid, name):
-    """Expansao de uma montaria, do mais barato p/ o mais completo:
+    """Expansao de uma montaria, do mais confiavel p/ o ultimo recurso:
        1) pagina do spell (meta 'World of Warcraft: X' -- so as novas tem);
-       2) item por nome exato -> meta OU 'Added in patch X.Y.Z' (major do patch);
-       3) item por template de nome (item_for_mount): cobre o item de nome irregular que
-          concede a montaria ('White Stallion Bridle', 'Reins of the Raven Lord', ...),
-          exigindo match exato com um template conhecido -- nao casa item alheio.
-       4) fallback: gate de REPUTACAO com faccao do Classic (CLASSIC_FACTIONS) -> Classic,
-          p/ quando nao ha meta nem patch mas a montaria e comprada com rep vanilla.
-    O Wowhead tem o patch de introducao p/ TODO item da database, entao so fica sem
-    expansao a montaria que nao tem item legivel (mounts de classe: Felsteed, Warhorse...)."""
+       2) item-de-montaria LINKADO na spell page -> 'Added in patch X.Y.Z' (autoritativo:
+          e o proprio item que a spell referencia; ex.: Headless -> The Horseman's Reins);
+       3) item por template de nome (item_for_mount): cobre o item de nome irregular sem
+          link na spell page ('White Stallion Bridle', 'Reins of the Raven Lord', ...),
+          exigindo match exato com um template -- nao casa item alheio;
+       4) fallback: gate de REPUTACAO com faccao do Classic (CLASSIC_FACTIONS) -> Classic.
+    O Wowhead tem o patch p/ TODO item da database, entao so fica sem expansao a montaria
+    sem item legivel/linkado (mounts de classe, racials 'Legacy' de nome truncado...)."""
     spell_html = wowhead.spell_html(http, sid)
     e = extract.expansion(spell_html)
+    if e:
+        return e
+    e = exp_from_linked_items(http, spell_html)
     if e:
         return e
     item_html = None
@@ -106,11 +142,14 @@ def main():
 
     rows = [json.loads(l) for l in open(args.all, encoding="utf-8") if l.strip()]
     http = Http(args.cache, delay=args.delay)
+    manual = manual_spellids()
 
     meta = {}
     n_exp = n_map = n_zone = 0
     for r in rows:
         sid = r["spellID"]
+        if sid in manual:
+            continue                            # curado a mao -> intocavel
         needs_exp = r["expansion"] == "Unknown"
         needs_map = r["map"] is None and (r.get("vendor") or r.get("source"))
         if not (needs_exp or needs_map):

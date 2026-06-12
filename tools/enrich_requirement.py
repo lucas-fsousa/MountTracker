@@ -30,6 +30,7 @@ SPELL_RE = re.compile(r"^(\s*)spellID\s*=\s*(\d+)")
 NAME_RE = re.compile(r'^\s*name\s*=\s*"((?:[^"\\]|\\.)*)"')
 REQ_RE = re.compile(r"^\s*requirement\s*=")
 VENDORCOST_RE = re.compile(r"^\s*(?:vendor|cost)\s*=")
+MANUAL_RE = re.compile(r"^\s*manualUpdate\s*=\s*true")
 INS_RE = re.compile(r"^\s*(?:cost|coords|map|zone|vendor)\s*=")
 
 
@@ -68,7 +69,8 @@ def main():
             if block is None:
                 if OPEN_RE.match(line):
                     block, info = [line], {"sid": None, "name": None, "indent": "        ",
-                                           "ins": None, "has_req": False, "is_vendor": False}
+                                           "ins": None, "has_req": False, "is_vendor": False,
+                                           "manual": False}
                 else:
                     out.append(line)
                 continue
@@ -84,10 +86,13 @@ def main():
                 info["has_req"] = True
             if VENDORCOST_RE.match(line):
                 info["is_vendor"] = True
+            if MANUAL_RE.match(line):
+                info["manual"] = True           # entrada curada a mao -> intocavel
             if INS_RE.match(line):
                 info["ins"] = idx
             if CLOSE_RE.match(line):
-                if info["sid"] and info["is_vendor"] and not info["has_req"] and info["ins"]:
+                if (info["sid"] and info["is_vendor"] and not info["has_req"]
+                        and info["ins"] and not info["manual"]):
                     req = None
                     try:
                         req = fetch_req(http, info["sid"], info["name"])
