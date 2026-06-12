@@ -53,15 +53,24 @@ def resolve_exp(http, sid, name):
        3) item por template de nome (item_for_mount): cobre o item de nome irregular que
           concede a montaria ('White Stallion Bridle', 'Reins of the Raven Lord', ...),
           exigindo match exato com um template conhecido -- nao casa item alheio.
+       4) fallback: gate de REPUTACAO com faccao do Classic (CLASSIC_FACTIONS) -> Classic,
+          p/ quando nao ha meta nem patch mas a montaria e comprada com rep vanilla.
     O Wowhead tem o patch de introducao p/ TODO item da database, entao so fica sem
     expansao a montaria que nao tem item legivel (mounts de classe: Felsteed, Warhorse...)."""
-    e = extract.expansion(wowhead.spell_html(http, sid))
+    spell_html = wowhead.spell_html(http, sid)
+    e = extract.expansion(spell_html)
     if e:
         return e
+    item_html = None
     iid = wowhead.item_for_mount(http, name)
     if iid:
-        return extract.expansion(wowhead.item_html(http, iid))
-    return None
+        item_html = wowhead.item_html(http, iid)
+        e = extract.expansion(item_html)
+        if e:
+            return e
+    # ultimo recurso: reputacao do Classic (no item, senao no spell)
+    return (extract.classic_rep_expansion(item_html)
+            or extract.classic_rep_expansion(spell_html))
 
 
 def resolve_map(http, vendor, source, zone):

@@ -33,6 +33,11 @@ HOW TO RELEASE (see RELEASING.md):
   the expansion. Cut the Unknown bucket from 179 to **20**. The last 20 are class mounts with
   no item (Felsteed, paladin Warhorse, …) and a few old racials/holiday mounts whose item
   name fits no template — all old Classic content.
+- **Classic-reputation fallback for expansion.** When neither the expansion meta nor an
+  introduction patch is available, a mount bought with a vanilla reputation (Orgrimmar,
+  Stormwind, Wintersaber Trainers, Brood of Nozdormu, … — the Classic faction set) is now
+  classified as Classic. (Doesn't reach the "Legacy" racials above, whose source text and
+  Wowhead spell page expose no faction at all, but covers any Classic rep-gated mount.)
 
 ## [0.10.0] - 2026-06-11
 

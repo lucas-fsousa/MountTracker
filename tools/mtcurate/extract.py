@@ -185,6 +185,53 @@ def expansion(html):
     return expansion_from_patch(html)
 
 
+# Faccoes de reputacao do Classic (vanilla). Uma montaria comprada com uma dessas e
+# necessariamente Classic -- ultimo fallback quando nao ha meta de expansao nem patch
+# (ex.: montaria racial marcada "Legacy", cujo gate e Exalted com a cidade). NAO inclui
+# Exodar/Silvermoon (racas/reputacoes de TBC).
+CLASSIC_FACTIONS = {
+    72,   # Stormwind
+    47,   # Ironforge
+    54,   # Gnomeregan
+    69,   # Darnassus
+    76,   # Orgrimmar
+    81,   # Thunder Bluff
+    68,   # Undercity
+    530,  # Darkspear Trolls
+    589,  # Wintersaber Trainers
+    910,  # Brood of Nozdormu
+    270,  # Zandalar Tribe
+    609,  # Cenarion Circle
+    749,  # Hydraxian Waterlords
+    576,  # Timbermaw Hold
+    529,  # Argent Dawn
+    59,   # Thorium Brotherhood
+    809,  # Shen'dralar
+    349,  # Ravenholdt
+    87,   # Bloodsail Buccaneers
+    21,   # Booty Bay (Steamwheedle Cartel)
+    369,  # Gadgetzan
+    470,  # Ratchet
+    577,  # Everlook
+    730,  # Stormpike Guard
+    729,  # Frostwolf Clan
+    509,  # The League of Arathor
+    510,  # The Defilers
+    890,  # Silverwing Sentinels
+    889,  # Warsong Outriders
+}
+
+
+def classic_rep_expansion(html):
+    """'Classic' se a pagina exige reputacao com uma faccao do Classic (CLASSIC_FACTIONS);
+    senao None. Fallback p/ montaria sem expansao/patch cujo unico sinal e o gate de rep
+    vanilla (racial 'Legacy' = Exalted com a cidade)."""
+    req = requirement(html)
+    if req and req.get("type") == "reputation" and req.get("factionID") in CLASSIC_FACTIONS:
+        return "Classic"
+    return None
+
+
 def faction_side(html):
     """Lado da faccao a partir do "side":N da pagina de item do Wowhead.
     1 = Alliance, 2 = Horde; 0/3 (ambos/neutro) -> None (sem restricao)."""
