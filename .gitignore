@@ -20,6 +20,7 @@ __pycache__/
 # Artefatos gerados pela auditoria (derivados do dump; dados de conta)
 tools/_*
 tools/AUDIT.md
+temp/
 
 # Backup pessoal e config local do Claude (nao versionar)
 backup-claude.ps1
