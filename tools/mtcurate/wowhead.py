@@ -31,6 +31,29 @@ def _norm(s):
     return re.sub(r"['’ʼ`]", "'", s or "").strip().lower()
 
 
+# Templates de nome do item que CONCEDE uma montaria. O item raramente tem o mesmo nome da
+# montaria -- segue um destes formatos. Exigir match EXATO com um template (nao "contem")
+# evita casar itens alheios ("Warhorse" -> "Purple Skeletal Warhorse"; "Raven Lord" ->
+# "Raven Lord's Gloves") que dariam expansao errada.
+_ITEM_TEMPLATES = (
+    "{n}", "Reins of the {n}", "Reins of {n}", "{n}'s Reins", "{n} Reins",
+    "{n} Bridle", "{n} Halter", "{n} Whistle", "{n} Harness", "{n} Egg",
+    "Horn of the {n}", "Whistle of the {n}",
+)
+
+
+def item_for_mount(http, name):
+    """itemID do item que concede a montaria `name`, testando templates de nome conhecidos
+    com match EXATO (via item_id). Cobre nomes irregulares ('White Stallion Bridle', 'Reins
+    of the Raven Lord', "Fiery Warhorse's Reins", 'Magic Rooster Egg') sem casar item alheio.
+    Retorna id ou None (montaria de classe sem item: Felsteed, Warhorse de paladino...)."""
+    for tpl in _ITEM_TEMPLATES:
+        iid = item_id(http, tpl.format(n=name))
+        if iid:
+            return iid
+    return None
+
+
 def faction_id(http, name):
     """factionID pelo nome (tolerante a apostrofo; fallback: 1a faccao)."""
     if not name:

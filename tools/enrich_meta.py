@@ -48,19 +48,19 @@ def clean_name(s):
 
 def resolve_exp(http, sid, name):
     """Expansao de uma montaria, do mais barato p/ o mais completo:
-       1) pagina do spell (meta 'World of Warcraft: X');
-       2) pagina do item por nome -> meta OU 'Added in patch X.Y.Z' (major do patch);
-       3) idem via 'Reins of the <nome>' (o item de drop/vendor costuma ter esse prefixo,
-          != nome da montaria). Montaria de classe (Felsteed...) nao tem item -> None."""
+       1) pagina do spell (meta 'World of Warcraft: X' -- so as novas tem);
+       2) item por nome exato -> meta OU 'Added in patch X.Y.Z' (major do patch);
+       3) item por template de nome (item_for_mount): cobre o item de nome irregular que
+          concede a montaria ('White Stallion Bridle', 'Reins of the Raven Lord', ...),
+          exigindo match exato com um template conhecido -- nao casa item alheio.
+    O Wowhead tem o patch de introducao p/ TODO item da database, entao so fica sem
+    expansao a montaria que nao tem item legivel (mounts de classe: Felsteed, Warhorse...)."""
     e = extract.expansion(wowhead.spell_html(http, sid))
     if e:
         return e
-    for nm in (name, "Reins of the " + name):
-        iid = wowhead.item_id(http, nm)
-        if iid:
-            e = extract.expansion(wowhead.item_html(http, iid))
-            if e:
-                return e
+    iid = wowhead.item_for_mount(http, name)
+    if iid:
+        return extract.expansion(wowhead.item_html(http, iid))
     return None
 
 

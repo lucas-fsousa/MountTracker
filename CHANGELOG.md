@@ -21,14 +21,18 @@ HOW TO RELEASE (see RELEASING.md):
   (or can't get on this character) never got a map/expansion — wrong for *other* players who
   still need it. A new `tools/dump_journal.lua` feeds the full Mount Journal (collected +
   hidden + missing) into the harvester, so the Expansion/Current-zone filters are correct for
-  everyone. Coverage across all 1607 journal mounts: missing-expansion **509→36**,
-  missing-location **577→128** (994 overlay entries).
+  everyone. Coverage across all 1607 journal mounts: missing-expansion **509→20**,
+  missing-location **577→128** (1004 overlay entries).
 - **Expansion is now read from Wowhead's "Added in patch X.Y.Z" too.** Many old/promo/TCG
   mounts have no "World of Warcraft: <expansion>" meta tag, so they fell through as Unknown.
-  The harvester now falls back to the introduction patch (on the item page, incl. the common
-  `Reins of the <name>` item) and maps its major version to the expansion — cutting the
-  Unknown bucket from 179 to **36**. The last 36 are old Classic basics/class mounts with no
-  readable Wowhead item (Felsteed, racial steeds, …) and a few irregular-named TCG items.
+  Wowhead records the introduction patch for every database item, so the harvester reads it
+  from the *teaching item* (the item that grants the mount) and maps its major version to the
+  expansion. Because that item rarely shares the mount's name, it's matched by **exact
+  name-template** (`<mount> Bridle`, `Reins of the <mount>`, `<mount>'s Reins`, `Horn of the
+  <mount>`, `<mount> Egg`, …) — exact-only, so it never grabs an unrelated item and mislabels
+  the expansion. Cut the Unknown bucket from 179 to **20**. The last 20 are class mounts with
+  no item (Felsteed, paladin Warhorse, …) and a few old racials/holiday mounts whose item
+  name fits no template — all old Classic content.
 
 ## [0.10.0] - 2026-06-11
 

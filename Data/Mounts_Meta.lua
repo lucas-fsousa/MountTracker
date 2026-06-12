@@ -5,11 +5,13 @@
 local ADDON, ns = ...
 ns.Meta = ns.Meta or {}
 local M = ns.Meta
-M[458] = { map = 56 }  -- Brown Horse
+M[458] = { map = 56, expansion = "Classic" }  -- Brown Horse
 M[459] = { map = 85 }  -- Gray Wolf
+M[468] = { expansion = "Classic" }  -- White Stallion
 M[470] = { map = 84 }  -- Black Stallion
 M[472] = { map = 84 }  -- Pinto
 M[578] = { map = 85 }  -- Black Wolf
+M[579] = { expansion = "Classic" }  -- Red Wolf
 M[580] = { map = 85 }  -- Timber Wolf
 M[3363] = { expansion = "Midnight" }  -- Nether-Swept Drake
 M[6648] = { map = 84 }  -- Chestnut Mare
@@ -23,6 +25,7 @@ M[8394] = { map = 89 }  -- Striped Frostsaber
 M[8395] = { map = 1 }  -- Emerald Raptor
 M[10789] = { map = 89 }  -- Spotted Frostsaber
 M[10793] = { map = 89 }  -- Striped Nightsaber
+M[10795] = { expansion = "Classic" }  -- Ivory Raptor
 M[10796] = { map = 1 }  -- Turquoise Raptor
 M[10799] = { map = 1 }  -- Violet Raptor
 M[10873] = { map = 27 }  -- Red Mechanostrider
@@ -30,7 +33,13 @@ M[10969] = { map = 27 }  -- Blue Mechanostrider
 M[15779] = { expansion = "Classic" }  -- White Mechanostrider Mod B
 M[15780] = { map = 27 }  -- Green Mechanostrider
 M[16056] = { expansion = "Classic" }  -- Ancient Frostsaber
+M[16080] = { expansion = "Classic" }  -- Red Wolf
+M[16081] = { expansion = "Classic" }  -- Arctic Wolf
+M[16082] = { expansion = "Classic" }  -- Palomino
+M[16083] = { expansion = "Classic" }  -- White Stallion
+M[16084] = { expansion = "Classic" }  -- Mottled Red Raptor
 M[17229] = { map = 83 }  -- Winterspring Frostsaber
+M[17450] = { expansion = "Classic" }  -- Ivory Raptor
 M[17453] = { map = 27 }  -- Green Mechanostrider
 M[17454] = { map = 27 }  -- Unpainted Mechanostrider
 M[17459] = { expansion = "Classic" }  -- Icy Blue Mechanostrider Mod A
@@ -115,7 +124,7 @@ M[35711] = { zone = "The Exodar", expansion = "TBC" }  -- Purple Elekk
 M[35712] = { zone = "The Exodar", expansion = "TBC" }  -- Great Green Elekk
 M[35713] = { zone = "The Exodar", expansion = "TBC" }  -- Great Blue Elekk
 M[35714] = { zone = "The Exodar", expansion = "TBC" }  -- Great Purple Elekk
-M[36702] = { zone = "Karazhan" }  -- Fiery Warhorse
+M[36702] = { zone = "Karazhan", expansion = "TBC" }  -- Fiery Warhorse
 M[37015] = { expansion = "TBC" }  -- Swift Nether Drake
 M[39315] = { map = 107 }  -- Cobalt Riding Talbuk
 M[39317] = { map = 107 }  -- Silver Riding Talbuk
@@ -201,6 +210,7 @@ M[63642] = { map = 118 }  -- Silvermoon Hawkstrider
 M[63643] = { map = 118 }  -- Forsaken Warhorse
 M[63796] = { zone = "Ulduar" }  -- Mimiron's Head
 M[64657] = { map = 7 }  -- White Kodo
+M[64658] = { expansion = "WotLK" }  -- Black Wolf
 M[64731] = { expansion = "WotLK" }  -- Sea Turtle
 M[64927] = { expansion = "WotLK" }  -- Deadly Gladiator's Frost Wyrm
 M[64977] = { map = 18, expansion = "WotLK" }  -- Black Skeletal Horse
@@ -215,14 +225,14 @@ M[65643] = { map = 118 }  -- Swift Violet Ram
 M[65644] = { map = 118 }  -- Swift Purple Raptor
 M[65645] = { map = 118 }  -- White Skeletal Warhorse
 M[65646] = { map = 118 }  -- Swift Burgundy Wolf
-M[65917] = { zone = "The Cape of Stranglethorn" }  -- Magic Rooster
+M[65917] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Magic Rooster
 M[66087] = { map = 118 }  -- Silver Covenant Hippogryph
 M[66088] = { zone = "Isle of Thunder" }  -- Sunreaver Dragonhawk
 M[66090] = { map = 118 }  -- Quel'dorei Steed
 M[66091] = { zone = "Isle of Thunder" }  -- Sunreaver Hawkstrider
-M[66122] = { zone = "The Cape of Stranglethorn" }  -- Magic Rooster
-M[66123] = { zone = "The Cape of Stranglethorn" }  -- Magic Rooster
-M[66124] = { zone = "The Cape of Stranglethorn" }  -- Magic Rooster
+M[66122] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Magic Rooster
+M[66123] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Magic Rooster
+M[66124] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Magic Rooster
 M[66846] = { map = 18, expansion = "WotLK" }  -- Ochre Skeletal Warhorse
 M[66847] = { zone = "Darnassus", expansion = "WotLK" }  -- Striped Dawnsaber
 M[67336] = { expansion = "WotLK" }  -- Relentless Gladiator's Frost Wyrm
