@@ -16,9 +16,14 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Changed
-- **Metadata overlay regenerated against a full journal dump** — map/expansion coverage for
-  uncurated mounts jumped sharply (missing-expansion 88→18, missing-location 143→58). The
-  remainder is inherently location/expansion-less (holiday, TCG/store, Island Expeditions,
+- **Metadata overlay now covers the *whole game*, not just what you're missing.** The
+  harvest used to read only your *obtainable-now* mounts, so anything you'd already collected
+  (or can't get on this character) never got a map/expansion — wrong for *other* players who
+  still need it. A new `tools/dump_journal.lua` feeds the full Mount Journal (collected +
+  hidden + missing) into the harvester, so the Expansion/Current-zone filters are correct for
+  everyone. Coverage across all 1607 journal mounts: missing-expansion **509→179**,
+  missing-location **577→128** (882 overlay entries). The remainder is inherently
+  expansion/location-less (promo/TCG/store, holiday, PvP "Vicious", Island Expeditions,
   world-drop caches) and correctly stays in the catch-all bucket.
 
 ## [0.10.0] - 2026-06-11

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Check GERAL: para TODA montaria obtivel (curada ou nao) sem `map` ou com expansao
-"Unknown", resolve do Wowhead e emite Data/Mounts_Meta.lua -- um overlay de METADADOS
-(spellID -> { map | zone, expansion }) usado SO para os filtros (expansao / current
-zone). Nao afeta status/glow (montaria nao-curada continua MISSING).
+"""Check GERAL: para TODA montaria do JOGO (curada ou nao, coletada ou nao) sem `map` ou
+com expansao "Unknown", resolve do Wowhead e emite Data/Mounts_Meta.lua -- um overlay de
+METADADOS (spellID -> { map | zone, expansion }) usado SO para os filtros (expansao /
+current zone). Nao afeta status/glow (montaria nao-curada continua MISSING).
+
+IMPORTANTE: a entrada e o journal COMPLETO (tools/dump_journal.lua), nao o "obtenivel
+agora" (dump_all.lua). Uma montaria que ESTE personagem ja tem (ou nao pode ter) ainda
+falta p/ outro player, entao os metadados precisam cobrir o jogo inteiro -- senao o filtro
+de expansao mostra "Unknown" indevidamente p/ quem ainda nao a coletou.
 
 Fonte:
   - expansao: pagina do spell ("World of Warcraft: <exp>"). Cobre todas.
@@ -10,10 +15,10 @@ Fonte:
          Conteudo antigo (g_mapperData sem uiMapId) -> nome da zona ("found in"), que o
          addon resolve em runtime (ns.Waypoint.MapForZone).
 
-Entrada: tools/_all.jsonl (gerado por: lua tools/dump_all.lua <dump>).
+Entrada: tools/_all.jsonl (gerado por: lua tools/dump_journal.lua <dump>).
 
 Uso:
-    lua tools/dump_all.lua <dump> > tools/_all.jsonl
+    lua tools/dump_journal.lua <dump> > tools/_all.jsonl
     python3 tools/enrich_meta.py            # gera Data/Mounts_Meta.lua
 """
 
