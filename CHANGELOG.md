@@ -29,6 +29,16 @@ HOW TO RELEASE (see RELEASING.md):
   ("verify in-game") instead of glowing, detected systemically: an unresolved faction/rank
   line in the source text, or a vendor in a Brawler's Guild venue (Brawl'gar Arena /
   Bizmo's Brawlpub).
+- **No more false glow on vendor mounts gated by a *hidden* reputation.** Some vendors
+  require a standing the game never prints in the source text (a hidden rep), so the mount
+  was curated as a plain purchase and lit up green even when locked — e.g. *Ivory
+  Hawkstrider* needs **Exalted with Talon's Vengeance**. These gates are now harvested from
+  the Wowhead tooltip (`tools/enrich_requirement.py`) and verified in-game, so they show
+  *Need requirement* until met. Caught 4 mounts (1 reputation + 3 renown).
+- **No more false glow on *Preyseeker's Wrath*.** It requires *Preyseeker's Journey rank 10*
+  — a progression tracked by a **currency** (3387), not a faction, and shown only in the
+  tooltip text. Added a `currency`-type requirement that reads the live rank via
+  `C_CurrencyInfo`, so the mount stays *Need requirement* until you reach rank 10.
 
 ## [0.9.0] - 2026-06-10
 

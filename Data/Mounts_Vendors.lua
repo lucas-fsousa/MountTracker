@@ -373,6 +373,10 @@ ns.Data.Register("Midnight", {
         map     = 2393,
         coords  = { map = 2393, x = 55.8, y = 65.8 },
         cost    = { currencyID = 3392, amount = 2550 },
+        -- Gate ESCONDIDO: "Requires Preyseeker's Journey rank 10". Nao e faction/rep; a
+        -- "journey" e a currency 3387 (quantity = rank). So aparece no texto do tooltip,
+        -- nunca no sourceText do jogo -> sem isso a mount acendia glow falso.
+        requirement = { type = "currency", currencyID = 3387, quantity = 10, factionName = "Preyseeker's Journey" },
         wowhead = "https://www.wowhead.com/spell=1261337",
     },
     {

@@ -60,6 +60,9 @@ for _, e in ipairs(ns.Data.All) do
             if not STANDINGS[r.standing] then err(nm, "invalid standing: " .. tostring(r.standing)) end
         elseif r.type == "achievement" then
             if type(r.achievementID) ~= "number" then err(nm, "achievement without achievementID") end
+        elseif r.type == "currency" then
+            if type(r.currencyID) ~= "number" then err(nm, "currency without currencyID") end
+            if type(r.quantity) ~= "number" then err(nm, "currency without quantity") end
         else
             err(nm, "unknown requirement.type: " .. tostring(r.type))
         end

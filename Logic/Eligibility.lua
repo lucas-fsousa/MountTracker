@@ -93,6 +93,20 @@ local function checkRequirement(req)
         local name, _, _, completed = GetAchievementInfo(req.achievementID)
         if completed then return true, nil end
         return false, ("Achievement: %s"):format(name or ("#" .. tostring(req.achievementID)))
+
+    elseif req.type == "currency" then
+        -- Rank rastreado por uma CURRENCY de progresso (ex.: Preyseeker's Journey 3387,
+        -- cujo quantity = rank). O jogo nao expoe esse gate no sourceText/tooltip de rep,
+        -- so no texto -> sem isso a vendor mount acendia glow falso.
+        local info = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo(req.currencyID)
+        local need = req.quantity or 1
+        local cname = (info and info.name) or req.factionName or ("currency " .. tostring(req.currencyID))
+        local have = ns.Safe.Value(info and info.quantity, nil)
+        if have == nil then
+            return false, ("%s: need rank %d (current hidden)"):format(cname, need)
+        end
+        if have >= need then return true, nil end
+        return false, ("%s: rank %d / %d"):format(cname, have, need)
     end
 
     return true, nil
