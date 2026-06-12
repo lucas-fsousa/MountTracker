@@ -21,10 +21,14 @@ HOW TO RELEASE (see RELEASING.md):
   (or can't get on this character) never got a map/expansion — wrong for *other* players who
   still need it. A new `tools/dump_journal.lua` feeds the full Mount Journal (collected +
   hidden + missing) into the harvester, so the Expansion/Current-zone filters are correct for
-  everyone. Coverage across all 1607 journal mounts: missing-expansion **509→179**,
-  missing-location **577→128** (882 overlay entries). The remainder is inherently
-  expansion/location-less (promo/TCG/store, holiday, PvP "Vicious", Island Expeditions,
-  world-drop caches) and correctly stays in the catch-all bucket.
+  everyone. Coverage across all 1607 journal mounts: missing-expansion **509→36**,
+  missing-location **577→128** (994 overlay entries).
+- **Expansion is now read from Wowhead's "Added in patch X.Y.Z" too.** Many old/promo/TCG
+  mounts have no "World of Warcraft: <expansion>" meta tag, so they fell through as Unknown.
+  The harvester now falls back to the introduction patch (on the item page, incl. the common
+  `Reins of the <name>` item) and maps its major version to the expansion — cutting the
+  Unknown bucket from 179 to **36**. The last 36 are old Classic basics/class mounts with no
+  readable Wowhead item (Felsteed, racial steeds, …) and a few irregular-named TCG items.
 
 ## [0.10.0] - 2026-06-11
 

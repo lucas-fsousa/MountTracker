@@ -46,6 +46,24 @@ def clean_name(s):
     return m.group(1).strip() if m else s
 
 
+def resolve_exp(http, sid, name):
+    """Expansao de uma montaria, do mais barato p/ o mais completo:
+       1) pagina do spell (meta 'World of Warcraft: X');
+       2) pagina do item por nome -> meta OU 'Added in patch X.Y.Z' (major do patch);
+       3) idem via 'Reins of the <nome>' (o item de drop/vendor costuma ter esse prefixo,
+          != nome da montaria). Montaria de classe (Felsteed...) nao tem item -> None."""
+    e = extract.expansion(wowhead.spell_html(http, sid))
+    if e:
+        return e
+    for nm in (name, "Reins of the " + name):
+        iid = wowhead.item_id(http, nm)
+        if iid:
+            e = extract.expansion(wowhead.item_html(http, iid))
+            if e:
+                return e
+    return None
+
+
 def resolve_map(http, vendor, source, zone):
     """(map_uiMapID, zone_name): uiMapId estrito, ou nome de zona (fallback runtime)."""
     name = clean_name(vendor or source or "")
@@ -91,7 +109,7 @@ def main():
         entry = {}
         if needs_exp:
             try:
-                e = extract.expansion(wowhead.spell_html(http, sid))
+                e = resolve_exp(http, sid, clean_name(r["name"]))
             except Exception as ex:                       # noqa: BLE001
                 e = None
                 sys.stderr.write(f"  spell {sid} exp ERRO: {ex}\n")

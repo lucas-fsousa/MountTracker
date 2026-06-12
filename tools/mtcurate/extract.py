@@ -153,15 +153,36 @@ _WH_EXP = {
 }
 
 
-def expansion(html):
-    """Expansao a partir do meta description do Wowhead. Cobre os dois formatos:
-       item  -> 'Added in World of Warcraft: <Exp>.'
-       spell -> 'A spell from World of Warcraft: <Exp>.'
-    Retorna o codigo interno do addon ou None."""
-    m = re.search(r"World of Warcraft: ([^.<\"]+)", html or "")
+# Versao major do patch -> expansao. O Wowhead marca quando algo entrou no jogo via
+# "Added in patch X.Y.Z" -- sinal mais confiavel que o meta p/ montarias antigas/promo/TCG,
+# cujo meta "World of Warcraft: X" costuma faltar.
+_PATCH_EXP = {
+    1: "Classic", 2: "TBC", 3: "WotLK", 4: "Cataclysm", 5: "MoP", 6: "WoD",
+    7: "Legion", 8: "BfA", 9: "Shadowlands", 10: "Dragonflight", 11: "TWW", 12: "Midnight",
+}
+
+
+def expansion_from_patch(html):
+    """Expansao pelo "Added in patch X.Y.Z" do Wowhead (na pagina do item). O markup vem
+    como `Added in patch [acronym="2.4.3.8600"]2.4.3[/acronym]` -- pegamos o 1o numero de
+    versao apos o rotulo e mapeamos o major p/ a expansao. Retorna o codigo ou None."""
+    m = re.search(r"Added in patch.{0,40}?(\d+)\.\d+", html or "")
     if not m:
         return None
-    return _WH_EXP.get(m.group(1).strip())
+    return _PATCH_EXP.get(int(m.group(1)))
+
+
+def expansion(html):
+    """Expansao a partir do Wowhead. Tenta, em ordem:
+       1) meta description: 'World of Warcraft: <Exp>' (item e spell);
+       2) "Added in patch X.Y.Z" -> major do patch (cobre antigas/promo/TCG sem meta).
+    Retorna o codigo interno do addon ou None."""
+    m = re.search(r"World of Warcraft: ([^.<\"]+)", html or "")
+    if m:
+        exp = _WH_EXP.get(m.group(1).strip())
+        if exp:
+            return exp
+    return expansion_from_patch(html)
 
 
 def faction_side(html):
