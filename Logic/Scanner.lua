@@ -114,7 +114,7 @@ function Scanner.Dump()
             mountID          = mountID,
             spellID          = spellID,
             name             = name,
-            sourceType       = sourceType,             -- 0 Drop,1 Quest,2 Vendor,...
+            sourceType       = sourceType,             -- 1 Drop,2 Quest,3 Vendor,... (BATTLE_PET_SOURCE_*)
             isFactionSpecific = isFactionSpecific,
             faction          = faction,                -- 0 Horde,1 Alliance (cru)
             shouldHideOnChar = shouldHideOnChar,       -- jogo esconderia p/ este char
