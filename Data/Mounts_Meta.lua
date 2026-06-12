@@ -10,8 +10,6 @@ M[60002] = { map = 120 }  -- Time-Lost Proto-Drake
 M[88718] = { map = 207 }  -- Phosphorescent Stone Drake
 M[88741] = { map = 245 }  -- Drake of the West Wind
 M[92155] = { expansion = "Cataclysm" }  -- Ultramarine Qiraji Battle Tank
-M[102346] = { zone = "Darkmoon Island" }  -- Swift Forest Strider
-M[103081] = { zone = "Darkmoon Island" }  -- Darkmoon Dancing Bear
 M[107842] = { zone = "Dragon Soul" }  -- Blazing Drake
 M[110039] = { zone = "Dragon Soul" }  -- Experiment 12-B
 M[127271] = { zone = "Lunarfall" }  -- Crimson Water Strider
@@ -152,8 +150,6 @@ M[1261584] = { zone = "Masters' Perch" }  -- Prowling Shredclaw
 M[1261585] = { zone = "Masters' Perch" }  -- Frenzied Shredclaw
 M[1263387] = { zone = "Oribos" }  -- Crimson Lupine
 M[1263635] = { zone = "Windrunner Spire" }  -- Spectral Hawkstrider
-M[1264621] = { zone = "Deeprun Tram" }  -- Brawlin' Bruno
-M[1264643] = { zone = "Deeprun Tram" }  -- Ballistic Bronco
 M[1264988] = { zone = "Oribos" }  -- Snowpaw Glimmerfur Prowler
 M[1265784] = { zone = "Magisters' Terrace" }  -- Lucent Hawkstrider
 M[1296731] = { zone = "Silvermoon City" }  -- Cerulean Deathwalker
