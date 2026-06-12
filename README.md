@@ -128,6 +128,28 @@ A built-in `/mtrack dump` tool exports your journal so contributors can expand t
 
 ---
 
+## 🐞 Spotted a wrong glow? Please report it
+
+This is the single most useful thing you can do for the project. 🙏
+
+The green **"obtainable now"** glow is only as good as the data behind it — and some gates are **invisible to the game itself**. A handful of mounts are locked behind a *hidden* reputation, a friendship rank, or a currency-tracked progression that the game **never prints** in its source text (real examples we've already fixed: *Ivory Hawkstrider* needs Exalted with a hidden faction; *Preyseeker's Wrath* needs *Preyseeker's Journey* rank 10). When that happens, a mount can light up green even though you can't actually buy it yet — a **false positive**.
+
+We hunt these down through a strict chain of sources, in order of trust:
+
+> **game data → Wowhead → Wowhead comments → your feedback**
+
+When the game doesn't expose a gate, we harvest it from Wowhead; when even Wowhead's structured data is silent, the answer often lives only in the page **comments** — or in **your report**. Many of these have to be curated **by hand**, one mount at a time, so each report genuinely moves the needle.
+
+**If you see a mount glow green that you *can't* actually get** (or one that *should* glow but doesn't), please **[open an issue](../../issues/new)** with:
+
+- the **mount name**,
+- what's actually gating it (the requirement you're missing), and
+- the output of `/mtrack check <name>` if you can.
+
+We'll curate the fix and ship it in the next version. Even a one-line "X glows but needs Y" is a huge help. 💚
+
+---
+
 ## 🗺️ Project status & roadmap
 
 MountTracker is in **active development**. The live base already covers the whole collection; the curated eligibility overlay is being expanded **expansion by expansion** (Classic → TBC → WotLK → …).

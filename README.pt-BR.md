@@ -128,6 +128,28 @@ Uma ferramenta interna `/mtrack dump` exporta seu journal para que contribuidore
 
 ---
 
+## 🐞 Viu um brilho errado? Reporte, por favor
+
+Essa é a coisa mais útil que você pode fazer pelo projeto. 🙏
+
+O brilho verde de **"obtenível agora"** é tão bom quanto os dados por trás dele — e alguns gates são **invisíveis para o próprio jogo**. Algumas montarias ficam trancadas atrás de uma reputação *oculta*, um rank de amizade, ou uma progressão rastreada por moeda que o jogo **nunca informa** no source text (exemplos reais que já corrigimos: o *Ivory Hawkstrider* exige Exalted com uma facção oculta; o *Preyseeker's Wrath* exige *Preyseeker's Journey* rank 10). Quando isso acontece, a montaria pode brilhar verde mesmo sem você poder comprá-la ainda — um **falso positivo**.
+
+A gente caça esses casos por uma cadeia estrita de fontes, em ordem de confiança:
+
+> **dados do jogo → Wowhead → comentários do Wowhead → seu feedback**
+
+Quando o jogo não expõe o gate, a gente colhe do Wowhead; quando até o dado estruturado do Wowhead é omisso, a resposta muitas vezes só existe nos **comentários** da página — ou no **seu report**. Muitos desses casos têm que ser curados **na mão**, uma montaria por vez, então cada report ajuda de verdade.
+
+**Se você vir uma montaria brilhar verde sem você *poder* obtê-la** (ou uma que *deveria* brilhar e não brilha), por favor **[abra uma issue](../../issues/new)** com:
+
+- o **nome da montaria**,
+- o que de fato está travando (o requisito que falta), e
+- a saída de `/mtrack check <nome>` se possível.
+
+A gente cura a correção e solta na próxima versão. Até um "X brilha mas precisa de Y" de uma linha já ajuda muito. 💚
+
+---
+
 ## 🗺️ Status e roadmap do projeto
 
 O MountTracker está em **desenvolvimento ativo**. A base ao vivo já cobre a coleção inteira; o overlay curado de elegibilidade está sendo expandido **expansão por expansão** (Classic → TBC → WotLK → …).
