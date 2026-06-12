@@ -15,6 +15,12 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Changed
+- **Metadata overlay regenerated against a full journal dump** — map/expansion coverage for
+  uncurated mounts jumped sharply (missing-expansion 88→18, missing-location 143→58). The
+  remainder is inherently location/expansion-less (holiday, TCG/store, Island Expeditions,
+  world-drop caches) and correctly stays in the catch-all bucket.
+
 ## [0.10.0] - 2026-06-11
 
 ### Added
