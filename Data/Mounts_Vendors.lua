@@ -483,6 +483,19 @@ ns.Data.Register("Shadowlands", {
 
 ns.Data.Register("TWW", {
     {
+        -- O jogo marca como "World Quest" no journal, mas e compra de vendedor por currency.
+        -- Curada a mao p/ sobrepor a classificacao errada (vendor + Resonance Crystals).
+        name    = "Delver's Gob-Trotter",
+        spellID = 466133,
+        acquisition = "vendor",
+        vendor  = "Reno Jackson",
+        zone    = "Dornogal",
+        map     = 2339,
+        coords  = { map = 2339, x = 47.6, y = 45.0 },
+        cost    = { currencyID = 2815, amount = 10000 },
+        wowhead = "https://www.wowhead.com/spell=466133",
+    },
+    {
         name    = "Asset Advocator",
         spellID = 466023,
         acquisition = "vendor",
@@ -660,6 +673,9 @@ ns.Data.Register("TWW", {
         map     = 2215,
         coords  = { map = 2215, x = 28.2, y = 56.2 },
         cost    = { currencyID = 2815, amount = 8125 },
+        -- Gate de RENOME que o sourceText do jogo NAO mostra -> glow falso so com a currency.
+        -- Requer Renown 9 com Flame's Radiance (2688). Colhido do tooltip do Wowhead.
+        requirement = { type = "renown", factionID = 2688, renownLevel = 9 },
         wowhead = "https://www.wowhead.com/spell=1226421",
     },
     {

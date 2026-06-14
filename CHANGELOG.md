@@ -15,6 +15,18 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Fixed
+- **No false glow on *Radiant Imperial Lynx*.** It was curated as a plain currency purchase,
+  but it also needs **Renown 9 with Flame's Radiance** — a gate the game's source text never
+  shows. Added the renown requirement (harvested from Wowhead), so it stays *Need requirement*
+  until you reach it. Also made the requirement parser tolerant of Wowhead's markup
+  (`Renown [b]Rank 9[/b] with …`) and of the dots in the faction link URL, which had stopped
+  these gates from being detected.
+- **Corrected *Delver's Gob-Trotter* source.** The game's journal labels it a *World Quest*,
+  but it's bought from **Reno Jackson** in Dornogal for 10,000 Resonance Crystals. Curated as
+  a vendor mount so it shows the seller, location and currency (and a waypoint) instead of
+  "World Quest".
+
 ### Changed
 - **Metadata overlay now covers the *whole game*, not just what you're missing.** The
   harvest used to read only your *obtainable-now* mounts, so anything you'd already collected

@@ -125,11 +125,14 @@ def requirement(html):
         (inclui "Requires you to be exalted with [faction=M]")
     Retorna o dict do requisito ou None."""
     h = html or ""
-    m = re.search(r"Renown Rank (\d+) with[^.]{0,80}?faction=(\d+)", h, re.I)
+    # `.{0,N}?` (nao `[^.]`) de proposito: o link da faccao e uma URL
+    # (".../faction=N") cheia de pontos, e o texto pode vir com markup entre as palavras
+    # ("Renown [b]Rank 9[/b] with [url=.../faction=N]").
+    m = re.search(r"Renown.{0,12}?Rank (\d+).{0,120}?faction=(\d+)", h, re.I)
     if m:
         return {"type": "renown", "renownLevel": int(m.group(1)),
                 "factionID": int(m.group(2))}
-    m = re.search(r"\b(%s)\s+with[^.]{0,80}?faction=(\d+)" % "|".join(STANDINGS), h, re.I)
+    m = re.search(r"\b(%s)\s+with.{0,120}?faction=(\d+)" % "|".join(STANDINGS), h, re.I)
     if m:
         return {"type": "reputation", "standing": m.group(1).capitalize(),
                 "factionID": int(m.group(2))}
