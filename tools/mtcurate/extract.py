@@ -312,6 +312,19 @@ def drop_zone(html):
     return names[0].strip() if names else None
 
 
+def item_location(html):
+    """Zona onde o ITEM e encontrado, pela pagina de item do Wowhead: o campo "location":[id]
+    mais o mapa de ids embutido na pagina ("id":{"name_enus":"Zona"}). Cobre drops/world-drops
+    cujo NPC nao tem coords mas a pagina diz a zona (ex.: Blue Qiraji Resonating Crystal ->
+    Temple of Ahn'Qiraj). Retorna o nome da zona ou None (o addon resolve zona->uiMapId)."""
+    h = html or ""
+    m = re.search(r'"location":\[(\d+)', h)
+    if not m:
+        return None
+    z = re.search(r'"%s":\{"name_enus":"((?:[^"\\]|\\.)*)"' % m.group(1), h)
+    return z.group(1).strip() if z else None
+
+
 def drop_chance(html):
     """Estima a chance de drop pela maior amostra (count/outof) da pagina.
     ~1.0 = drop garantido (raro elite); valores baixos = RNG."""

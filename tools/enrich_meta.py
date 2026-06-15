@@ -129,6 +129,23 @@ def resolve_map(http, vendor, source, zone):
     return None, None
 
 
+def mount_item_id(http, sid, name):
+    """itemID do item que concede a montaria: 1o item-de-montaria linkado na spell page
+    (tooltip 'summon this mount'), senao por template de nome. None se nao achar."""
+    for m in re.finditer(r"/item=(\d+)", wowhead.spell_html(http, sid) or ""):
+        iid = int(m.group(1))
+        if extract.is_mount_item(wowhead.item_html(http, iid)):
+            return iid
+    return wowhead.item_for_mount(http, name)
+
+
+def resolve_loc_via_item(http, sid, name):
+    """Zona pela pagina do ITEM que concede a montaria ("location" -> nome da zona). Cobre
+    drops/world-drops cujo NPC nao tem coords (ex.: Blue Qiraji -> Temple of Ahn'Qiraj)."""
+    iid = mount_item_id(http, sid, clean_name(name))
+    return extract.item_location(wowhead.item_html(http, iid)) if iid else None
+
+
 def lua_str(s):
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
@@ -170,6 +187,11 @@ def main():
             except Exception as ex:                       # noqa: BLE001
                 mid, zname = None, None
                 sys.stderr.write(f"  spell {sid} map ERRO: {ex}\n")
+            if not mid and not zname:            # NPC sem coords -> tenta a zona do item
+                try:
+                    zname = resolve_loc_via_item(http, sid, r["name"])
+                except Exception as ex:           # noqa: BLE001
+                    sys.stderr.write(f"  spell {sid} loc-item ERRO: {ex}\n")
             if mid:
                 entry["map"] = mid
                 n_map += 1

@@ -16,6 +16,11 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Added
+- **"Current zone" location harvested from the item page too.** For drop/world-drop mounts
+  whose vendor/NPC has no mappable coordinates, the harvester now reads the *teaching item's*
+  "Location" (e.g. *The Big G* → Liberation of Undermine). Only works when the mount's item is
+  discoverable from the spell page or its name; items with an unrelated name (e.g. Qiraji
+  Battle Tank → "Qiraji Resonating Crystal") still need manual curation.
 - **Faction-specific reputation requirements.** A requirement's `factionID` may now be a
   `{ Horde = …, Alliance = … }` table, resolved to the player's faction at check time (same
   pattern the Brawler's Guild already used). Lets cross-faction vendor mounts gate correctly
