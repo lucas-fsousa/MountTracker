@@ -34,7 +34,8 @@ ns.Data.Register("BfA", {
         map     = 1355,
         coords  = { map = 1355, x = 39.2, y = 54.2 },
         cost    = { itemID = 169783, amount = 4 },
-        requirement = { type = "reputation", factionID = 2400, standing = "Exalted" },
+        -- Faction-especifica (Nazjatar): The Unshackled (H) / Waveblade Ankoan (A).
+        requirement = { type = "reputation", factionID = { Horde = 2400, Alliance = 2401 }, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=300153",
     },
     {
@@ -56,7 +57,8 @@ ns.Data.Register("BfA", {
         vendor  = "Crafticus Mindbender",
         zone    = "Nazjatar",
         cost    = { itemID = 168802, amount = 150 },
-        requirement = { type = "reputation", factionID = 2400, standing = "Exalted" },
+        -- Faction-especifica (Nazjatar): The Unshackled (H) / Waveblade Ankoan (A).
+        requirement = { type = "reputation", factionID = { Horde = 2400, Alliance = 2401 }, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=300151",
     },
     {
@@ -160,6 +162,17 @@ ns.Data.Register("BfA", {
 })
 
 ns.Data.Register("Cataclysm", {
+    {
+        -- Tol Barad: vendedor e rep faction-especificos. Exalted com Hellscream's Reach (H,
+        -- 1177) ou Baradin's Wardens (A, 1178) -- gate que o sourceText do jogo nao mostra.
+        name    = "Drake of the West Wind",
+        spellID = 88741,
+        acquisition = "reputation",
+        vendor  = "Quartermaster (Tol Barad)",
+        zone    = "Tol Barad",
+        requirement = { type = "reputation", factionID = { Horde = 1177, Alliance = 1178 }, standing = "Exalted" },
+        wowhead = "https://www.wowhead.com/spell=88741",
+    },
     {
         name    = "Darkmoon Dancing Bear",
         spellID = 103081,

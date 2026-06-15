@@ -15,6 +15,13 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **Faction-specific reputation requirements.** A requirement's `factionID` may now be a
+  `{ Horde = …, Alliance = … }` table, resolved to the player's faction at check time (same
+  pattern the Brawler's Guild already used). Lets cross-faction vendor mounts gate correctly
+  for both sides — *Drake of the West Wind* (Tol Barad: Hellscream's Reach / Baradin's
+  Wardens) and the Nazjatar mounts (The Unshackled / Waveblade Ankoan) now use it.
+
 ### Fixed
 - **Requirement harvesting now uses only *authoritative* Wowhead data — never comments.** The
   parser was matching reputation/renown text anywhere on the page, including the user-comment

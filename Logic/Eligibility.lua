@@ -13,6 +13,16 @@ local function playerFactionId()
     return nil -- Neutro (Panda nivel 1) etc.
 end
 
+-- Um `factionID` curado pode ser faction-especifico: uma tabela { Horde=N, Alliance=M }
+-- (ex.: reputacoes de Tol Barad/Nazjatar, que diferem por faccao). Resolve p/ a do jogador
+-- -- mesmo padrao ja usado na Brawler's Guild (BRAWLERS_FACTION[UnitFactionGroup]).
+local function resolveFactionID(fid)
+    if type(fid) == "table" then
+        return fid[UnitFactionGroup("player")]
+    end
+    return fid
+end
+
 -- Le a reputacao classica de uma faccao: retorna reaction (1..8).
 -- Pode devolver nil se a API falhar ou se o valor vier protegido (Secret Value).
 local function getReputation(factionID)
@@ -66,9 +76,10 @@ local function checkRequirement(req)
     if not req then return true, nil end
 
     if req.type == "reputation" then
+        local fid = resolveFactionID(req.factionID)
         local needed = ns.STANDING_TO_REACTION[req.standing] or 8
-        local current = getReputation(req.factionID)
-        local fname = reputationName(req.factionID) or req.factionName or "Reputation"
+        local current = getReputation(fid)
+        local fname = reputationName(fid) or req.factionName or "Reputation"
         if not current then
             return false, ("%s: need %s (current hidden)"):format(fname, req.standing or "?")
         end
@@ -77,7 +88,7 @@ local function checkRequirement(req)
             fname, REACTION_TO_STANDING[current] or "?", req.standing or "?")
 
     elseif req.type == "renown" then
-        local fid = req.factionID or majorFactionByName(req.factionName)
+        local fid = resolveFactionID(req.factionID) or majorFactionByName(req.factionName)
         local d = fid and C_MajorFactions and C_MajorFactions.GetMajorFactionData(fid)
         local fname = (d and d.name) or req.factionName or "Renown faction"
         local need = req.renownLevel or 0

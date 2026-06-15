@@ -49,14 +49,22 @@ for _, e in ipairs(ns.Data.All) do
     end
 
     local r = e.requirement
+    -- factionID pode ser number OU tabela faction-especifica { Horde=N, Alliance=M }.
+    local function validFaction(fid)
+        if type(fid) == "number" then return true end
+        if type(fid) == "table" and (type(fid.Horde) == "number" or type(fid.Alliance) == "number") then
+            return true
+        end
+        return false
+    end
     if r then
         if r.type == "renown" then
-            if not (type(r.factionID) == "number" or type(r.factionName) == "string") then
+            if not (validFaction(r.factionID) or type(r.factionName) == "string") then
                 err(nm, "renown without factionID or factionName")
             end
             if type(r.renownLevel) ~= "number" then err(nm, "renown without renownLevel") end
         elseif r.type == "reputation" then
-            if type(r.factionID) ~= "number" then err(nm, "reputation without factionID") end
+            if not validFaction(r.factionID) then err(nm, "reputation without factionID") end
             if not STANDINGS[r.standing] then err(nm, "invalid standing: " .. tostring(r.standing)) end
         elseif r.type == "achievement" then
             if type(r.achievementID) ~= "number" then err(nm, "achievement without achievementID") end
