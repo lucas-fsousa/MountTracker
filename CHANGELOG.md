@@ -16,6 +16,19 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Fixed
+- **Requirement harvesting now uses only *authoritative* Wowhead data — never comments.** The
+  parser was matching reputation/renown text anywhere on the page, including the user-comment
+  section, which produced **wrong gates** (e.g. three Undermine mounts were curated as "Renown
+  with the Cartels of Undermine" when they actually need *Exalted with a specific cartel*, and
+  one needs no gate at all). It now reads the item's structured requirement (`reqfaction`/
+  `reqrep`) for reputation and the item *tooltip* for renown (resolving the faction by name),
+  so a comment can never become a false gate.
+- **Swept every vendor mount for hidden gates and corrected the base.** With the fixed parser,
+  found and added 11 missing reputation gates (Bloodfang Widow, Crimson Tidestallion, Inkscale
+  Deepseeker, Palehide Direhorn, Ravenous Black Gryphon, Dark War Talbuk, Champion's Treadblade,
+  the Undermine cartel mounts, …) so they no longer false-glow when you have the currency but
+  not the standing; and fixed three mislabeled Undermine gates (Crimson Armored Growler →
+  Bilgewater, Ochre Delivery Rocket → Venture Company; Innovation Investigator → no gate).
 - **No false glow on *Radiant Imperial Lynx*.** It was curated as a plain currency purchase,
   but it also needs **Renown 9 with Flame's Radiance** — a gate the game's source text never
   shows. Added the renown requirement (harvested from Wowhead), so it stays *Need requirement*

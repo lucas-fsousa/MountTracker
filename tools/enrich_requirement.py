@@ -37,9 +37,14 @@ INS_RE = re.compile(r"^\s*(?:cost|coords|map|zone|vendor)\s*=")
 def fetch_req(http, sid, name):
     req = extract.requirement(wowhead.spell_html(http, sid))
     if not req:
-        iid = wowhead.item_id(http, name)
+        iid = wowhead.item_id(http, name) or wowhead.item_for_mount(http, name)
         if iid:
             req = extract.requirement(wowhead.item_html(http, iid))
+    # requirement() pode devolver a faccao por NOME (renome/rep do tooltip); resolve o id.
+    if req and not req.get("factionID") and req.get("factionName"):
+        req["factionID"] = wowhead.faction_id(http, req["factionName"])
+    if req and not req.get("factionID"):
+        return None                              # sem id confiavel -> nao cura (evita erro)
     return req
 
 

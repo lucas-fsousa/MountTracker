@@ -35,7 +35,7 @@ ns.Data.Register("TWW", {
         zone    = "Undermine",
         map     = 2346,
         coords  = { map = 2346, x = 43.6, y = 50.2 },
-        requirement = { type = "renown", factionID = 2653, renownLevel = 15 }, -- Bilgewater Cartel
+        requirement = { type = "renown", factionID = 2653, renownLevel = 15 }, -- Cartels of Undermine (renome umbrella)
         cost    = { currencyID = 2815, amount = 8125 },
         wowhead = "https://www.wowhead.com/spell=466002",
     },
@@ -67,7 +67,7 @@ ns.Data.Register("TWW", {
         zone    = "Undermine",
         map     = 2346,
         coords  = { map = 2346, x = 43.6, y = 50.2 },
-        requirement = { type = "renown", factionID = 2653, renownLevel = 19 }, -- Bilgewater Cartel
+        requirement = { type = "renown", factionID = 2653, renownLevel = 19 }, -- Cartels of Undermine (renome umbrella)
         cost    = { currencyID = 2815, amount = 11375 },
         wowhead = "https://www.wowhead.com/spell=466016",
     },

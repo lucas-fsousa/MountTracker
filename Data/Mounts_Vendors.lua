@@ -34,6 +34,7 @@ ns.Data.Register("BfA", {
         map     = 1355,
         coords  = { map = 1355, x = 39.2, y = 54.2 },
         cost    = { itemID = 169783, amount = 4 },
+        requirement = { type = "reputation", factionID = 2400, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=300153",
     },
     {
@@ -45,6 +46,7 @@ ns.Data.Register("BfA", {
         map     = 863,
         coords  = { map = 863, x = 70.8, y = 56.4 },
         cost    = { gold = 333333 },
+        requirement = { type = "reputation", factionID = 2156, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=259740",
     },
     {
@@ -54,6 +56,7 @@ ns.Data.Register("BfA", {
         vendor  = "Crafticus Mindbender",
         zone    = "Nazjatar",
         cost    = { itemID = 168802, amount = 150 },
+        requirement = { type = "reputation", factionID = 2400, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=300151",
     },
     {
@@ -64,6 +67,7 @@ ns.Data.Register("BfA", {
         zone    = "Zuldazar",
         coords  = { map = 1165, x = 48.4, y = 87.2 },
         cost    = { gold = 500000 },
+        requirement = { type = "reputation", factionID = 2165, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=279474",
     },
     {
@@ -209,6 +213,7 @@ ns.Data.Register("Dragonflight", {
         zone    = "Tyrhold Reservoir",
         coords  = { map = 2025, x = 51.0, y = 56.6 },
         cost    = { currencyID = 2594, amount = 3000 },
+        requirement = { type = "reputation", factionID = 942, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=414323",
     },
     {
@@ -524,6 +529,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 63.2, y = 16.2 },
         cost    = { currencyID = 2815, amount = 8125 },
+        requirement = { type = "reputation", factionID = 2675, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=466019",
     },
     {
@@ -555,7 +561,8 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 39.0, y = 22.0 },
         cost    = { currencyID = 2815, amount = 8125 },
-        requirement = { type = "renown", factionID = 2653, renownLevel = 15 },
+        -- Exalted com a Bilgewater Cartel (reputacao, nao renome 2653). Tooltip do Wowhead.
+        requirement = { type = "reputation", factionID = 2673, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=465999",
     },
     {
@@ -576,6 +583,8 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 30.4, y = 38.8 },
         cost    = { currencyID = 2815, amount = 11375 },
+        -- Revered com a Darkfuse Solutions (tooltip: "Darkfuse Cartel"). Faction 2669.
+        requirement = { type = "reputation", factionID = 2669, standing = "Revered" },
         wowhead = "https://www.wowhead.com/spell=466018",
     },
     {
@@ -587,7 +596,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 43.0, y = 82.2 },
         cost    = { itemID = 234741, amount = 25 },
-        requirement = { type = "renown", factionID = 2653, renownLevel = 19 },
+        -- Sem gate de rep/renome no tooltip do Wowhead -- compra por token (234741).
         wowhead = "https://www.wowhead.com/spell=466017",
     },
     {
@@ -640,6 +649,7 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 27.2, y = 72.4 },
         cost    = { currencyID = 2815, amount = 11375 },
+        requirement = { type = "reputation", factionID = 2677, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=466028",
     },
     {
@@ -661,7 +671,8 @@ ns.Data.Register("TWW", {
         map     = 2346,
         coords  = { map = 2346, x = 53.2, y = 72.4 },
         cost    = { currencyID = 2815, amount = 11375 },
-        requirement = { type = "renown", factionID = 2653, renownLevel = 19 },
+        -- Exalted com a Venture Company Cartel (reputacao, nao renome 2653). Tooltip do Wowhead.
+        requirement = { type = "reputation", factionID = 2671, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=466013",
     },
     {
@@ -751,6 +762,7 @@ ns.Data.Register(nil, {
         map     = 107,
         coords  = { map = 107, x = 42.8, y = 42.4 },
         cost    = { itemID = 26045, amount = 100 },
+        requirement = { type = "reputation", factionID = 941, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=34790",
     },
     {
@@ -795,6 +807,7 @@ ns.Data.Register("WoD", {
         zone    = "Stormwind, Old Town",
         coords  = { map = 84, x = 73.0, y = 59.2 },
         cost    = { gold = 100000 },
+        requirement = { type = "reputation", factionID = 1272, standing = "Exalted" },
         wowhead = "https://www.wowhead.com/spell=171846",
     },
     {

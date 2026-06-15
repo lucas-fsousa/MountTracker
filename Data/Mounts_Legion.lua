@@ -15,6 +15,7 @@ ns.Data.Register("Legion", {
         zone    = "Dalaran",
         map     = 627,
         cost    = { gold = 2000000 },
+        requirement = { type = "reputation", factionID = 1975, standing = "Honored" },
         wowhead = "https://www.wowhead.com/spell=213115",
     },
     {

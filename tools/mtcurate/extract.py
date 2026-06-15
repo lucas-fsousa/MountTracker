@@ -117,25 +117,69 @@ def sold_cost(html):
     return None
 
 
+# reqrep do Wowhead (0=Hated ... 7=Exalted) -> nome de standing do addon.
+_REQREP_STANDING = {4: "Friendly", 5: "Honored", 6: "Revered", 7: "Exalted"}
+
+
+def _unescape_after(html, quote_idx):
+    """Desescapa a string JS/JSON que comeca na aspa em `quote_idx`."""
+    out, i, esc = [], quote_idx + 1, {"n": "\n", "t": "\t", "/": "/", '"': '"', "\\": "\\"}
+    while i < len(html):
+        c = html[i]
+        if c == "\\":
+            out.append(esc.get(html[i + 1:i + 2], html[i + 1:i + 2]))
+            i += 2
+            continue
+        if c == '"':
+            break
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
+def tooltip(html):
+    """HTML do TOOLTIP do item (campo tooltip_enus, ex.: `g_items[ID].tooltip_enus = "..."`).
+    Fonte AUTORITATIVA -- isola o tooltip da secao de COMENTARIOS (nao confiavel)."""
+    h = html or ""
+    for marker in (".tooltip_enus = \"", "\"tooltip_enus\":\""):
+        i = h.find(marker)
+        if i >= 0:
+            return _unescape_after(h, i + len(marker) - 1)
+    return ""
+
+
 def requirement(html):
-    """Requisito de reputacao/renome do tooltip do Wowhead (o jogo as vezes ESCONDE
-    isso no sourceText). Captura o factionID do link `faction=N`. Cobre:
-      - "Renown Rank N with [faction=M]"            -> renown
-      - "<Standing> with [faction=M]"  (Exalted...)  -> reputation
-        (inclui "Requires you to be exalted with [faction=M]")
+    """Requisito de reputacao/renome de uma montaria (o jogo as vezes ESCONDE isso no
+    sourceText -> glow falso). Usa SO fontes AUTORITATIVAS, nunca os comentarios da pagina:
+
+      - reputacao: dado ESTRUTURADO do item ("reqfaction":N ... "reqrep":M, com M>=4).
+        E JSON do proprio Wowhead, imune a texto solto de comentario.
+      - renome: texto do TOOLTIP ("Requires Renown Rank N with <Faccao>"); a faccao vem por
+        NOME (o caller resolve o id via wowhead.faction_id) -> {type:renown, factionName}.
+
     Retorna o dict do requisito ou None."""
     h = html or ""
-    # `.{0,N}?` (nao `[^.]`) de proposito: o link da faccao e uma URL
-    # (".../faction=N") cheia de pontos, e o texto pode vir com markup entre as palavras
-    # ("Renown [b]Rank 9[/b] with [url=.../faction=N]").
-    m = re.search(r"Renown.{0,12}?Rank (\d+).{0,120}?faction=(\d+)", h, re.I)
-    if m:
-        return {"type": "renown", "renownLevel": int(m.group(1)),
-                "factionID": int(m.group(2))}
-    m = re.search(r"\b(%s)\s+with.{0,120}?faction=(\d+)" % "|".join(STANDINGS), h, re.I)
-    if m:
-        return {"type": "reputation", "standing": m.group(1).capitalize(),
-                "factionID": int(m.group(2))}
+    best = None
+    for m in re.finditer(r'"reqfaction":(\d+),"reqlevel":\d+,"reqrep":(\d+)', h):
+        fid, rep = int(m.group(1)), int(m.group(2))
+        if fid and (best is None or rep > best[1]):
+            best = (fid, rep)
+    if best and best[1] in _REQREP_STANDING:
+        return {"type": "reputation", "standing": _REQREP_STANDING[best[1]],
+                "factionID": best[0]}
+    tt = tooltip(h)
+    if tt:
+        m = re.search(r"Renown.{0,12}?Rank\s*(\d+).{0,8}?with\s+(?:<[^>]+>)?([^<\[\".]{3,40})",
+                      tt, re.I)
+        if m:
+            return {"type": "renown", "renownLevel": int(m.group(1)),
+                    "factionName": m.group(2).strip()}
+        # "Requires Exalted reputation with the Bilgewater Cartel in Undermine."
+        m = re.search(r"Requires\s+(%s)\s+reputation\s+with\s+(?:the\s+)?([^<\[\".]{3,40}?)"
+                      r"(?:\s+in\s|[.<\[])" % "|".join(STANDINGS), tt, re.I)
+        if m:
+            return {"type": "reputation", "standing": m.group(1).capitalize(),
+                    "factionName": m.group(2).strip()}
     return None
 
 
