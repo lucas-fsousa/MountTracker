@@ -40,20 +40,42 @@ def fetch_req(http, sid, name):
         iid = wowhead.item_id(http, name) or wowhead.item_for_mount(http, name)
         if iid:
             req = extract.requirement(wowhead.item_html(http, iid))
+    if not req:
+        return None
+    # Par faction-especifico ({"factionIDs":[a,b]}) -> resolve o lado de cada e monta a
+    # tabela { Horde=x, Alliance=y } (mesmo formato que checkRequirement resolve em runtime).
+    if req.get("factionIDs"):
+        team = {}
+        for fid in req["factionIDs"]:
+            side = wowhead.faction_team(http, fid)
+            if side:
+                team[side] = fid
+        if "Horde" in team and "Alliance" in team:
+            req["factionID"] = team
+            req.pop("factionIDs", None)
+        else:
+            req["factionID"] = req["factionIDs"][0]   # nao deu p/ separar -> usa o 1o
+            req.pop("factionIDs", None)
     # requirement() pode devolver a faccao por NOME (renome/rep do tooltip); resolve o id.
-    if req and not req.get("factionID") and req.get("factionName"):
+    if not req.get("factionID") and req.get("factionName"):
         req["factionID"] = wowhead.faction_id(http, req["factionName"])
-    if req and not req.get("factionID"):
+    if not req.get("factionID"):
         return None                              # sem id confiavel -> nao cura (evita erro)
     return req
 
 
+def _fmt_faction(fid):
+    if isinstance(fid, dict):
+        return "{ Horde = %d, Alliance = %d }" % (fid["Horde"], fid["Alliance"])
+    return str(fid)
+
+
 def emit_req(req):
     if req["type"] == "renown":
-        return ('requirement = { type = "renown", factionID = %d, renownLevel = %d },'
-                % (req["factionID"], req["renownLevel"]))
-    return ('requirement = { type = "reputation", factionID = %d, standing = "%s" },'
-            % (req["factionID"], req["standing"]))
+        return ('requirement = { type = "renown", factionID = %s, renownLevel = %d },'
+                % (_fmt_faction(req["factionID"]), req["renownLevel"]))
+    return ('requirement = { type = "reputation", factionID = %s, standing = "%s" },'
+            % (_fmt_faction(req["factionID"]), req["standing"]))
 
 
 def main():

@@ -159,14 +159,20 @@ def requirement(html):
 
     Retorna o dict do requisito ou None."""
     h = html or ""
-    best = None
-    for m in re.finditer(r'"reqfaction":(\d+),"reqlevel":\d+,"reqrep":(\d+)', h):
-        fid, rep = int(m.group(1)), int(m.group(2))
-        if fid and (best is None or rep > best[1]):
-            best = (fid, rep)
-    if best and best[1] in _REQREP_STANDING:
-        return {"type": "reputation", "standing": _REQREP_STANDING[best[1]],
-                "factionID": best[0]}
+    pairs = [(int(a), int(b)) for a, b in
+             re.findall(r'"reqfaction":(\d+),"reqlevel":\d+,"reqrep":(\d+)', h)
+             if int(a)]
+    if pairs:
+        maxrep = max(b for _, b in pairs)
+        fids = []
+        for a, b in pairs:                       # faccoes distintas no maior standing exigido
+            if b == maxrep and a not in fids:
+                fids.append(a)
+        if maxrep in _REQREP_STANDING:
+            standing = _REQREP_STANDING[maxrep]
+            if len(fids) == 2:                   # par A/H -> requisito faction-especifico
+                return {"type": "reputation", "standing": standing, "factionIDs": fids}
+            return {"type": "reputation", "standing": standing, "factionID": fids[0]}
     tt = tooltip(h)
     if tt:
         m = re.search(r"Renown.{0,12}?Rank\s*(\d+).{0,8}?with\s+(?:<[^>]+>)?([^<\[\".]{3,40})",

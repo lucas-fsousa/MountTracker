@@ -54,6 +54,23 @@ def item_for_mount(http, name):
     return None
 
 
+# Lado da faccao pela PAGINA DA FACCAO ("side": 1=Horde, 2=Alliance). ATENCAO: convencao
+# INVERTIDA da pagina de ITEM (extract.faction_side, onde 1=Alliance, 2=Horde).
+_FACTION_SIDE = {"1": "Horde", "2": "Alliance"}
+
+
+def faction_team(http, fid):
+    """'Horde'/'Alliance' da faccao `fid` (p/ montar requisito faction-especifico), ou None."""
+    if not fid:
+        return None
+    try:
+        h = http.get(f"{BASE}/faction={fid}")
+    except Exception:                       # noqa: BLE001
+        return None
+    m = re.search(r'"side":(\d+)', h or "")
+    return _FACTION_SIDE.get(m.group(1)) if m else None
+
+
 def faction_id(http, name):
     """factionID pelo nome (tolerante a apostrofo; fallback: 1a faccao)."""
     if not name:
