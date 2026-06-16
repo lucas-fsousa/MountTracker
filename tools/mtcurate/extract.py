@@ -312,6 +312,16 @@ def drop_zone(html):
     return names[0].strip() if names else None
 
 
+def npc_zone(html):
+    """Zona de um NPC pela meta description do Wowhead ('This NPC can be found in <Zona>.').
+    Pega a 1a zona quando ha varias ('X, Y and Z'). Retorna o nome ou None."""
+    m = re.search(r"This NPC can be found in ([^.<]+?)\.", html or "")
+    if not m:
+        return None
+    z = re.split(r",| and ", m.group(1).strip())[0].strip()
+    return z or None
+
+
 def item_location(html):
     """Zona onde o ITEM e encontrado, pela pagina de item do Wowhead: o campo "location":[id]
     mais o mapa de ids embutido na pagina ("id":{"name_enus":"Zona"}). Cobre drops/world-drops
