@@ -434,6 +434,15 @@ function Eligibility.Evaluate(cand)
         return item
     end
 
+    -- 2.6) Inobtenivel marcada pela curadoria manual (overlay Meta) -- evento legacy que o
+    --      jogo NAO flaga (ex.: Black Qiraji Battle Tank, recompensa unica dos Portoes de AQ).
+    local mmeta = ns.Meta and ns.Meta[cand.spellID]
+    if mmeta and mmeta.unavailable then
+        item.status = S.UNAVAILABLE
+        item.detail = mmeta.note or "Unobtainable (legacy)"
+        return item
+    end
+
     -- 3) Faccao oposta (inelegivel) -- sinal do proprio mount (quando o jogo flaga).
     local pf = playerFactionId()
     if info.isFactionSpecific and info.faction ~= nil and pf ~= nil and info.faction ~= pf then

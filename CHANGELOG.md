@@ -16,6 +16,12 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Added
+- **Manual overlay can mark a mount *unobtainable*.** `Data/Mounts_ManualMeta.lua` entries
+  may carry `unavailable = true` (with an optional `note`), and the addon then shows the mount
+  as *Unavailable* instead of letting it look obtainable — for legacy mounts the game itself
+  doesn't flag. First case: the **Black Qiraji Battle Tank** (one-time Gates of Ahn'Qiraj
+  event reward; 3 spell IDs, all flagged). The four colored Qiraji Battle Tanks (Blue/Red/
+  Yellow/Green) got their zone (Temple of Ahn'Qiraj) — they remain obtainable.
 - **"Current zone" location harvested from the item page too.** For drop/world-drop mounts
   whose vendor/NPC has no mappable coordinates, the harvester now reads the *teaching item's*
   "Location" (e.g. *The Big G* → Liberation of Undermine). Only works when the mount's item is

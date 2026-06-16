@@ -22,5 +22,14 @@ M[581]   = { expansion = "Classic", zone = "Orgrimmar", manualUpdate = true }  -
 M[5784]  = { expansion = "Classic", zone = "Undercity", manualUpdate = true }  -- Felsteed
 M[8980]  = { expansion = "Classic", zone = "Undercity", manualUpdate = true }  -- Skeletal Horse
 M[10790] = { expansion = "Classic", zone = "Darnassus", manualUpdate = true }  -- Tiger (saber vanilla de night elf)
-M[25863] = { expansion = "Classic", zone = "Silithus",  manualUpdate = true }  -- Black Qiraji Battle Tank
-M[26655] = { expansion = "Classic", zone = "Silithus",  manualUpdate = true }  -- Black Qiraji Battle Tank
+-- Qiraji Battle Tanks coloridos: obteniveis em Ahn'Qiraj (AQ40); item "<Cor> Qiraji
+-- Resonating Crystal". O nome do item nao casa a montaria, entao curados a mao.
+M[25953] = { expansion = "Classic", zone = "Temple of Ahn'Qiraj", manualUpdate = true }  -- Blue Qiraji Battle Tank
+M[26054] = { expansion = "Classic", zone = "Temple of Ahn'Qiraj", manualUpdate = true }  -- Red Qiraji Battle Tank
+M[26055] = { expansion = "Classic", zone = "Temple of Ahn'Qiraj", manualUpdate = true }  -- Yellow Qiraji Battle Tank
+M[26056] = { expansion = "Classic", zone = "Temple of Ahn'Qiraj", manualUpdate = true }  -- Green Qiraji Battle Tank
+-- Black Qiraji Battle Tank: INOBTENIVEL (recompensa unica dos primeiros a completar a quest
+-- dos Portoes de Ahn'Qiraj). 3 spellIDs com esse nome -> todos marcados unavailable.
+M[25863] = { expansion = "Classic", unavailable = true, note = "Unobtainable: Gates of AQ event", manualUpdate = true }  -- Black Qiraji Battle Tank
+M[26655] = { expansion = "Classic", unavailable = true, note = "Unobtainable: Gates of AQ event", manualUpdate = true }  -- Black Qiraji Battle Tank
+M[26656] = { expansion = "Classic", unavailable = true, note = "Unobtainable: Gates of AQ event", manualUpdate = true }  -- Black Qiraji Battle Tank
