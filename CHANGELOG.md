@@ -16,6 +16,14 @@ HOW TO RELEASE (see RELEASING.md):
 ## [Unreleased]
 
 ### Added
+- **Location curated for ~70 more drop/reward mounts.** A journal-wide sweep resolved the
+  "Current zone" of mounts whose source had no mappable NPC — via the source's NPC/object/item
+  page, the item's "Location", the source name when it's itself a zone (e.g. *X Rare
+  Creatures* → X), and a curated source→zone map for reputation caches/eggs/troves that carry
+  no location on Wowhead (Undermine troves → Undermine, Necroray Egg → Maldraxxus, Nightfallen
+  Cache → Suramar, Cracked Egg → Sholazar Basin, …). Added to `Mounts_ManualMeta.lua`.
+  Missing-location dropped 115 → 42; the rest are inherently zone-less (Island Expeditions,
+  holiday bags, world drops) or unreleased-Midnight sources Wowhead doesn't map yet.
 - **Manual overlay can mark a mount *unobtainable*.** `Data/Mounts_ManualMeta.lua` entries
   may carry `unavailable = true` (with an optional `note`), and the addon then shows the mount
   as *Unavailable* instead of letting it look obtainable — for legacy mounts the game itself
