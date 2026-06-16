@@ -15,6 +15,8 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-06-15
+
 ### Added
 - **Location curated for ~70 more drop/reward mounts.** A journal-wide sweep resolved the
   "Current zone" of mounts whose source had no mappable NPC — via the source's NPC/object/item
