@@ -104,3 +104,16 @@ M[1233561] = { zone = "Hallowfall", expansion = "TWW", manualUpdate = true }  --
 M[1261155] = { zone = "Voidstorm", expansion = "Midnight", manualUpdate = true }  -- Augmented Stormray
 M[1261351] = { zone = "Zul'Aman", expansion = "Midnight", manualUpdate = true }  -- Witherbark Pango
 M[1266700] = { zone = "Voidstorm", expansion = "Midnight", manualUpdate = true }  -- Sanguine Harrower
+
+-- Expansao de mounts de classe / racial / legacy sem item legivel no Wowhead (a expansao
+-- vem da classe/raca/conteudo). Fecha o bucket "Unknown".
+M[13819] = { expansion = "Classic", manualUpdate = true }  -- Warhorse (Paladin)
+M[16055] = { expansion = "Classic", zone = "Darnassus", manualUpdate = true }  -- Black Nightsaber (racial NE)
+M[18363] = { expansion = "Classic", zone = "Thunder Bluff", manualUpdate = true }  -- Riding Kodo (racial Tauren)
+M[23161] = { expansion = "Classic", manualUpdate = true }  -- Dreadsteed (Warlock)
+M[34767] = { expansion = "TBC", manualUpdate = true }  -- Thalassian Charger (Paladin Blood Elf)
+M[34769] = { expansion = "TBC", manualUpdate = true }  -- Thalassian Warhorse (Paladin Blood Elf)
+M[48778] = { expansion = "WotLK", manualUpdate = true }  -- Acherus Deathcharger (Death Knight)
+M[55164] = { expansion = "WotLK", manualUpdate = true }  -- Swift Spectral Gryphon
+M[60136] = { expansion = "WotLK", manualUpdate = true }  -- Grand Caravan Mammoth (Mei Francis, Dalaran)
+M[60140] = { expansion = "WotLK", manualUpdate = true }  -- Grand Caravan Mammoth (Mei Francis, Dalaran)
