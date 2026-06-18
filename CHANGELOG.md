@@ -15,15 +15,24 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-06-18
+
 ### Changed
-- **Expansion coverage is now 100%** (0 "Unknown" across all 1623 journal mounts): the last 10
+- **Expansion coverage is now 100%** (0 "Unknown" across all 1623 journal mounts): the last
   class/racial/legacy mounts with no readable Wowhead item (Warhorse, Dreadsteed, Thalassian,
-  Acherus Deathcharger, …) were curated by hand.
-- **Location coverage greatly expanded.** A journal-wide sweep of Drop/Quest/Vendor mounts
-  resolved ~140 more "Current zone" assignments — most from the game's own source text
-  (`Zone:`), the rest via the source NPC/object/item, the item's Location, or a curated
-  source→zone map. Achievement/Profession/Promotion/TCG/Store mounts are account-wide and have
-  no zone by design, so they're intentionally left out of the current-zone filter.
+  Acherus Deathcharger, PvP "Vicious", …) were resolved — most from Wowhead's authoritative
+  data, the rest curated by hand.
+- **Midnight spell-ID threshold reviewed.** TWW and Midnight spell IDs overlap, so the
+  heuristic that promotes a reused-zone mount to Midnight was over-reaching (it could mislabel
+  late-TWW mounts). It's now pinned just above TWW's highest mount spell ID, and the affected
+  mounts get their *real* expansion harvested from Wowhead instead of a guess. Expansion is
+  also derived from a mount's curated zone when the overlay has the zone but no expansion.
+- **Location coverage greatly expanded** (~180 more "Current zone" assignments). A journal-wide
+  sweep of Drop/Quest/Vendor mounts resolved most from the game's own source text (`Zone:`),
+  the rest via the source NPC/object/item, the item's Location, or a curated source→zone map;
+  plus racial "Legacy" mounts mapped to their race's capital (Wolf→Orgrimmar, Ram→Ironforge,
+  Kodo→Thunder Bluff, Saber→Darnassus, …). Achievement/Profession/Promotion/TCG/Store mounts
+  are account-wide and have no zone by design, so they stay out of the current-zone filter.
 
 ## [0.11.0] - 2026-06-15
 
