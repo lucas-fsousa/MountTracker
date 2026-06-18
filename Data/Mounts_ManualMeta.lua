@@ -254,3 +254,26 @@ M[1261391] = { expansion = "Midnight", manualUpdate = true }  -- Relinquished Sc
 M[1261583] = { expansion = "Midnight", manualUpdate = true }  -- Insatiable Shredclaw
 M[1261629] = { expansion = "Midnight", manualUpdate = true }  -- Vicious Snaplizard
 M[1261648] = { expansion = "Midnight", manualUpdate = true }  -- Vicious Snaplizard
+
+-- Racials "Legacy": zona = capital da raca (inferida pelo tipo da montaria)
+M[468] = { zone = "Stormwind", expansion = "Classic", manualUpdate = true }  -- White Stallion (racial)
+M[579] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Red Wolf (racial)
+M[6896] = { zone = "Ironforge", expansion = "Classic", manualUpdate = true }  -- Black Ram (racial)
+M[10795] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Ivory Raptor (racial)
+M[15779] = { zone = "Ironforge", expansion = "Classic", manualUpdate = true }  -- White Mechanostrider Mod B (racial)
+M[16056] = { zone = "Darnassus", expansion = "Classic", manualUpdate = true }  -- Ancient Frostsaber (racial)
+M[16080] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Red Wolf (racial)
+M[16081] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Arctic Wolf (racial)
+M[16082] = { zone = "Stormwind", expansion = "Classic", manualUpdate = true }  -- Palomino (racial)
+M[16083] = { zone = "Stormwind", expansion = "Classic", manualUpdate = true }  -- White Stallion (racial)
+M[16084] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Mottled Red Raptor (racial)
+M[17450] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Ivory Raptor (racial)
+M[17459] = { zone = "Ironforge", expansion = "Classic", manualUpdate = true }  -- Icy Blue Mechanostrider Mod A (racial)
+M[17460] = { zone = "Ironforge", expansion = "Classic", manualUpdate = true }  -- Frost Ram (racial)
+M[17461] = { zone = "Ironforge", expansion = "Classic", manualUpdate = true }  -- Black Ram (racial)
+M[18991] = { zone = "Thunder Bluff", expansion = "Classic", manualUpdate = true }  -- Green Kodo (racial)
+M[18992] = { zone = "Thunder Bluff", expansion = "Classic", manualUpdate = true }  -- Teal Kodo (racial)
+M[64656] = { zone = "Undercity", expansion = "Classic", manualUpdate = true }  -- Blue Skeletal Warhorse (racial)
+M[68056] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Swift Horde Wolf (racial)
+M[68057] = { zone = "Stormwind", expansion = "Classic", manualUpdate = true }  -- Swift Alliance Steed (racial)
+M[73629] = { zone = "Exodar", expansion = "Classic", manualUpdate = true }  -- Exarch's Elekk (racial)
