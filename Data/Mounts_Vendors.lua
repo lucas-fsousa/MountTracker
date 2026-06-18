@@ -336,6 +336,18 @@ ns.Data.Register("Legion", {
 
 ns.Data.Register("Midnight", {
     {
+        name    = "Tortured Gorger",
+        spellID = 1297427,
+        acquisition = "vendor",
+        vendor  = "Kifaan",
+        zone    = "Naigtal",
+        coords  = { zone = "Naigtal", x = 47.4, y = 81.4 },
+        cost    = { currencyID = 3316, amount = 15 },        -- Voidlight Marl
+        requirement = { type = "achievement", achievementID = 63264 },  -- Heroic Showdowns
+        expansion = "Midnight",
+        wowhead = "https://www.wowhead.com/spell=1297427",
+    },
+    {
         name    = "Amethyst Mechsuit",
         spellID = 1296734,
         acquisition = "vendor",

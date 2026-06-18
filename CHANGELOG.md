@@ -15,6 +15,11 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Added
+- **Curated *Tortured Gorger*** (new Midnight patch mount): vendor Kifaan in Naigtal, 15×
+  Voidlight Marl, gated by the *Heroic Showdowns* achievement — so it glows only when you've
+  earned the achievement and can afford it.
+
 ## [0.12.0] - 2026-06-18
 
 ### Changed
