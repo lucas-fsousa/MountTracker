@@ -117,3 +117,133 @@ M[48778] = { expansion = "WotLK", manualUpdate = true }  -- Acherus Deathcharger
 M[55164] = { expansion = "WotLK", manualUpdate = true }  -- Swift Spectral Gryphon
 M[60136] = { expansion = "WotLK", manualUpdate = true }  -- Grand Caravan Mammoth (Mei Francis, Dalaran)
 M[60140] = { expansion = "WotLK", manualUpdate = true }  -- Grand Caravan Mammoth (Mei Francis, Dalaran)
+
+-- Localizacao curada (sweep Drop/Quest/Vendor: zona do sourceText do
+-- jogo + NPC/item/mapa). Ver temp/noloc_resolved.jsonl.
+M[24252] = { zone = "Zul'Gurub", manualUpdate = true }  -- Swift Zulian Tiger
+M[41513] = { zone = "Shattrath City, Outland", expansion = "TBC", manualUpdate = true }  -- Onyx Netherwing Drake
+M[41514] = { zone = "Shattrath City, Outland", expansion = "TBC", manualUpdate = true }  -- Azure Netherwing Drake
+M[41515] = { zone = "Shattrath City, Outland", expansion = "TBC", manualUpdate = true }  -- Cobalt Netherwing Drake
+M[41516] = { zone = "Shattrath City, Outland", expansion = "TBC", manualUpdate = true }  -- Purple Netherwing Drake
+M[41518] = { zone = "Shattrath City, Outland", expansion = "TBC", manualUpdate = true }  -- Violet Netherwing Drake
+M[61465] = { zone = "Vault of Archavon", manualUpdate = true }  -- Grand Black War Mammoth
+M[61467] = { zone = "Vault of Archavon", manualUpdate = true }  -- Grand Black War Mammoth
+M[63844] = { zone = "Argent Tournament, Icecrown", expansion = "WotLK", manualUpdate = true }  -- Argent Hippogryph
+M[64659] = { zone = "Un'Goro Crater", expansion = "Classic", manualUpdate = true }  -- Venomhide Ravasaur
+M[73313] = { zone = "Icecrown Citadel", expansion = "WotLK", manualUpdate = true }  -- Crimson Deathcharger
+M[75207] = { zone = "Kelp'thar Forest", manualUpdate = true }  -- Vashj'ir Seahorse
+M[113199] = { zone = "The Jade Forest", expansion = "MoP", manualUpdate = true }  -- Jade Cloud Serpent
+M[123182] = { zone = "Krasarang Wilds", expansion = "MoP", manualUpdate = true }  -- Kafa Yak
+M[123992] = { zone = "The Jade Forest", expansion = "MoP", manualUpdate = true }  -- Azure Cloud Serpent
+M[123993] = { zone = "The Jade Forest", expansion = "MoP", manualUpdate = true }  -- Golden Cloud Serpent
+M[127154] = { zone = "Townlong Steppes", expansion = "MoP", manualUpdate = true }  -- Onyx Cloud Serpent
+M[136163] = { zone = "Kun-Lai Summit", manualUpdate = true }  -- Grand Gryphon
+M[136164] = { zone = "Kun-Lai Summit", manualUpdate = true }  -- Grand Wyvern
+M[138640] = { zone = "Isle of Giants", expansion = "MoP", manualUpdate = true }  -- Bone-White Primal Raptor
+M[171626] = { zone = "Garrison Trading Post", manualUpdate = true }  -- Armored Irontusk
+M[171831] = { zone = "Garrison Stables", manualUpdate = true }  -- Trained Silverpelt
+M[171833] = { zone = "Stormshield", expansion = "WoD", manualUpdate = true }  -- Pale Thorngrazer
+M[171850] = { zone = "Suramar", expansion = "Legion", manualUpdate = true }  -- Llothien Prowler
+M[189999] = { zone = "Moonglade", manualUpdate = true }  -- Grove Warden
+M[230987] = { zone = "Suramar", expansion = "Legion", manualUpdate = true }  -- Arcanist's Manasaber
+M[231428] = { zone = "Return to Karazhan", manualUpdate = true }  -- Smoldering Ember Wyrm
+M[237286] = { zone = "Vol'dun", expansion = "BfA", manualUpdate = true }  -- Dune Scavenger
+M[243795] = { zone = "Nazmir", expansion = "BfA", manualUpdate = true }  -- Leaping Veinseeker
+M[253639] = { zone = "Dalaran", expansion = "WotLK", manualUpdate = true }  -- Violet Spellwing
+M[259741] = { zone = "Stormsong Valley", expansion = "BfA", manualUpdate = true }  -- Honeyback Harvester
+M[260174] = { zone = "Drustvar", expansion = "BfA", manualUpdate = true }  -- Terrified Pack Mule
+M[260175] = { zone = "Stormsong", expansion = "BfA", manualUpdate = true }  -- Goldenmane
+M[267270] = { zone = "Zuldazar", expansion = "BfA", manualUpdate = true }  -- Kua'fon
+M[297560] = { zone = "Zuldazar", expansion = "BfA", manualUpdate = true }  -- Child of Torcali
+M[299159] = { zone = "Mechagon", expansion = "BfA", manualUpdate = true }  -- Scrapforged Mechaspider
+M[300146] = { zone = "Nazjatar", expansion = "BfA", manualUpdate = true }  -- Snapdragon Kelpstalker
+M[300147] = { zone = "Nazjatar", expansion = "BfA", manualUpdate = true }  -- Deepcoral Snapdragon
+M[300151] = { zone = "Nazjatar", expansion = "BfA", manualUpdate = true }  -- Inkscale Deepseeker
+M[312753] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Hopecrusher Gargon
+M[312754] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Battle Gargon Vrednic
+M[312759] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Dreamlight Runestag
+M[312761] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Enchanted Dreamlight Runestag
+M[316339] = { zone = "Uldum", expansion = "Cataclysm", manualUpdate = true }  -- Shadowbarb Drone
+M[316802] = { zone = "Uldum", expansion = "Cataclysm", manualUpdate = true }  -- Springfur Alpaca
+M[332243] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Shadeleaf Runestag
+M[332244] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Wakener's Runestag
+M[332245] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Winterborn Runestag
+M[332246] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Enchanted Shadeleaf Runestag
+M[332247] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Enchanted Wakener's Runestag
+M[332248] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Enchanted Winterborn Runestag
+M[332252] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Shimmermist Runner
+M[332455] = { zone = "Maldraxxus", expansion = "Shadowlands", manualUpdate = true }  -- War-Bred Tauralus
+M[332456] = { zone = "Maldraxxus", expansion = "Shadowlands", manualUpdate = true }  -- Plaguerot Tauralus
+M[332462] = { zone = "Maldraxxus", expansion = "Shadowlands", manualUpdate = true }  -- Armored War-Bred Tauralus
+M[332923] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Inquisition Gargon
+M[332927] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Sinfall Gargon
+M[332932] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Crypt Gargon
+M[332949] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Desire's Battle Gargon
+M[333021] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Gravestone Battle Gargon
+M[333023] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Battle Gargon Silessa
+M[334382] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Phalynx of Loyalty
+M[334386] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Phalynx of Humility
+M[334391] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Phalynx of Courage
+M[334398] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Phalynx of Purity
+M[334403] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Eternal Phalynx of Purity
+M[334406] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Eternal Phalynx of Courage
+M[334408] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Eternal Phalynx of Loyalty
+M[334409] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Eternal Phalynx of Humility
+M[336038] = { zone = "Maldraxxus", expansion = "Shadowlands", manualUpdate = true }  -- Callow Flayedwing
+M[339588] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Sinrunner Blanchy
+M[339957] = { zone = "Sanctum of Domination", expansion = "Shadowlands", manualUpdate = true }  -- Hand of Hrestimorak
+M[344577] = { zone = "The Maw", expansion = "Shadowlands", manualUpdate = true }  -- Bound Shadehound
+M[346141] = { zone = "Plaguefall", manualUpdate = true }  -- Slime Serpent
+M[350219] = { zone = "The Waking Shores", expansion = "Dragonflight", manualUpdate = true }  -- Magmashell
+M[353265] = { zone = "Shadow Point", expansion = "TWW", manualUpdate = true }  -- Vandal's Gearglider
+M[353856] = { zone = "Ardenweald", expansion = "Shadowlands", manualUpdate = true }  -- Ardenweald Wilderling
+M[353872] = { zone = "Revendreth", expansion = "Shadowlands", manualUpdate = true }  -- Sinfall Gravewing
+M[353875] = { zone = "Bastion", expansion = "Shadowlands", manualUpdate = true }  -- Elysian Aquilon
+M[353883] = { zone = "Maldraxxus", expansion = "Shadowlands", manualUpdate = true }  -- Maldraxxian Corpsefly
+M[354354] = { zone = "The Maw", expansion = "Shadowlands", manualUpdate = true }  -- Hand of Nilganihmaht
+M[354355] = { zone = "Korthia and The Maw", expansion = "Shadowlands", manualUpdate = true }  -- Hand of Salaranga
+M[354358] = { zone = "Korthia", expansion = "Shadowlands", manualUpdate = true }  -- Darkmaul
+M[354361] = { zone = "Korthia", expansion = "Shadowlands", manualUpdate = true }  -- Dusklight Razorwing
+M[354362] = { zone = "Korthia", expansion = "Shadowlands", manualUpdate = true }  -- Maelie, the Wanderer
+M[363701] = { zone = "Zereth Mortis", expansion = "Shadowlands", manualUpdate = true }  -- Patient Bufonid
+M[369666] = { zone = "Blackrock Depths", expansion = "Classic", manualUpdate = true }  -- Grimhowl
+M[370620] = { zone = "Ghostlands", expansion = "Classic", manualUpdate = true }  -- Elusive Emerald Hawkstrider
+M[374247] = { zone = "Ohn'ahran Plains", expansion = "Dragonflight", manualUpdate = true }  -- Lizi, Thunderspine Tramper
+M[395644] = { zone = "Ohn'ahran Plains", expansion = "Dragonflight", manualUpdate = true }  -- Divine Kiss of Ohn'ahra
+M[404018] = { zone = "Valdrakken", expansion = "Dragonflight", manualUpdate = true }  -- Black-Furred Bakar
+M[408313] = { zone = "Zaralek Cavern", expansion = "Dragonflight", manualUpdate = true }  -- Big Slick in the City
+M[412088] = { zone = "Emerald Dream", expansion = "Dragonflight", manualUpdate = true }  -- Grotto Netherwing Drake
+M[413922] = { zone = "Naxxramas", expansion = "WotLK", manualUpdate = true }  -- Valiance
+M[425338] = { zone = "Emerald Dream", expansion = "Dragonflight", manualUpdate = true }  -- Flourishing Whimsydrake
+M[427041] = { zone = "Emerald Dream", expansion = "Dragonflight", manualUpdate = true }  -- Ochre Dreamtalon
+M[428068] = { zone = "Vision of Orgrimmar (Revisited)", expansion = "Classic", manualUpdate = true }  -- Voidfire Deathcycle
+M[430225] = { zone = "Gilneas", expansion = "Cataclysm", manualUpdate = true }  -- Gilnean Prowler
+M[431049] = { zone = "Emerald Dream", expansion = "Dragonflight", manualUpdate = true }  -- Grotto Netherwing Drake
+M[431050] = { zone = "Emerald Dream", expansion = "Dragonflight", manualUpdate = true }  -- Flourishing Whimsydrake
+M[442358] = { zone = "The Ringing Deeps", expansion = "TWW", manualUpdate = true }  -- Stonevault Mechsuit
+M[446052] = { zone = "Isle of Dorn", expansion = "TWW", manualUpdate = true }  -- Delver's Dirigible
+M[447189] = { zone = "Vision of Orgrimmar (Revisited)", expansion = "Classic", manualUpdate = true }  -- Nesting Swarmite
+M[448680] = { zone = "Azj-Kahet", manualUpdate = true }  -- Widow's Undercrawler
+M[448685] = { zone = "Azj-Kahet", manualUpdate = true }  -- Heritage Undercrawler
+M[448689] = { zone = "Azj-Kahet", manualUpdate = true }  -- Royal Court Undercrawler
+M[449264] = { zone = "Darkflame Cleft (Mythic)", expansion = "TWW", manualUpdate = true }  -- Wick
+M[451489] = { zone = "City of Threads", expansion = "TWW", manualUpdate = true }  -- Siesbarg
+M[466027] = { zone = "Undermine", expansion = "TWW", manualUpdate = true }  -- Darkfuse Spy-Eye
+M[1218306] = { zone = "Vision of Orgrimmar (Revisited)", expansion = "Classic", manualUpdate = true }  -- Void-Scarred Pack Mother
+M[1218307] = { zone = "Vision of Orgrimmar (Revisited)", expansion = "Classic", manualUpdate = true }  -- Void-Scarred Windrider
+M[1221132] = { zone = "K'aresh", expansion = "TWW", manualUpdate = true }  -- Resplendent K'arroc
+M[1224048] = { zone = "Isle of Dorn", expansion = "TWW", manualUpdate = true }  -- Delver's Mana-Skimmer
+M[1233542] = { zone = "Shadow Point", expansion = "TWW", manualUpdate = true }  -- The Bone Freezer
+M[1233559] = { zone = "K'aresh", expansion = "TWW", manualUpdate = true }  -- Blue Barry
+M[1241070] = { zone = "Tazavesh", expansion = "Midnight", manualUpdate = true }  -- Translocated Gorger
+M[1242904] = { zone = "March on Quel'Danas (Mythic)", expansion = "Midnight", manualUpdate = true }  -- Ashes of Belo'ren
+M[1243582] = { zone = "Harandar", expansion = "Midnight", manualUpdate = true }  -- Dusk Grimlynx
+M[1260356] = { zone = "Harandar", expansion = "Midnight", manualUpdate = true }  -- Echo of Aln'sharan
+M[1261293] = { zone = "Isle of Quel'Danas", expansion = "Midnight", manualUpdate = true }  -- Peridot Dragonhawk
+M[1261332] = { zone = "Masters' Perch", expansion = "Midnight", manualUpdate = true }  -- Duskbrute Harrower
+M[1261668] = { zone = "Dalaran", expansion = "TWW", manualUpdate = true }  -- Bronze Wilderling
+M[1261671] = { zone = "Dalaran", expansion = "TWW", manualUpdate = true }  -- Bronze Aquilon
+M[1261677] = { zone = "Dalaran", expansion = "TWW", manualUpdate = true }  -- Bronze Corpsefly
+M[1261681] = { zone = "Dalaran", expansion = "TWW", manualUpdate = true }  -- Bronze Gravewing
+M[1265785] = { zone = "Silvermoon City", expansion = "Midnight", manualUpdate = true }  -- Emerald Hawkstrider
+M[1284973] = { zone = "Sporefall", expansion = "Midnight", manualUpdate = true }  -- Luminous Sporeglider

@@ -15,6 +15,16 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+### Changed
+- **Expansion coverage is now 100%** (0 "Unknown" across all 1623 journal mounts): the last 10
+  class/racial/legacy mounts with no readable Wowhead item (Warhorse, Dreadsteed, Thalassian,
+  Acherus Deathcharger, …) were curated by hand.
+- **Location coverage greatly expanded.** A journal-wide sweep of Drop/Quest/Vendor mounts
+  resolved ~140 more "Current zone" assignments — most from the game's own source text
+  (`Zone:`), the rest via the source NPC/object/item, the item's Location, or a curated
+  source→zone map. Achievement/Profession/Promotion/TCG/Store mounts are account-wide and have
+  no zone by design, so they're intentionally left out of the current-zone filter.
+
 ## [0.11.0] - 2026-06-15
 
 ### Added
