@@ -88,7 +88,6 @@ M[23338] = { map = 89 }  -- Swift Stormsaber
 M[23509] = { map = 25 }  -- Frostwolf Howler
 M[23510] = { map = 25 }  -- Stormpike Battle Charger
 M[24242] = { zone = "Zul'Gurub" }  -- Swift Razzashi Raptor
-M[24252] = { expansion = "Cataclysm" }  -- Swift Zulian Tiger
 M[28828] = { map = 104 }  -- Nether Drake
 M[30174] = { zone = "The Cape of Stranglethorn", expansion = "TBC" }  -- Riding Turtle
 M[32235] = { map = 84 }  -- Golden Gryphon
@@ -189,13 +188,10 @@ M[60119] = { expansion = "WotLK" }  -- Black War Bear
 M[60424] = { expansion = "WotLK" }  -- Mekgineer's Chopper
 M[61229] = { zone = "Dalaran" }  -- Armored Snowy Gryphon
 M[61230] = { zone = "Dalaran" }  -- Armored Blue Wind Rider
-M[61294] = { expansion = "WotLK" }  -- Green Proto-Drake
 M[61309] = { expansion = "WotLK" }  -- Magnificent Flying Carpet
 M[61425] = { zone = "Dalaran" }  -- Traveler's Tundra Mammoth
 M[61447] = { zone = "Dalaran" }  -- Traveler's Tundra Mammoth
 M[61451] = { expansion = "WotLK" }  -- Flying Carpet
-M[61465] = { expansion = "WotLK" }  -- Grand Black War Mammoth
-M[61467] = { expansion = "WotLK" }  -- Grand Black War Mammoth
 M[61469] = { map = 120 }  -- Grand Ice Mammoth
 M[61470] = { map = 120 }  -- Grand Ice Mammoth
 M[61996] = { expansion = "WotLK" }  -- Blue Dragonhawk
@@ -255,7 +251,6 @@ M[73629] = { expansion = "Cataclysm" }  -- Exarch's Elekk
 M[73630] = { expansion = "Cataclysm" }  -- Great Exarch's Elekk
 M[74856] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Blazing Hippogryph
 M[74918] = { zone = "The Cape of Stranglethorn", expansion = "WotLK" }  -- Wooly White Rhino
-M[75207] = { expansion = "Cataclysm" }  -- Vashj'ir Seahorse
 M[75596] = { expansion = "WotLK" }  -- Frosty Flying Carpet
 M[75614] = { expansion = "WotLK" }  -- Celestial Steed
 M[75973] = { expansion = "WotLK" }  -- X-53 Touring Rocket
@@ -360,8 +355,6 @@ M[133023] = { expansion = "MoP" }  -- Jade Pandaren Kite
 M[134359] = { expansion = "MoP" }  -- Sky Golem
 M[134573] = { expansion = "MoP" }  -- Swift Windsteed
 M[135416] = { map = 418 }  -- Grand Armored Gryphon
-M[136163] = { expansion = "MoP" }  -- Grand Gryphon
-M[136164] = { expansion = "MoP" }  -- Grand Wyvern
 M[136400] = { expansion = "MoP" }  -- Armored Skyscreamer
 M[136471] = { zone = "Throne of Thunder" }  -- Spawn of Horridon
 M[136505] = { zone = "The Cape of Stranglethorn", expansion = "MoP" }  -- Ghastly Charger
@@ -369,9 +362,6 @@ M[138423] = { map = 507 }  -- Cobalt Primordial Direhorn
 M[138424] = { map = 422 }  -- Amber Primordial Direhorn
 M[138425] = { map = 422 }  -- Slate Primordial Direhorn
 M[138426] = { map = 422 }  -- Jade Primordial Direhorn
-M[138641] = { expansion = "MoP" }  -- Red Primal Raptor
-M[138642] = { expansion = "MoP" }  -- Black Primal Raptor
-M[138643] = { expansion = "MoP" }  -- Green Primal Raptor
 M[139407] = { expansion = "MoP" }  -- Malevolent Gladiator's Cloud Serpent
 M[139442] = { map = 504 }  -- Thundering Cobalt Cloud Serpent
 M[139448] = { zone = "Throne of Thunder" }  -- Clutch of Ji-Kun
@@ -404,7 +394,6 @@ M[171621] = { zone = "Blackrock Foundry" }  -- Ironhoof Destroyer
 M[171622] = { map = 550 }  -- Mottled Meadowstomper
 M[171623] = { expansion = "WoD" }  -- Trained Meadowstomper
 M[171625] = { zone = "Stormshield" }  -- Dusty Rockhide
-M[171626] = { expansion = "WoD" }  -- Armored Irontusk
 M[171628] = { zone = "Lunarfall", expansion = "WoD" }  -- Rocktusk Battleboar
 M[171629] = { expansion = "WoD" }  -- Armored Frostboar
 M[171633] = { map = 534 }  -- Wild Goretusk
@@ -415,7 +404,6 @@ M[171824] = { map = 535 }  -- Sapphire Riverbeast
 M[171826] = { expansion = "WoD" }  -- Mudback Riverbeast
 M[171828] = { zone = "Spires of Arak", expansion = "WoD" }  -- Solar Spirehawk
 M[171830] = { map = 539 }  -- Swift Breezestrider
-M[171831] = { expansion = "WoD" }  -- Trained Silverpelt
 M[171832] = { zone = "Nazjatar" }  -- Breezestrider Stallion
 M[171834] = { map = 84 }  -- Vicious War Ram
 M[171838] = { expansion = "WoD" }  -- Armored Frostwolf
@@ -440,7 +428,6 @@ M[189043] = { expansion = "WoD" }  -- Wild Gladiator's Felblood Gronnling
 M[189044] = { expansion = "WoD" }  -- Warmongering Gladiator's Felblood Gronnling
 M[189364] = { expansion = "WoD" }  -- Coalfist Gronnling
 M[189998] = { expansion = "WoD" }  -- Illidari Felstalker
-M[189999] = { expansion = "WoD" }  -- Grove Warden
 M[190690] = { map = 534 }  -- Bristling Hellboar
 M[190977] = { map = 534 }  -- Deathtusk Felboar
 M[191314] = { expansion = "WoD" }  -- Minion of Grumpus
@@ -493,7 +480,6 @@ M[229487] = { map = 84 }  -- Vicious War Bear
 M[229499] = { zone = "Karazhan", expansion = "Legion" }  -- Midnight
 M[229512] = { map = 84 }  -- Vicious War Lion
 M[230844] = { zone = "Deeprun Tram", expansion = "Legion" }  -- Brawler's Burly Basilisk
-M[231428] = { expansion = "Legion" }  -- Smoldering Ember Wyrm
 M[231434] = { expansion = "Legion" }  -- Shadowblade's Murderous Omen
 M[231435] = { expansion = "Legion" }  -- Highlord's Golden Charger
 M[231442] = { expansion = "Legion" }  -- Farseer's Raging Tempest
@@ -507,8 +493,6 @@ M[232405] = { expansion = "Legion" }  -- Primal Flamesaber
 M[232412] = { expansion = "Legion" }  -- Netherlord's Chaotic Wrathsteed
 M[232519] = { zone = "Tomb of Sargeras", expansion = "Legion" }  -- Abyss Worm
 M[232523] = { map = 84 }  -- Vicious War Turtle
-M[233364] = { expansion = "Legion" }  -- Leywoven Flying Carpet
-M[235764] = { expansion = "Legion" }  -- Darkspore Mana Ray
 M[237287] = { map = 864 }  -- Alabaster Hyena
 M[238452] = { zone = "Dalaran" }  -- Netherlord's Brimstone Wrathsteed
 M[238454] = { map = 646 }  -- Netherlord's Accursed Wrathsteed
@@ -536,15 +520,11 @@ M[253007] = { zone = "Antoran Wastes" }  -- Cerulean Ruinstrider
 M[253008] = { zone = "Antoran Wastes" }  -- Umber Ruinstrider
 M[253058] = { map = 882, expansion = "Legion" }  -- Maddened Chaosrunner
 M[253088] = { zone = "Antorus, the Burning Throne", expansion = "Legion" }  -- Antoran Charhound
-M[253106] = { expansion = "Legion" }  -- Vibrant Mana Ray
 M[253107] = { map = 882, expansion = "Legion" }  -- Lambent Mana Ray
-M[253108] = { expansion = "Legion" }  -- Felglow Mana Ray
-M[253109] = { expansion = "Legion" }  -- Scintillating Mana Ray
 M[253660] = { zone = "Antoran Wastes" }  -- Biletooth Gnasher
 M[253661] = { map = 885 }  -- Crimson Slavermaw
 M[253662] = { map = 882, expansion = "Legion" }  -- Acid Belcher
 M[253711] = { expansion = "Legion" }  -- Pond Nettle
-M[254259] = { expansion = "Legion" }  -- Avenging Felcrusher
 M[254260] = { expansion = "Legion" }  -- Bleakhoof Ruinstrider
 M[254812] = { expansion = "BfA" }  -- Royal Seafeather
 M[254813] = { zone = "Freehold" }  -- Sharkbait
@@ -676,9 +656,7 @@ M[342671] = { expansion = "Shadowlands" }  -- Pale Regal Cervid
 M[342678] = { expansion = "Shadowlands" }  -- Vespoid Flutterer
 M[342680] = { map = 1970 }  -- Deepstar Aurelid
 M[343550] = { map = 1961 }  -- Battle-Hardened Aquilon
-M[344575] = { expansion = "Shadowlands" }  -- Pestilent Necroray
 M[346136] = { expansion = "Shadowlands" }  -- Viridian Phase-Hunter
-M[346141] = { expansion = "Shadowlands" }  -- Slime Serpent
 M[346719] = { expansion = "Shadowlands" }  -- Serenade
 M[347251] = { map = 1961 }  -- Soaring Razorwing
 M[347812] = { expansion = "Shadowlands" }  -- Sapphire Skyblazer
@@ -756,7 +734,6 @@ M[374048] = { zone = "The Waking Shores", expansion = "Dragonflight" }  -- Verda
 M[374098] = { zone = "Valdrakken", expansion = "Dragonflight" }  -- Stormhide Salamanther
 M[374138] = { map = 2133 }  -- Seething Slug
 M[374162] = { map = 2022 }  -- Scrappy Worldsnail
-M[374194] = { expansion = "Dragonflight" }  -- Mossy Mammoth
 M[374196] = { expansion = "Dragonflight" }  -- Plainswalker Bearer
 M[374204] = { map = 2025 }  -- Explorer's Stonehide Packbeast
 M[374278] = { expansion = "Dragonflight" }  -- Renewed Magmammoth
@@ -854,15 +831,12 @@ M[443660] = { expansion = "Dragonflight" }  -- Charming Courier
 M[446352] = { expansion = "Dragonflight" }  -- Kickin' Kezan Waveshredder
 M[447057] = { map = 2339 }  -- Smoldering Cinderbee
 M[447151] = { zone = "Isle of Dorn" }  -- Soaring Meaderbee
-M[447173] = { map = 2413, expansion = "TWW" }  -- Elder Glowmite
+M[447173] = { expansion = "TWW" }  -- Elder Glowmite
 M[447185] = { map = 2255, expansion = "TWW" }  -- Aquamarine Swarmite
 M[447405] = { expansion = "TWW" }  -- Vicious Skyflayer
 M[447413] = { expansion = "Dragonflight" }  -- Pearlescent Goblin Wave Shredder
 M[447957] = { map = 2255, expansion = "TWW" }  -- Ferocious Jawcrawler
 M[448188] = { map = 2214 }  -- Machine Defense Unit 1-11
-M[448680] = { expansion = "TWW" }  -- Widow's Undercrawler
-M[448685] = { expansion = "TWW" }  -- Heritage Undercrawler
-M[448689] = { expansion = "TWW" }  -- Royal Court Undercrawler
 M[448845] = { expansion = "Dragonflight" }  -- Blue Old God Fish Mount
 M[448849] = { expansion = "Dragonflight" }  -- Underlight Shorestalker
 M[448850] = { expansion = "Dragonflight" }  -- Kah, Legend of the Deep
@@ -989,20 +963,103 @@ M[1237703] = { zone = "Boralus" }  -- Ivory Savagemane
 M[1238729] = { expansion = "TWW" }  -- Slag Basilisk
 M[1238827] = { expansion = "Midnight" }  -- Swift Spectral Dragonhawk
 M[1239138] = { expansion = "TWW" }  -- Voidlight Surger
+M[1240003] = { expansion = "TWW" }  -- Unarmored Deathtusk Felboar
 M[1241263] = { map = 2339 }  -- OC91 Chariot
-M[1243597] = { zone = "Harandar" }  -- Rootstalker Grimlynx
+M[1241429] = { expansion = "TWW" }  -- Inarius' Charger
+M[1242272] = { expansion = "TWW" }  -- Royal Voidwing
+M[1243003] = { expansion = "Midnight" }  -- Light-Forged Mechsuit
+M[1243589] = { expansion = "TWW" }  -- Void-Forged Overseer
+M[1243597] = { zone = "Harandar", expansion = "Midnight" }  -- Rootstalker Grimlynx
+M[1243598] = { expansion = "Midnight" }  -- Ivory Grimlynx
+M[1244247] = { expansion = "TWW" }  -- Thunder-Ridged Elekk
+M[1244259] = { expansion = "TWW" }  -- Cinder-Seared Elekk
+M[1244260] = { expansion = "TWW" }  -- Void-Razed Elekk
+M[1244261] = { expansion = "TWW" }  -- Legion-Forged Elekk
+M[1245197] = { expansion = "TWW" }  -- The Headless Horseman's Chilling Charger
+M[1245198] = { expansion = "TWW" }  -- The Headless Horseman's Ghoulish Charger
+M[1245202] = { expansion = "TWW" }  -- The Headless Horseman's Burning Charger
+M[1245205] = { expansion = "TWW" }  -- The Headless Horseman's Hallowed Charger
+M[1245357] = { expansion = "TWW" }  -- Adorned Northeron Gryphon
+M[1245358] = { expansion = "TWW" }  -- High Shaman's Aerie Gryphon
+M[1245359] = { expansion = "TWW" }  -- Cinder-Plumed Highland Gryphon
+M[1245361] = { expansion = "TWW" }  -- Emberwing Sky Guide
+M[1245370] = { expansion = "TWW" }  -- Ornery Breezestrider
+M[1245604] = { expansion = "TWW" }  -- Astral Aurochs
+M[1247422] = { expansion = "TWW" }  -- Scorching Valor
 M[1247662] = { zone = "Blackrock Depths" }  -- Brewfest Bomber
-M[1251433] = { zone = "Zul'Aman" }  -- Amani Sunfeather
-M[1253927] = { zone = "Harandar" }  -- Vibrant Petalwing
-M[1253938] = { map = 2413 }  -- Ruddy Sporeglider
-M[1260354] = { map = 2413 }  -- Untainted Grove Crawler
+M[1248309] = { expansion = "TWW" }  -- Kalu'ak Crest-Horn
+M[1250285] = { expansion = "TWW" }  -- Sharktested Crest-Horn
+M[1250287] = { expansion = "TWW" }  -- Floestrider Crest-Horn
+M[1250288] = { expansion = "TWW" }  -- Cragstepper Crest-Horn
+M[1250482] = { expansion = "TWW" }  -- Ghastly Ur'zul
+M[1250879] = { expansion = "TWW" }  -- Leystone Basilisk
+M[1250880] = { expansion = "TWW" }  -- Felslate Basilisk
+M[1250881] = { expansion = "TWW" }  -- Aquamarine Basilisk
+M[1250882] = { expansion = "TWW" }  -- Illidari Dreadstalker
+M[1250884] = { expansion = "TWW" }  -- Illidari Blightstalker
+M[1250886] = { expansion = "TWW" }  -- Highland Elderhorn
+M[1251255] = { expansion = "TWW" }  -- Treetop Highmountain Eagle
+M[1251265] = { expansion = "TWW" }  -- Arcberry Manasaber
+M[1251279] = { expansion = "TWW" }  -- Fel-Scarred Mana Ray
+M[1251281] = { expansion = "TWW" }  -- Bloodtooth Mana Ray
+M[1251283] = { expansion = "TWW" }  -- Albino Mana Ray
+M[1251284] = { expansion = "TWW" }  -- Luminous Mana Ray
+M[1251295] = { expansion = "TWW" }  -- Twilight Courser
+M[1251297] = { expansion = "TWW" }  -- Golden Sunrunner
+M[1251298] = { expansion = "TWW" }  -- Turquoise Courser
+M[1251300] = { expansion = "TWW" }  -- Gloomdark Nightmare
+M[1251305] = { expansion = "TWW" }  -- Bonesteed of Triumph
+M[1251307] = { expansion = "TWW" }  -- Bonesteed of Bloodshed
+M[1251309] = { expansion = "TWW" }  -- Bonesteed of Plague
+M[1251311] = { expansion = "TWW" }  -- Bonesteed of Oblivion
+M[1251396] = { expansion = "TWW" }  -- Longhorned Sable Talbuk
+M[1251397] = { expansion = "TWW" }  -- Garnet Ruinstrider
+M[1251398] = { expansion = "TWW" }  -- Longhorned Bleakhoof Talbuk
+M[1251399] = { expansion = "TWW" }  -- Longhorned Argussian Talbuk
+M[1251400] = { expansion = "TWW" }  -- Longhorned Beryl Talbuk
+M[1251433] = { zone = "Zul'Aman", expansion = "Midnight" }  -- Amani Sunfeather
+M[1251680] = { expansion = "TWW" }  -- Highlands Gobbler
+M[1251685] = { expansion = "TWW" }  -- Quirky Turkey
+M[1251689] = { expansion = "TWW" }  -- Murky Turkey
+M[1251690] = { expansion = "TWW" }  -- Prized Turkey
+M[1251697] = { expansion = "Midnight" }  -- Frostfall Groveglider
+M[1251762] = { expansion = "Midnight" }  -- Cindertuft Groveglider
+M[1251764] = { expansion = "Midnight" }  -- Gloombough Groveglider
+M[1251765] = { expansion = "Midnight" }  -- Blossombranch Groveglider
+M[1253129] = { expansion = "TWW" }  -- Chestnut Courser
+M[1253130] = { expansion = "TWW" }  -- Brimstone Courser
+M[1253927] = { zone = "Harandar", expansion = "Midnight" }  -- Vibrant Petalwing
+M[1253938] = { map = 2413, expansion = "Midnight" }  -- Ruddy Sporeglider
+M[1254363] = { expansion = "TWW" }  -- (PH) Legion Remix Mount
+M[1255159] = { expansion = "TWW" }  -- Mechanical Prototype Panther MK-0
+M[1255179] = { expansion = "TWW" }  -- Steel Prototype Panther MK-0
+M[1255246] = { expansion = "TWW" }  -- Starspark Netherdrake
+M[1255264] = { expansion = "TWW" }  -- Felscorned Vilebrood Vanquisher
+M[1255431] = { expansion = "TWW" }  -- Slayer's Felscorned Shrieker
+M[1255456] = { expansion = "TWW" }  -- Felscorned Wolfhawk
+M[1255463] = { expansion = "TWW" }  -- Archmage's Felscorned Disc
+M[1255467] = { expansion = "TWW" }  -- Felscorned Grandmaster's Companion
+M[1255471] = { expansion = "TWW" }  -- Felscorned Highlord's Charger
+M[1255475] = { expansion = "TWW" }  -- High Priest's Felscorned Seeker
+M[1255477] = { expansion = "TWW" }  -- Shadowblade's Felscorned Omen
+M[1255478] = { expansion = "TWW" }  -- Farseer's Felscorned Tempest
+M[1255480] = { expansion = "TWW" }  -- Felscorned Netherlord's Dreadsteed
+M[1255482] = { expansion = "TWW" }  -- Felscorned War Wyrm
+M[1256677] = { expansion = "TWW" }  -- Cobalt Phase-Hunter
+M[1257058] = { expansion = "Midnight" }  -- Calamitous Carrion
+M[1258573] = { expansion = "Midnight" }  -- Thunderhoof Celestial
+M[1258574] = { expansion = "Midnight" }  -- Stormgilded Celestial
+M[1260354] = { map = 2413, expansion = "Midnight" }  -- Untainted Grove Crawler
+M[1261298] = { expansion = "Midnight" }  -- Crimson Dragonhawk
 M[1261302] = { zone = "Eversong Woods" }  -- Cobalt Dragonhawk
 M[1261316] = { zone = "Zul'Aman" }  -- Amani Sharptalon
 M[1261322] = { map = 2395 }  -- Crimson Silvermoon Hawkstrider
 M[1261323] = { zone = "Eversong Woods" }  -- Cerulean Hawkstrider
+M[1261334] = { expansion = "Midnight" }  -- Contained Stormarion Defender
 M[1261336] = { map = 2393 }  -- Preyseeker's Hubris
 M[1261348] = { zone = "Zul'Aman" }  -- Blessed Amani Burrower
 M[1261360] = { map = 2437 }  -- Ancestral War Bear
+M[1261362] = { expansion = "Midnight" }  -- Witherbark Warbear Mother
 M[1261576] = { map = 2437 }  -- Hexed Vilefeather Eagle
 M[1261583] = { map = 2405 }  -- Insatiable Shredclaw
 M[1261584] = { zone = "Masters' Perch" }  -- Prowling Shredclaw
@@ -1015,7 +1072,6 @@ M[1264643] = { zone = "Deeprun Tram" }  -- Ballistic Bronco
 M[1264988] = { zone = "Oribos" }  -- Snowpaw Glimmerfur Prowler
 M[1265784] = { zone = "Magisters' Terrace" }  -- Lucent Hawkstrider
 M[1268924] = { map = 2393 }  -- Silvermoon's Arcane Defender
-M[1270675] = { map = 2413 }  -- Vivid Chloroceros
 M[1282936] = { map = 2393 }  -- Void-Touched Hawkstrider
 M[1296731] = { zone = "Silvermoon City" }  -- Cerulean Deathwalker
 M[1296734] = { zone = "Silvermoon City" }  -- Amethyst Mechsuit

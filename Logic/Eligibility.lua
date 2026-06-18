@@ -394,10 +394,16 @@ function Eligibility.Evaluate(cand)
     }
 
     -- Expansao: se a heuristica nao soube ("Unknown"), usa o overlay de metadados
-    -- (ns.Meta, colhido do Wowhead) -- cobre ate montarias nao-curadas.
+    -- (ns.Meta, colhido do Wowhead) -- cobre ate montarias nao-curadas. Se o overlay so tem
+    -- a ZONA (sem expansao), deriva a expansao da zona (ExpansionFor) -- assim uma entrada de
+    -- localizacao manual nao precisa repetir a expansao.
     if item.expansion == "Unknown" then
         local meta = ns.Meta and ns.Meta[cand.spellID]
-        if meta and meta.expansion then item.expansion = meta.expansion end
+        if meta and meta.expansion then
+            item.expansion = meta.expansion
+        elseif meta and meta.zone then
+            item.expansion = ns.ExpansionFor(meta.zone, nil, cand.spellID)
+        end
     end
 
     -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas recebem

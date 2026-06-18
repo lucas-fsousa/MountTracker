@@ -33,8 +33,12 @@ local OLD = {
     Classic = true, TBC = true, WotLK = true, Cataclysm = true,
     MoP = true, WoD = true, Legion = true, BfA = true,
 }
--- spellID a partir do qual a montaria e seguramente do Midnight (12.0).
-local MIDNIGHT_SPELL = 1240000
+-- spellID a partir do qual a montaria e seguramente do Midnight (12.0). O override so deve
+-- pegar mount de Midnight em zona reaproveitada (Eversong/Zul'Aman/Quel'Danas) -- nunca uma
+-- de TWW. Como TWW terminou, seu MAIOR spellID de montaria e fixo (1261681 = os "Bronze" do
+-- 20o aniversario); o limiar fica logo acima disso. Midnight de spellID menor cai pelo meta
+-- do Wowhead (overlay), nao pelo override. Revisar se um TWW futuro passar de 1261681.
+local MIDNIGHT_SPELL = 1262000
 
 -- Deriva a expansao. `curatedExp` (se houver) tem prioridade total.
 -- `spellID` desambigua zonas reaproveitadas (ex.: Quel'Danas TBC vs Midnight).
