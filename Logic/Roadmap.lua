@@ -87,6 +87,11 @@ end
 -- Zonas associadas a uma montaria (curada + parseadas do sourceText).
 local function itemZones(item)
     local z = {}
+    -- Zona do overlay de metadados (ns.Meta) entra no match POR NOME -- nao como uiMapID
+    -- estrito -- p/ resolver zona reaproveitada (Eversong TBC vs Midnight = uiMapID diferente,
+    -- mesmo nome).
+    local meta = ns.Meta and ns.Meta[item.spellID]
+    if meta and meta.zone then z[#z + 1] = meta.zone end
     if item.entry then
         -- `source` (ex.: "Eversong Woods Rare Creatures") costuma carregar a zona de
         -- drops curados que nao tem o campo `zone` -- inclui no match de zona.
@@ -167,14 +172,13 @@ end
 -- metadados (ns.Meta, cobre ate nao-curadas) por `map` direto ou por `zone` resolvida
 -- em runtime (ns.Waypoint.MapForZone). NAO usa `coords.map` (nao-estrito, so waypoint).
 local function itemMapId(item)
+    -- SO uiMapID EXPLICITO (curado ou overlay) -> match estrito, imune a colisao de nome.
+    -- A zona por NOME (meta.zone) NAO e convertida em uiMapID aqui: vira match POR NOME em
+    -- zoneMatches. Converter o nome em ID pegava o Eversong TBC (94) e quebrava o match
+    -- quando o jogador esta no Eversong de Midnight (uiMapID diferente, mesmo nome).
     if item.entry and item.entry.map then return item.entry.map end
     local meta = ns.Meta and ns.Meta[item.spellID]
-    if meta then
-        if meta.map then return meta.map end
-        if meta.zone and ns.Waypoint and ns.Waypoint.MapForZone then
-            return ns.Waypoint.MapForZone(meta.zone)
-        end
-    end
+    if meta and meta.map then return meta.map end
     return nil
 end
 

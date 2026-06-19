@@ -389,21 +389,23 @@ function Eligibility.Evaluate(cand)
         entry   = entry,
         sourceText = cand.sourceText,
         sources = ns.SourceParse and ns.SourceParse(cand.sourceText) or {},
-        expansion = ns.ExpansionFor and ns.ExpansionFor(expText, entry and entry.expansion, cand.spellID) or "Unknown",
+        expansion = "Unknown",   -- definido logo abaixo, por prioridade
         costPct = 0,
     }
 
-    -- Expansao: se a heuristica nao soube ("Unknown"), usa o overlay de metadados
-    -- (ns.Meta, colhido do Wowhead) -- cobre ate montarias nao-curadas. Se o overlay so tem
-    -- a ZONA (sem expansao), deriva a expansao da zona (ExpansionFor) -- assim uma entrada de
-    -- localizacao manual nao precisa repetir a expansao.
-    if item.expansion == "Unknown" then
-        local meta = ns.Meta and ns.Meta[cand.spellID]
-        if meta and meta.expansion then
-            item.expansion = meta.expansion
-        elseif meta and meta.zone then
-            item.expansion = ns.ExpansionFor(meta.zone, nil, cand.spellID)
-        end
+    -- Expansao por PRIORIDADE (do mais confiavel ao ultimo recurso). O dado AUTORITATIVO
+    -- (curado a mao + overlay colhido do "Added in patch" do Wowhead) vem ANTES da heuristica
+    -- por zona -- senao uma zona reaproveitada (ex.: Eversong = TBC e tambem Midnight) faria
+    -- o keyword classificar errado as mounts recentes. A heuristica so cobre o que nao foi
+    -- colhido (mounts antigas sem item legivel no Wowhead).
+    local meta = ns.Meta and ns.Meta[cand.spellID]
+    item.expansion =
+        (entry and entry.expansion)
+        or (meta and meta.expansion)
+        or (ns.ExpansionFor and ns.ExpansionFor(expText, nil, cand.spellID))
+        or "Unknown"
+    if item.expansion == "Unknown" and meta and meta.zone then
+        item.expansion = ns.ExpansionFor(meta.zone, nil, cand.spellID)
     end
 
     -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas recebem

@@ -167,7 +167,13 @@ def main():
         sid = r["spellID"]
         if sid in manual:
             continue                            # curado a mao -> intocavel
-        needs_exp = r["expansion"] == "Unknown"
+        # Colhe expansao AUTORITATIVA (Wowhead "Added in patch") quando: a heuristica nao
+        # soube (Unknown) OU a heuristica deu uma expansao ANTIGA mas o spellID e recente --
+        # sinal de ZONA REAPROVEITADA (ex.: Eversong/Zul'Aman: TBC original vs Midnight novo).
+        # E so um filtro de QUAIS colher; a expansao em si vem 100% do Wowhead (sem chute).
+        OLD_BUCKET = ("Classic", "TBC", "WotLK", "Cataclysm", "MoP", "WoD", "Legion", "BfA")
+        needs_exp = (r["expansion"] == "Unknown"
+                     or (r["expansion"] in OLD_BUCKET and r["spellID"] >= 1100000))
         needs_map = r["map"] is None and (r.get("vendor") or r.get("source"))
         if not (needs_exp or needs_map):
             continue

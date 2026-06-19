@@ -23,48 +23,26 @@ local RULES = {
     { "MoP",          { "pandaria", "jade forest", "valley of the four winds", "kun-lai", "townlong", "dread wastes", "vale of eternal", "timeless isle", "krasarang", "isle of thunder", "isle of giants", "veiled stair", "throne of thunder", "mogu" } },
     { "Cataclysm",    { "mount hyjal", "vashj.ir", "deepholm", "uldum", "twilight highlands", "tol barad", "firelands", "dragon soul", "blackwing descent", "gilneas" } },
     { "WotLK",        { "northrend", "icecrown", "storm peaks", "sholazar", "grizzly hills", "howling fjord", "borean tundra", "dragonblight", "zul.drak", "crystalsong", "wintergrasp", "ulduar", "naxxramas", "argent tournament", "argent crusade", "dalaran" } },
-    { "TBC",          { "outland", "hellfire", "zangarmarsh", "terokkar", "blade.s edge", "netherstorm", "shattrath", "quel.danas", "zul.aman", "tempest keep", "black temple", "sunwell", "netherwing", "skettis" } },
-    { "Classic",      { "alterac", "winterspring", "silithus", "azshara", "felwood", "un.goro", "plaguelands", "stratholme", "scholomance", "dire maul", "blackrock", "molten core", "onyxia", "zul.gurub", "ahn.qiraj", "tanaris", "stormwind", "orgrimmar", "ironforge", "darnassus", "thunder bluff", "undercity", "dun morogh", "elwynn", "durotar", "mulgore", "eversong", "silvermoon", "ghostlands" } },
+    { "TBC",          { "outland", "hellfire", "zangarmarsh", "terokkar", "blade.s edge", "netherstorm", "shattrath", "quel.danas", "zul.aman", "tempest keep", "black temple", "sunwell", "netherwing", "skettis", "eversong", "silvermoon", "ghostlands", "azuremyst", "bloodmyst", "exodar" } },
+    { "Classic",      { "alterac", "winterspring", "silithus", "azshara", "felwood", "un.goro", "plaguelands", "stratholme", "scholomance", "dire maul", "blackrock", "molten core", "onyxia", "zul.gurub", "ahn.qiraj", "tanaris", "stormwind", "orgrimmar", "ironforge", "darnassus", "thunder bluff", "undercity", "dun morogh", "elwynn", "durotar", "mulgore" } },
 }
 
--- Expansoes "antigas": zonas reaproveitadas (Quel'Danas, Zul'Aman, Eversong...)
--- caem aqui pelo nome, mas montarias recentes nelas sao de Midnight.
-local OLD = {
-    Classic = true, TBC = true, WotLK = true, Cataclysm = true,
-    MoP = true, WoD = true, Legion = true, BfA = true,
-}
--- spellID a partir do qual a montaria e seguramente do Midnight (12.0). O override so deve
--- pegar mount de Midnight em zona reaproveitada (Eversong/Zul'Aman/Quel'Danas) -- nunca uma
--- de TWW. Como TWW terminou, seu MAIOR spellID de montaria e fixo (1261681 = os "Bronze" do
--- 20o aniversario); o limiar fica logo acima disso. Midnight de spellID menor cai pelo meta
--- do Wowhead (overlay), nao pelo override. Revisar se um TWW futuro passar de 1261681.
-local MIDNIGHT_SPELL = 1262000
-
--- Deriva a expansao. `curatedExp` (se houver) tem prioridade total.
--- `spellID` desambigua zonas reaproveitadas (ex.: Quel'Danas TBC vs Midnight).
+-- Deriva a expansao APENAS por heuristica de zona/sourceText. E o ULTIMO recurso: o addon
+-- usa primeiro o dado AUTORITATIVO (entry.expansion curado + overlay ns.Meta colhido do
+-- "Added in patch" do Wowhead). Por isso aqui NAO ha mais override por spellID: a colisao
+-- de zona reaproveitada (Eversong = TBC e Midnight, etc.) e resolvida pelo overlay, nao por
+-- um numero magico. `spellID`/`curatedExp` ficam na assinatura por compatibilidade.
 function ns.ExpansionFor(sourceText, curatedExp, spellID)
     if curatedExp then return curatedExp end
     -- Remove texturas (caminhos de icone contem palavras como "draenor" -> falso positivo).
     local t = (sourceText or ""):gsub("|T.-|t", ""):lower()
-    local exp
     if t:find("outland", 1, true) then  -- desambigua Nagrand/Shadowmoon (TBC) de WoD
-        exp = "TBC"
-    else
-        for _, rule in ipairs(RULES) do
-            for _, kw in ipairs(rule[2]) do
-                if t:find(kw) then exp = rule[1]; break end
-            end
-            if exp then break end
+        return "TBC"
+    end
+    for _, rule in ipairs(RULES) do
+        for _, kw in ipairs(rule[2]) do
+            if t:find(kw) then return rule[1] end
         end
     end
-    exp = exp or "Unknown"
-    -- Override: um spellID muito alto e seguramente do Midnight (12.0). Aplica quando
-    -- a zona caiu num bucket "antigo" reaproveitado (ex.: Quel'Danas/Eversong) OU
-    -- quando nao deu p/ classificar (Unknown) -- ex.: world drops cujo texto ao vivo
-    -- nao cita a zona. Buckets recentes (TWW/Dragonflight) tem spellID < MIDNIGHT_SPELL,
-    -- entao nao sao afetados.
-    if spellID and spellID >= MIDNIGHT_SPELL and (OLD[exp] or exp == "Unknown") then
-        return "Midnight"
-    end
-    return exp
+    return "Unknown"
 end

@@ -207,7 +207,7 @@ M[354361] = { zone = "Korthia", expansion = "Shadowlands", manualUpdate = true }
 M[354362] = { zone = "Korthia", expansion = "Shadowlands", manualUpdate = true }  -- Maelie, the Wanderer
 M[363701] = { zone = "Zereth Mortis", expansion = "Shadowlands", manualUpdate = true }  -- Patient Bufonid
 M[369666] = { zone = "Blackrock Depths", expansion = "Classic", manualUpdate = true }  -- Grimhowl
-M[370620] = { zone = "Ghostlands", expansion = "Classic", manualUpdate = true }  -- Elusive Emerald Hawkstrider
+M[370620] = { expansion = "Shadowlands", manualUpdate = true }  -- Elusive Emerald Hawkstrider (secret)
 M[374247] = { zone = "Ohn'ahran Plains", expansion = "Dragonflight", manualUpdate = true }  -- Lizi, Thunderspine Tramper
 M[395644] = { zone = "Ohn'ahran Plains", expansion = "Dragonflight", manualUpdate = true }  -- Divine Kiss of Ohn'ahra
 M[404018] = { zone = "Valdrakken", expansion = "Dragonflight", manualUpdate = true }  -- Black-Furred Bakar
@@ -276,4 +276,4 @@ M[18992] = { zone = "Thunder Bluff", expansion = "Classic", manualUpdate = true 
 M[64656] = { zone = "Undercity", expansion = "Classic", manualUpdate = true }  -- Blue Skeletal Warhorse (racial)
 M[68056] = { zone = "Orgrimmar", expansion = "Classic", manualUpdate = true }  -- Swift Horde Wolf (racial)
 M[68057] = { zone = "Stormwind", expansion = "Classic", manualUpdate = true }  -- Swift Alliance Steed (racial)
-M[73629] = { zone = "Exodar", expansion = "Classic", manualUpdate = true }  -- Exarch's Elekk (racial)
+M[73629] = { zone = "Exodar", expansion = "Cataclysm", manualUpdate = true }  -- Great Exarch's Elekk
