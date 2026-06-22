@@ -128,10 +128,11 @@ local function handleSlash(msg)
                 -- Status calculado + faction curada (procura no roadmap ja construido).
                 for _, it in ipairs(ns._roadmap or {}) do
                     if it.mountID == mid then
+                        local effMap = ns.Logic.Roadmap.ItemMapId and ns.Logic.Roadmap.ItemMapId(it)
                         ns.Print(("  status=%s | readyNow=%s | category=%s | expansion=%s | map=%s")
                             :format(tostring(it.status), tostring(it.readyNow),
                                 tostring(it.category), tostring(it.expansion),
-                                tostring(it.entry and it.entry.map)))
+                                tostring(effMap)))
                         ns.Print("  filter -> " .. tostring(ns.Logic.Roadmap.WhyHidden(it)))
                         break
                     end
@@ -226,8 +227,35 @@ local function handleSlash(msg)
         ns.Print("debug " .. (ns.DEBUG and "on" or "off") ..
             (ns._lastError and (" | last error: " .. ns._lastError) or ""))
 
+    elseif cmd == "enable" or cmd == "disable" then
+        local what = (rest or ""):lower()
+        if what ~= "edit" then ns.Print("usage: /mtrack " .. cmd .. " edit") return end
+        ns.DB.Settings().editMode = (cmd == "enable")
+        ns.Print(("edit mode %s. Open a mount's detail to %s.")
+            :format(cmd == "enable" and "ON" or "OFF",
+                cmd == "enable" and "edit its curation data" or "(button hidden)"))
+        ns.Logic.Roadmap.Build()
+        if ns.UI and ns.UI.Refresh then ns.UI.Refresh() end
+
+    elseif cmd == "export" then
+        -- Nao escreve arquivo (addons nao gravam no disco): apenas resume o que esta
+        -- pendente no SavedVariable MountTrackerEdits, que o script tools/ le depois.
+        local n = ns.DB.CountEdits()
+        ns.Print(("%d manual edit(s) pending in MountTrackerEdits."):format(n))
+        if n > 0 then
+            for sp in pairs(ns.DB.edits) do
+                local nm = "?"
+                if C_MountJournal and C_MountJournal.GetMountFromSpell then
+                    local mid = C_MountJournal.GetMountFromSpell(sp)
+                    nm = (mid and C_MountJournal.GetMountInfoByID(mid)) or "?"
+                end
+                ns.Print(("  %s (spell %d)"):format(tostring(nm), sp))
+            end
+            ns.Print("Run |cffffff00python tools/edits_to_curated.py|r after logout to merge into Data/*.lua.")
+        end
+
     elseif cmd == "help" then
-        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | hidden | unhide <name> | faction <id> | reset | debug | help")
+        ns.Print("commands: /mtrack (open) | find <name> | check <name> | scan | dump | minimap | zone | marked | hidden | unhide <name> | faction <id> | enable edit | disable edit | export | reset | debug | help")
 
     else
         ns.Print("unknown command. /mtrack help")

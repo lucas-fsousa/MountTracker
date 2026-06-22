@@ -215,7 +215,13 @@ ns.NativeSourceLabel = nativeSourceLabel
 -- e, se nao classificar, recorre ao `sourceType` nativo do jogo.
 -- Retorna (category, baseDifficulty).
 local function categorize(sourceText, sourceType)
-    local s = (sourceText or ""):lower()
+    -- Remove a marcacao inline (cor/reset/textura/hyperlink) ANTES de casar palavras-chave.
+    -- Alguns rotulos novos (Midnight) vem como "|cFFFFD200Vendor|r:Valor" -- com o reset
+    -- |r ENTRE a palavra e os dois-pontos -- e o match cru "vendor:" falhava (virava "Drop"
+    -- pelo sourceType nativo). Limpar a marcacao deixa "Vendor:Valor" e o keyword acerta.
+    local s = (sourceText or "")
+        :gsub("|T.-|t", ""):gsub("|H.-|h(.-)|h", "%1")
+        :gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):lower()
     local function has(p) return s:find(p, 1, true) ~= nil end
 
     if has("legacy")          then return "Legacy",       9.5 end
@@ -408,14 +414,24 @@ function Eligibility.Evaluate(cand)
         item.expansion = ns.ExpansionFor(meta.zone, nil, cand.spellID)
     end
 
-    -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas recebem
-    -- a categoria do heuristico `categorize` na sua branch (mais abaixo).
+    -- Categoria (p/ o filtro). Curadas derivam de `acquisition`; nao-curadas usam o
+    -- heuristico `categorize` (texto de origem -> tipo nativo). Computada AQUI, ANTES
+    -- da escada de early-returns, para que TODA montaria tenha categoria mesmo quando o
+    -- jogo a esconde (UNAVAILABLE / owned / wrong-faction). Senao o filtro de categoria
+    -- a some e ela aparece sem rotulo quando revelada por "Show unavailable".
     if entry then
         local a = entry.acquisition
         item.category = (a == "reputation" and "Reputation")
             or ((a == "drop" or a == "world" or a == "rare") and "Drop")
             or (a == "achievement" and "Achievement")
             or "Vendor"
+    else
+        local cat, baseDiff = categorize(cand.sourceText, cand.sourceType)
+        item.category = cat
+        item._catDiff = baseDiff
+        -- Linha de origem padrao (early-returns especificos a sobrescrevem com seu texto).
+        item.detail = cleanSource(cand.sourceText)
+        if item.detail == "" then item.detail = nativeSourceLabel(cand.sourceType) or "" end
     end
 
     -- 1) Ja coletada ou marcada como obtida -> status OWNED (so aparece com "Show owned").
@@ -435,8 +451,12 @@ function Eligibility.Evaluate(cand)
     end
 
     -- 2.5) O jogo esconde esta montaria para este personagem (faccao oposta, classe,
-    --      legacy/inobtenivel). Sinal autoritativo do proprio Mount Journal.
-    if cand.shouldHideOnChar then
+    --      legacy/inobtenivel). Sinal autoritativo do proprio Mount Journal -- EXCETO
+    --      quando a curadoria marca `availableOverride`: conteudo novo (ex.: housing /
+    --      Decor Duel) que o jogo ainda flaga como hidden mas que ja e comprovadamente
+    --      obtenivel. A curadoria (entry abaixo) entao decide o status real. A protecao
+    --      de faccao oposta continua nos branches 3/3b.
+    if cand.shouldHideOnChar and not (entry and entry.availableOverride) then
         item.status = S.UNAVAILABLE
         item.detail = ns.CleanSource and ns.CleanSource(cand.sourceText) or ""
         return item
@@ -471,19 +491,10 @@ function Eligibility.Evaluate(cand)
         end
     end
 
-    -- 3.5) Nao-curada: usa o texto de origem do proprio jogo (base ao vivo).
+    -- 3.5) Nao-curada: categoria/detalhe ja derivados do texto de origem la em cima.
     --      Cobertura total imediata; a curadoria (overlay) refina depois.
     if not entry then
-        local cat, baseDiff = categorize(cand.sourceText, cand.sourceType)
-        item.status   = S.MISSING
-        item.category = cat
-        item._catDiff = baseDiff
-        item.detail   = cleanSource(cand.sourceText)
-        -- sourceText vazio (ex.: bau de tesouro): mostra ao menos o tipo nativo,
-        -- p/ a linha de origem nao ficar em branco/"?".
-        if item.detail == "" then
-            item.detail = nativeSourceLabel(cand.sourceType) or ""
-        end
+        item.status = S.MISSING
         return item
     end
 

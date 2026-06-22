@@ -181,7 +181,7 @@ local function buildDetail()
     -- Filho do frame principal: e uma EXTENSAO do roadmap -> fecha junto (auto, por ser
     -- filho) e se move junto (ancorado a direita do roadmap; nao tem drag proprio).
     local f = CreateFrame("Frame", "MountTrackerDetailFrame", frame, "BasicFrameTemplateWithInset")
-    f:SetSize(340, 470)
+    f:SetSize(340, 496)
     f:SetFrameStrata("DIALOG")
     f:EnableMouse(true)                              -- bloqueia cliques passarem por baixo
     -- A ancora (lado direito/esquerdo do roadmap) e definida no ShowDetail conforme
@@ -219,6 +219,7 @@ local function buildDetail()
         b:GetFontString():SetWordWrap(false)
         return b
     end
+    f.btnEdit = actBtn("Edit data"); f.btnEdit:SetPoint("BOTTOM", 0, 122)
     f.btnWay = actBtn("Set waypoint to vendor"); f.btnWay:SetPoint("BOTTOM", 0, 96)
     f.btnWowhead = actBtn("Copy Wowhead link"); f.btnWowhead:SetPoint("BOTTOM", 0, 70)
     f.btnObtained = actBtn("Mark as owned"); f.btnObtained:SetPoint("BOTTOM", 0, 44)
@@ -256,6 +257,19 @@ function UI.ShowDetail(item)
         f.model:Show()
     else
         f.model:Hide()
+    end
+
+    local editing = ns.DB.EditModeOn and ns.DB.EditModeOn()
+    f.title:SetText(editing and "Mount detail  |cffffd200\226\156\142 edit|r" or "Mount detail")
+
+    if editing then
+        f.btnEdit:Show()
+        f.btnEdit:SetText(ns.DB.GetEdit and ns.DB.GetEdit(item.spellID) and "Edit data (edited)" or "Edit data")
+        f.btnEdit:SetScript("OnClick", ns.Safe.Wrap("open edit", function()
+            if ns.UI.ShowEdit then ns.UI.ShowEdit(item) end
+        end))
+    else
+        f.btnEdit:Hide()
     end
 
     f.name:SetText(item.name or "?")

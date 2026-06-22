@@ -15,6 +15,7 @@ local DEFAULTS = {
         expansionFilter  = "All",  -- filtro por expansao ("All" ou nome da expansao)
         zoneFilter       = "All",  -- filtro por zona ("All" ou "Current")
         categoryFilter   = "All",  -- filtro por categoria ("All" ou Vendor/Drop/...)
+        editMode         = false,  -- modo de edicao de curadoria (/mtrack enable edit)
     },
 }
 
@@ -37,6 +38,10 @@ function ns.DB.Init()
     MountTrackerDB = MountTrackerDB or {}
     applyDefaults(MountTrackerDB, DEFAULTS)
     ns.DB.data = MountTrackerDB
+    -- Overlay de edicao de curadoria (SavedVariable separado, indexado por spellID).
+    -- Mantido fora do MountTrackerDB de proposito: e dado de curadoria exportavel.
+    MountTrackerEdits = MountTrackerEdits or {}
+    ns.DB.edits = MountTrackerEdits
 end
 
 function ns.DB.IsMarkedObtained(mountID)
@@ -57,4 +62,42 @@ end
 
 function ns.DB.Settings()
     return ns.DB.data.settings
+end
+
+function ns.DB.EditModeOn()
+    return ns.DB.data.settings.editMode == true
+end
+
+-- ---- Overlay de edicao de curadoria (MountTrackerEdits), por spellID ----------------
+
+-- Retorna a edicao curada do usuario para um spellID (ou nil).
+function ns.DB.GetEdit(spellID)
+    return spellID and ns.DB.edits[spellID] or nil
+end
+
+-- Grava a edicao de um spellID. `data` ja vem no formato de storage (cost={type,id,
+-- amount}, coords={x,y}, ...). Carimba _meta. Passar nil/tabela vazia remove a edicao.
+function ns.DB.SetEdit(spellID, data)
+    if not spellID then return end
+    if not data or next(data) == nil then
+        ns.DB.edits[spellID] = nil
+        return
+    end
+    data._meta = {
+        editedAt = time and time() or 0,
+        char = (UnitName and (UnitName("player") .. "-" .. (GetRealmName and GetRealmName() or "?"))) or "?",
+    }
+    ns.DB.edits[spellID] = data
+end
+
+-- Descarta a edicao de um spellID (volta ao dado dos arquivos curados).
+function ns.DB.RevertEdit(spellID)
+    if spellID then ns.DB.edits[spellID] = nil end
+end
+
+-- Conta quantas edicoes existem (para o resumo do /mtrack export).
+function ns.DB.CountEdits()
+    local n = 0
+    for _ in pairs(ns.DB.edits or {}) do n = n + 1 end
+    return n
 end

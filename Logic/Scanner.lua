@@ -44,6 +44,46 @@ local function resolveMountID(entry, nameIndex)
     return nil
 end
 
+-- Converte o custo do formato de STORAGE da edicao ({type,id,amount}) para o formato
+-- da Schema curada. Reutilizado pela UI; o script de export (Python) replica esta logica.
+local function costFromStorage(c)
+    if not c or not c.type or c.type == "none" then return nil end
+    if c.type == "currency" then return { currencyID = c.id, amount = c.amount } end
+    if c.type == "item"     then return { itemID = c.id, amount = c.amount } end
+    if c.type == "gold"     then return { gold = c.amount } end
+    return nil  -- token/desconhecido: sem custo verificavel
+end
+ns.Data.CostFromStorage = costFromStorage
+
+-- Mescla a edicao do usuario (MountTrackerEdits, formato de storage) sobre a entry
+-- curada -- ou cria uma entry nova quando a montaria nao era curada. Sub-objetos
+-- (cost/requirement/coords) sao SUBSTITUIDOS inteiros; `false` neles = remover.
+local function mergeEdit(base, edit, spellID)
+    local e = {}
+    if base then for k, v in pairs(base) do e[k] = v end end
+    e.spellID = spellID
+    local function put(k, v) if v ~= nil and v ~= "" then e[k] = v end end
+    put("acquisition", edit.acquisition)
+    put("vendor",      edit.vendor)
+    put("zone",        edit.zone)
+    put("map",         edit.map)
+    put("expansion",   edit.expansion)
+    put("wowhead",     edit.wowhead)
+    put("faction",     edit.faction)
+    if edit.availableOverride ~= nil then e.availableOverride = edit.availableOverride end
+    if edit.cost ~= nil then
+        e.cost = (edit.cost ~= false) and costFromStorage(edit.cost) or nil
+    end
+    if edit.requirement ~= nil then
+        e.requirement = (edit.requirement ~= false) and edit.requirement or nil
+    end
+    if edit.coords and edit.coords.x and edit.coords.y then
+        e.coords = { map = edit.map or e.map, x = edit.coords.x, y = edit.coords.y }
+    end
+    return e
+end
+ns.Data.MergeEdit = mergeEdit
+
 -- Returns candidates for EVERY mount in the journal (live base). Curated entries
 -- (ns.Data.All), indexed by spellID, are attached as `entry` overrides when present.
 -- Each candidate: { entry?, mountID, spellID, sourceType, sourceText, info = {...} }
@@ -64,6 +104,9 @@ function Scanner.Collect()
         if name and name ~= "" then
             local _, _, sourceText = C_MountJournal.GetMountInfoExtraByID(mountID)
             local entry = spellID and curated[spellID] or nil
+            -- Overlay de edicao do usuario (in-game): mescla por cima / cria entry nova.
+            local edit = spellID and ns.DB and ns.DB.GetEdit and ns.DB.GetEdit(spellID)
+            if edit then entry = mergeEdit(entry, edit, spellID) end
             if entry then seen[spellID] = true end
             out[#out + 1] = {
                 entry      = entry,

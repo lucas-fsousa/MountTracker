@@ -3,7 +3,7 @@
 ## Notes: Roadmap of the easiest-to-obtain mounts still missing from your account.
 ## Author: Lucas
 ## Version: 0.12.0
-## SavedVariables: MountTrackerDB, MountTrackerDump
+## SavedVariables: MountTrackerDB, MountTrackerDump, MountTrackerEdits
 ## IconTexture: Interface\Icons\Ability_Mount_RidingHorse
 ## X-Category: Collections
 ##
@@ -45,6 +45,7 @@ Logic\Roadmap.lua
 
 # Interface
 UI\MainFrame.lua
+UI\EditFrame.lua
 UI\Minimap.lua
 
 # Eventos e slash commands (por ultimo, depende de tudo acima)

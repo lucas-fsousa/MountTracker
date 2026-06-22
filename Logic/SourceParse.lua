@@ -85,6 +85,10 @@ end
 --   { kind = "Vendor"/"Quest"/"Faction"/"Drop"/..., who, faction, zone, renown, costs={...} }
 function ns.SourceParse(raw)
     if not raw or raw == "" then return {} end
+    -- Normaliza o formato novo (Midnight) "|cFFFFD200Label|r:Valor" -- com o reset |r
+    -- ENTRE o rotulo e os dois-pontos -- para o canonico "|cFFFFD200Label: |rValor", que
+    -- e o que o parser de rotulos abaixo espera.
+    raw = raw:gsub("(|c[Ff][Ff]%x%x%x%x%x%x[%a ]-)|r%s*:", "%1: |r")
     -- Marca cada rotulo com \1 para separar os segmentos.
     local s = raw:gsub("|c[Ff][Ff]%x%x%x%x%x%x", "\1")
     local sources, cur = {}, nil

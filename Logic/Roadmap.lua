@@ -181,6 +181,7 @@ local function itemMapId(item)
     if meta and meta.map then return meta.map end
     return nil
 end
+Roadmap.ItemMapId = itemMapId
 
 -- Casa a montaria com a localizacao atual.
 --   1) PREFERE uiMapID: match exato por ID -> imune a colisao de nome/expansao.

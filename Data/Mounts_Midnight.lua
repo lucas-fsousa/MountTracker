@@ -139,4 +139,21 @@ ns.Data.Register("Midnight", {
         cost    = { currencyID = 3316, amount = 6000 },
         wowhead = "https://www.wowhead.com/spell=1261585",
     },
+
+    -- Decor Duel (housing / Silvermoon): vendedor Gamesmaster Fleurian por 500x
+    -- Illusionary Coin (currency 3393). O jogo flaga shouldHideOnChar=true (conteudo
+    -- de housing novo, sourceType errado = Drop), mas a montaria E compravel sem gate de
+    -- reputacao -> availableOverride faz a curadoria mandar no status (READY/NEED_CURRENCY).
+    {
+        name    = "Magister's Spell Bee",
+        spellID = 1282471,
+        acquisition = "vendor",
+        vendor  = "Gamesmaster Fleurian",
+        zone    = "Silvermoon City",
+        map     = 2393,
+        coords  = { map = 2393, x = 31.6, y = 76.7 },  -- Falconwing Square
+        cost    = { currencyID = 3393, amount = 500 },
+        availableOverride = true,
+        wowhead = "https://www.wowhead.com/spell=1282471",
+    },
 })
