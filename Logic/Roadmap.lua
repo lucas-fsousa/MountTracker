@@ -209,10 +209,29 @@ local function zoneMatches(item, ctx)
     return false
 end
 
+-- Casa o texto livre de busca contra o nome + a fonte da montaria (vendedor / zona /
+-- sourceText / fonte curada). Substring case-insensitive. Texto vazio = casa tudo.
+local function textMatches(item, q)
+    if not q or q == "" then return true end
+    local hay = item.name or ""
+    if item.detail then hay = hay .. " " .. item.detail end
+    if item.sourceText then hay = hay .. " " .. item.sourceText:gsub("|T.-|t", "") end
+    local e = item.entry
+    if e then hay = hay .. " " .. (e.vendor or "") .. " " .. (e.zone or "") .. " " .. (e.source or "") end
+    for _, sr in ipairs(item.sources or {}) do
+        hay = hay .. " " .. (sr.who or "") .. " " .. (sr.zone or "")
+    end
+    return hay:lower():find(q:lower(), 1, true) ~= nil
+end
+Roadmap.TextMatches = textMatches
+
 -- Diagnostico (/mtrack check): por que uma montaria NAO aparece com os filtros atuais?
 -- Retorna "shown" ou o nome do primeiro filtro que a esconde.
 function Roadmap.WhyHidden(item)
     local s = ns.DB.Settings()
+    if s.textFilter and s.textFilter ~= "" and not textMatches(item, s.textFilter) then
+        return "text filter = '" .. s.textFilter .. "'"
+    end
     if s.expansionFilter and s.expansionFilter ~= "All" and item.expansion ~= s.expansionFilter then
         return "expansion filter = " .. s.expansionFilter .. " (item=" .. tostring(item.expansion) .. ")"
     end
@@ -250,8 +269,10 @@ function Roadmap.Filtered()
     local catFilter = s.categoryFilter
     local zoneCurrent = (s.zoneFilter == "Current")
     local ctx = zoneCurrent and playerLocationCtx() or nil
+    local textFilter = s.textFilter
     for _, item in ipairs(items) do
         local show = true
+        if textFilter and textFilter ~= "" and not textMatches(item, textFilter) then show = false end
         if expFilter and expFilter ~= "All" and item.expansion ~= expFilter then show = false end
         if catFilter and catFilter ~= "All" and item.category ~= catFilter then show = false end
         if zoneCurrent and not zoneMatches(item, ctx) then show = false end

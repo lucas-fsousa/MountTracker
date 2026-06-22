@@ -547,10 +547,25 @@ local function buildFrame()
     end))
     frame.cbZone = cb3
 
+    -- Campo de busca textual (nome / vendedor / zona / fonte). Combina com os demais
+    -- filtros (AND). Util p/ puxar uma montaria especifica e validar seus dados.
+    local sb = CreateFrame("EditBox", "MountTrackerSearchBox", frame, "SearchBoxTemplate")
+    sb:SetPoint("TOPLEFT", 14, -82)
+    sb:SetSize(360, 20)
+    sb:SetAutoFocus(false)
+    if sb.Instructions then sb.Instructions:SetText("Search name / vendor / zone") end
+    sb:SetScript("OnTextChanged", ns.Safe.Wrap("apply text filter", function(self)
+        if SearchBoxTemplate_OnTextChanged then SearchBoxTemplate_OnTextChanged(self) end
+        ns.DB.Settings().textFilter = self:GetText() or ""
+        UI.RefreshTop()
+    end))
+    sb:SetScript("OnEscapePressed", function(self) self:SetText(""); self:ClearFocus() end)
+    frame.searchBox = sb
+
     -- Scroll virtualizado (FauxScrollFrame): renderiza so as linhas visiveis e
     -- recicla ao rolar -> aguenta milhares de itens (inclui as owned) sem travar.
     scroll = CreateFrame("ScrollFrame", "MountTrackerScrollFrame", frame, "FauxScrollFrameTemplate")
-    scroll:SetPoint("TOPLEFT", 10, -84)
+    scroll:SetPoint("TOPLEFT", 10, -110)
     scroll:SetPoint("BOTTOMRIGHT", -30, 10)
     scroll:SetScript("OnVerticalScroll", function(self, offset)
         FauxScrollFrame_OnVerticalScroll(self, offset, ROW_STEP, UI.Refresh)
@@ -628,6 +643,7 @@ function UI.Toggle()
         frame:Hide()
     else
         ns.Logic.Roadmap.Build()
+        if frame.searchBox then frame.searchBox:SetText(ns.DB.Settings().textFilter or "") end
         UI.Refresh()
         frame:Show()
     end

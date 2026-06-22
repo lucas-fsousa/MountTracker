@@ -15,6 +15,7 @@ local DEFAULTS = {
         expansionFilter  = "All",  -- filtro por expansao ("All" ou nome da expansao)
         zoneFilter       = "All",  -- filtro por zona ("All" ou "Current")
         categoryFilter   = "All",  -- filtro por categoria ("All" ou Vendor/Drop/...)
+        textFilter       = "",     -- busca textual livre (nome / vendedor / zona / fonte)
         editMode         = false,  -- modo de edicao de curadoria (/mtrack enable edit)
     },
 }
