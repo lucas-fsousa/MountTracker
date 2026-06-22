@@ -71,6 +71,31 @@ Options:
 | `--include-collected` | Also process mounts you already own |
 | `--cache` | Cache directory (default `tools/cache`) |
 
+## In-game edits → curated base (`edits_to_curated.py`)
+
+The in-game edit mode (`/mtrack enable edit`) stores manual curation in the
+`MountTrackerEdits` SavedVariable (per spellID). This script folds those edits back
+into `Data/Mounts_*.lua`:
+
+- **UPDATE**: if the spellID already exists in any `Data/Mounts_*.lua`, its entry is
+  replaced in place (keeping the file's formatting and the existing `name`).
+- **NEW**: otherwise a new entry is inserted into `Data/Mounts_<expansion>.lua`
+  (the `expansion` field of the edit). Names are resolved from `MountTrackerDump`, so
+  run `/mtrack dump` too if you want the new entries named.
+
+`edits_to_json.lua` converts the SavedVariable to JSONL (same pattern as
+`dump_to_json.lua`); the Python script does the storage→Schema conversion and Lua
+rendering. **Dry-run by default**; `--write` applies and backs up each file as `.bak`.
+
+```bash
+# In game: edit mounts (/mtrack enable edit), then /reload to flush SavedVariables.
+python3 tools/edits_to_curated.py \
+    --dump "/path/to/WTF/Account/<ID>/SavedVariables/MountTracker.lua" \
+    --lua ~/lua-build/lua-5.4.7/src/lua          # dry-run: shows every UPDATE/NEW
+python3 tools/edits_to_curated.py --dump "..." --lua ... --write   # apply + .bak
+# then: luac -p the touched files, review `git diff`, commit.
+```
+
 ## Validating the curated data
 
 `validate.lua` loads the whole curated overlay outside the game and checks integrity

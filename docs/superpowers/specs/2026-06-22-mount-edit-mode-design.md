@@ -106,15 +106,17 @@ Campos (ordem da Schema), label à esquerda / controle à direita:
 lista nome+spellID, e mostra o caminho do SavedVariables. O dado em si persiste sozinho
 no logout (é SavedVariable).
 
-### Script `tools/edits_to_curated.py`
-Segue o padrão de `dump_to_json.lua`/`curate.py`: carrega `MountTracker.lua` via `lua`
-(`loadfile`) para extrair o global `MountTrackerEdits`, depois para cada spellID:
-- **Existe** em algum `Data/Mounts_*.lua` (casado por spellID) → atualiza os campos
-  daquela entry.
-- **Não existe** → adiciona uma entry nova no arquivo da expansão correta
-  (`Data/Mounts_<expansion>.lua`).
+### Script `tools/edits_to_curated.py` (IMPLEMENTADO)
+Segue o padrão de `dump_to_json.lua`/`curate.py`: `tools/edits_to_json.lua` carrega
+`MountTracker.lua` via `lua` (`loadfile`), extrai `MountTrackerEdits` e emite JSONL
+(resolvendo o `name` pelo `MountTrackerDump`). O Python então, para cada spellID:
+- **Existe** em algum `Data/Mounts_*.lua` (casado por spellID, por balanceamento de
+  chaves) → substitui a entry in-place, preservando indentação e o `name` existente.
+- **Não existe** → insere uma entry nova antes do `})` do `Data/Mounts_<expansion>.lua`.
 - Converte o formato de storage para o formato Schema (mesma conversão do merge).
-- Gera saída revisável (diff); o dev revisa e commita. O script **não** commita sozinho.
+- **Dry-run por padrão** (mostra cada UPDATE/NEW); `--write` aplica e faz backup `.bak`.
+  O script **não** commita; o dev valida com `luac -p`, revisa o `git diff` e commita.
+- Testado contra o SavedVariables real (UPDATE de 288587) e fixture sintético (NEW).
 
 Caminho do SavedVariables (referência):
 `...\WTF\Account\352171876#1\SavedVariables\MountTracker.lua`.
