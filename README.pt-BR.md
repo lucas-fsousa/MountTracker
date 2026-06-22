@@ -49,7 +49,9 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 | 🎲 **Graduação por drop rate** | Drops de RNG são ranqueados pela chance: `1/25` é "vai farmar," `1/200` afunda pro fim — cada um com sua porcentagem. |
 | ⚔️ **Filtro de facção inteligente** | Usa o sinal de visibilidade do próprio jogo pra esconder corretamente montarias da facção oposta e travadas por classe (não só as "pareadas" que outras ferramentas erram). |
 | 📂 **Filtro por expansão** | Restrinja o roadmap a Classic, TBC, WotLK … até The War Within e Midnight. |
+| 🔎 **Busca textual** | Um campo de texto livre filtra o roadmap por nome, vendedor ou zona — combine com os outros filtros pra achar uma montaria específica rápido. |
 | 🏷️ **Overlay curado** | Dados verificados à mão (do Wowhead) adicionam detecção precisa de elegibilidade, drop rates e links do Wowhead por cima da base ao vivo. |
+| ✎ **Editor de curadoria in-game** | Ferramenta de contribuidor: edite os dados de aquisição de uma montaria (vendedor, custo, requisito, coords…) direto no painel de detalhe e veja o roadmap atualizar ao vivo. Veja a nota abaixo antes de usar. |
 | 🧭 **Botão de minimapa** | Arraste pra qualquer ponto da borda; clique pra abrir. Zero bibliotecas externas. |
 | 🔗 **Wowhead num clique** | Toda montaria tem link do Wowhead — copie direto da linha. |
 | 🛡️ **Sem erro no meio da tela** | Todo ponto de entrada é blindado; se algo falha, você recebe uma mensagem discreta no chat, nunca um popup de erro Lua. |
@@ -74,6 +76,8 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 | Filtro por expansão | Filtro pela zona atual (inclui dungeons e raids) |
 | ![Mostrar obtidas](images/owned-toggle.png) | ![Botão de minimapa](images/minimap.png) |
 | Obtidas (coloridas) vs. faltantes (cinza) | Botão de minimapa — arraste e clique pra abrir |
+| ![Busca textual](images/search.png) | ![Editor de curadoria](images/edit-panel.png) |
+| **Busca** por nome, vendedor ou zona | **Editor de curadoria in-game** (ferramenta de contribuidor) |
 
 ---
 
@@ -103,15 +107,24 @@ Abra a janela pelo **botão de minimapa** ou por um slash command:
 | `/mtrack scan` | Imprime um resumo no chat (obtidas / obteníveis / indisponíveis) |
 | `/mtrack find <nome>` | Procura o ID interno de uma montaria |
 | `/mtrack minimap` | Mostra / esconde o botão do minimapa |
+| `/mtrack enable edit` / `/mtrack disable edit` | Liga / desliga o editor de curadoria in-game (veja abaixo) |
+| `/mtrack export` | Lista suas edições manuais pendentes (para contribuir) |
 | `/mtrack reset` | Limpa seus overrides manuais (marcada-obtida / oculta) |
 | `/mtrack debug` | Liga / desliga o detalhe técnico de erros |
 | `/mtrack help` | Lista todos os comandos |
 
 **Na janela:**
+- **Campo de busca** — digite parte do nome, vendedor ou zona pra filtrar o roadmap.
 - **Wowhead** — copia o link do Wowhead da montaria.
 - **Hide** — esconde uma montaria que você não quer.
 - **Owned** — marca como obtida (corrige um track indevido).
 - Use o dropdown **Expansion** e os checkboxes **Show owned / Show unavailable** para moldar a lista.
+
+### ✎ Editor de curadoria in-game (contribuidores)
+
+Rode `/mtrack enable edit` e um botão **"Edit data"** aparece no painel de detalhe de cada montaria. Ele permite preencher ou corrigir os dados de aquisição de uma montaria — vendedor, zona, mapa, coords, custo, requisito, expansão — e ver o roadmap atualizar **ao vivo**, ótimo pra validar uma montaria específica antes de contribuir a correção.
+
+> **Atenção — suas edições são locais até você compartilhá-las.** Elas ficam salvas só no seu cliente (o SavedVariable `MountTrackerEdits`) e **não** são enviadas a lugar nenhum. Pra que uma correção entre no addon oficial (e ajude todo mundo), **[abra um Pull Request](../../pulls)** com seus dados — nós revisamos e incorporamos ao repositório master. Até lá, suas edições locais **sobrepõem** os dados do addon: se você mantiver uma edição de uma montaria que depois receber uma curadoria oficial, a sua cópia local prevalece e pode **mascarar** a correção oficial. Depois que seu PR for aceito, clique em **Revert** naquela montaria pra descartar a cópia local. É uma ferramenta de contribuidor — o colecionador comum não precisa dela.
 
 ---
 

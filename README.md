@@ -36,6 +36,7 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 - **Shows you exactly how to get each mount:** vendor name, zone, cost (with currency icon **and how much you own**), or the drop source and its rate.
 - **Filters out what you can't get** — opposite-faction, class-locked, and legacy/unobtainable mounts are hidden by default (and one click away when you want them).
 - **Filter by expansion**, toggle owned/unavailable, and manage your list manually.
+- **Search the roadmap** by name, vendor or zone to jump straight to a specific mount.
 
 ---
 
@@ -49,7 +50,9 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 | 🎲 **Drop-rate grading** | RNG drops are ranked by their odds: `1/25` is "go farm it," `1/200` sinks to the bottom — each shown with its percentage. |
 | ⚔️ **Smart faction filter** | Uses the game's own visibility signal to correctly hide opposite-faction and class-locked mounts (not just the "paired" ones other tools miss). |
 | 📂 **Expansion filter** | Narrow the roadmap to Classic, TBC, WotLK … all the way to The War Within and Midnight. |
+| 🔎 **Text search** | A free-text box filters the roadmap by name, vendor or zone — combine it with the other filters to pull up a specific mount fast. |
 | 🏷️ **Curated overlay** | Hand-verified data (from Wowhead) adds precise eligibility detection, drop rates and Wowhead links on top of the live base. |
+| ✎ **In-game curation editor** | Contributor tool: edit a mount's acquisition data (vendor, cost, requirement, coords…) right in the detail panel and watch the roadmap update live. See the note below before using. |
 | 🧭 **Minimap button** | Drag it anywhere around the ring; click to open. Zero external libraries. |
 | 🔗 **One-click Wowhead** | Every mount has a Wowhead link — copy it straight from the row. |
 | 🛡️ **No mid-screen errors** | Every entry point is sandboxed; if something fails you get a quiet chat message, never a Lua error popup. |
@@ -74,6 +77,8 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 | Filter by expansion | Filter by your current zone (dungeons & raids included) |
 | ![Show owned](images/owned-toggle.png) | ![Minimap button](images/minimap.png) |
 | Owned (colored) vs. missing (gray) | Minimap button — drag anywhere, click to open |
+| ![Text search](images/search.png) | ![Curation editor](images/edit-panel.png) |
+| **Search** by name, vendor or zone | **In-game curation editor** (contributor tool) |
 
 ---
 
@@ -103,15 +108,24 @@ Open the window from the **minimap button** or with a slash command:
 | `/mtrack scan` | Print a summary to chat (owned / obtainable / unavailable) |
 | `/mtrack find <name>` | Look up a mount's internal ID |
 | `/mtrack minimap` | Show / hide the minimap button |
+| `/mtrack enable edit` / `/mtrack disable edit` | Turn the in-game curation editor on/off (see below) |
+| `/mtrack export` | List your pending manual edits (for contributing) |
 | `/mtrack reset` | Clear your manual overrides (marked-owned / hidden) |
 | `/mtrack debug` | Toggle technical error details |
 | `/mtrack help` | List all commands |
 
 **In the window:**
+- **Search box** — type part of a name, vendor or zone to filter the roadmap.
 - **Wowhead** — copy the mount's Wowhead link.
 - **Hide** — hide a mount you don't care about.
 - **Owned** — mark a mount as owned (fixes a wrongly-tracked one).
 - Use the **Expansion** dropdown and the **Show owned / Show unavailable** checkboxes to shape the list.
+
+### ✎ In-game curation editor (contributors)
+
+Run `/mtrack enable edit` and an **"Edit data"** button appears on each mount's detail panel. It lets you fill in or correct a mount's acquisition data — vendor, zone, map, coords, cost, requirement, expansion — and see the roadmap update **live**, which is great for validating a specific mount before contributing the fix.
+
+> **Heads-up — your edits are local until you share them.** They're saved only on your client (the `MountTrackerEdits` SavedVariable) and are **not** uploaded anywhere. To get a fix into the official addon (and help everyone), **[open a Pull Request](../../pulls)** with your data — we review it and merge it into the master repo. Until then, your local edits **override** the addon's data: if you keep an edit for a mount that later receives an official curation, your local copy wins and can **mask** the official fix. After your PR is merged, hit **Revert** on that mount to drop the local copy. This is a contributor tool — regular collectors don't need it.
 
 ---
 
