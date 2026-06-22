@@ -288,7 +288,7 @@ local function buildEdit()
     do local ty = fieldRow(); lbl("uiMapID", ty - 2)
         f.eMap = makeEdit(f, 70, true); f.eMap:SetPoint("TOPLEFT", CTLX, ty - 2)
         f.btnMapFromZone = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-        f.btnMapFromZone:SetSize(130, 20); f.btnMapFromZone:SetText("\226\134\144 usar o da zona")
+        f.btnMapFromZone:SetSize(130, 20); f.btnMapFromZone:SetText("usar o da zona")
         f.btnMapFromZone:SetPoint("TOPLEFT", CTLX + 80, ty - 2) end
 
     do local ty = fieldRow(); lbl("Coords  x / y", ty - 2)
@@ -384,7 +384,7 @@ local function resolveIdLabels(f)
     local z = f.eZone:GetText()
     local mid = z and z ~= "" and ns.Waypoint and ns.Waypoint.MapForZone(z)
     if z == "" then f.zoneInfo:SetText("")
-    elseif mid then f.zoneInfo:SetText("uiMapID " .. mid .. " \226\156\147"); f.zoneInfo:SetTextColor(0.4, 1, 0.4)
+    elseif mid then f.zoneInfo:SetText("uiMapID " .. mid .. " (ok)"); f.zoneInfo:SetTextColor(0.4, 1, 0.4)
     else f.zoneInfo:SetText("zona nao resolvida"); f.zoneInfo:SetTextColor(1, 0.4, 0.4) end
 end
 

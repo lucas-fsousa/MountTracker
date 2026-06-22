@@ -260,7 +260,7 @@ function UI.ShowDetail(item)
     end
 
     local editing = ns.DB.EditModeOn and ns.DB.EditModeOn()
-    f.title:SetText(editing and "Mount detail  |cffffd200\226\156\142 edit|r" or "Mount detail")
+    f.title:SetText(editing and "Mount detail  |cffffd200(edit)|r" or "Mount detail")
 
     if editing then
         f.btnEdit:Show()
