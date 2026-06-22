@@ -15,10 +15,33 @@ HOW TO RELEASE (see RELEASING.md):
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-06-22
+
 ### Added
+- **Text search box** in the roadmap window — filter by name, vendor or zone, combining
+  with the existing filters. Handy for jumping straight to a specific mount to validate it.
+- **In-game curation editor** (`/mtrack enable edit`): an *Edit data* button on the detail
+  panel lets you fill in or correct a mount's acquisition data (vendor, zone, map, coords,
+  cost, requirement, expansion), stored in the new `MountTrackerEdits` SavedVariable and
+  applied to the roadmap **live**. `/mtrack export` lists pending edits, and
+  `tools/edits_to_curated.py` folds them back into the curated `Data/*.lua`. Edits stay
+  **local** until shared via a GitHub Pull Request.
+- **Curated *Magister's Spell Bee*** (Decor Duel): vendor Gamesmaster Fleurian in Silvermoon
+  City (Falconwing Square) for 500× Illusionary Coin. A new `availableOverride` curation flag
+  lets a mount show as obtainable even when the game still flags the new housing content as
+  hidden for the character.
 - **Curated *Tortured Gorger*** (new Midnight patch mount): vendor Kifaan in Naigtal, 15×
   Voidlight Marl, gated by the *Heroic Showdowns* achievement — so it glows only when you've
   earned the achievement and can afford it.
+
+### Fixed
+- **Category is now computed for every mount**, including ones the game hides
+  (`shouldHideOnChar`), owned, or wrong-faction. They previously fell through with no
+  category, which broke the category filter and left them unlabeled when revealed via
+  *Show unavailable*.
+- **New Midnight sourceText format** (`|cFFFFD200Vendor|r:Value`, with the colour reset
+  *before* the colon) is now parsed correctly by both the categorizer and SourceParse — it
+  used to slip through and mislabel a vendor mount as a drop.
 
 ## [0.12.0] - 2026-06-18
 
