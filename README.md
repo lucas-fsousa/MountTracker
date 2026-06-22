@@ -73,12 +73,12 @@ It then builds a **roadmap** of everything else, sorted from *easiest to obtain*
 | **Green glow = you can get it right now** | Clean, click-to-open rows |
 | ![Detail panel](images/detail-panel.png) | ![Vendor waypoint](images/waypoint.png) |
 | Click a mount → detail panel with a **3D model** + all actions | One click sets a **waypoint** to the vendor |
-| ![Expansion filter](images/expansion-filter.png) | ![Zone filter](images/zone-filter.png) |
-| Filter by expansion | Filter by your current zone (dungeons & raids included) |
-| ![Show owned](images/owned-toggle.png) | ![Minimap button](images/minimap.png) |
-| Owned (colored) vs. missing (gray) | Minimap button — drag anywhere, click to open |
-| ![Text search](images/search.png) | ![Curation editor](images/edit-panel.png) |
-| **Search** by name, vendor or zone | **In-game curation editor** (contributor tool) |
+| ![Expansion filter](images/expansion-filter.png) | ![Category filter](images/category-filter.png) |
+| Filter by expansion | Filter by category (Vendor / Reputation / Drop / …) |
+| ![Search & filters](images/free-filter.png) | ![Show owned](images/owned-toggle.png) |
+| Free-text search + toggles (current zone, owned, unavailable) | Owned (colored) vs. missing (gray) |
+| ![Minimap button](images/minimap.png) | ![Curation editor](images/editmode.png) |
+| Minimap button — drag anywhere, click to open | In-game curation editor (contributor tool) |
 
 ---
 

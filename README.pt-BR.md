@@ -72,12 +72,12 @@ E então monta um **roadmap** de tudo o que falta, ordenado da *mais fácil de o
 | **Brilho verde = dá pra pegar agora** | Linhas limpas, clique pra abrir |
 | ![Painel de detalhes](images/detail-panel.png) | ![Waypoint do vendedor](images/waypoint.png) |
 | Clique numa montaria → painel com **modelo 3D** + ações | Um clique cria um **waypoint** até o vendedor |
-| ![Filtro por expansão](images/expansion-filter.png) | ![Filtro por zona](images/zone-filter.png) |
-| Filtro por expansão | Filtro pela zona atual (inclui dungeons e raids) |
-| ![Mostrar obtidas](images/owned-toggle.png) | ![Botão de minimapa](images/minimap.png) |
-| Obtidas (coloridas) vs. faltantes (cinza) | Botão de minimapa — arraste e clique pra abrir |
-| ![Busca textual](images/search.png) | ![Editor de curadoria](images/edit-panel.png) |
-| **Busca** por nome, vendedor ou zona | **Editor de curadoria in-game** (ferramenta de contribuidor) |
+| ![Filtro por expansão](images/expansion-filter.png) | ![Filtro por categoria](images/category-filter.png) |
+| Filtro por expansão | Filtro por categoria (Vendor / Reputação / Drop / …) |
+| ![Busca e filtros](images/free-filter.png) | ![Mostrar obtidas](images/owned-toggle.png) |
+| Busca textual + toggles (zona atual, obtidas, indisponíveis) | Obtidas (coloridas) vs. faltantes (cinza) |
+| ![Botão de minimapa](images/minimap.png) | ![Editor de curadoria](images/editmode.png) |
+| Botão de minimapa — arraste e clique pra abrir | Editor de curadoria in-game (ferramenta de contribuidor) |
 
 ---
 
